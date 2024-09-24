@@ -1,0 +1,42 @@
+{
+	"name": "electron-easy-builder",
+	"version": "1.0.0",
+	"description": "A simpler electron packaging tool currently only supports windows and mac os. It also provides support for electron-easy-updater, which can realize resource update or full update on windows and mac os (updater will automatically determine whether to enable full update or resource update).",
+	"author": "Auga.L",
+	"license": "MIT",
+	"main": "./out/easy-builder.js",
+	"scripts": {
+		"watch": "webpack --watch --progress --config webpack.dev.ts",
+		"build": "webpack --progress --config webpack.prod.ts",
+		"link": "sudo npm link"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/featherJ/electron-easy-builder"
+	},
+	"homepage": "https://github.com/featherJ/electron-easy-builder#readme",
+	"keywords": [
+		"electron",
+		"builder",
+		"packager",
+		"updater",
+		"cli"
+	],
+	"bin": {
+		"easy-builder": "bin/easy-builder.js"
+	},
+	"devDependencies": {
+		"@electron/notarize": "^2.5.0",
+		"appdmg": "^0.6.6",
+		"chalk": "^5.3.0",
+		"commander": "^12.1.0",
+		"electron-builder": "^25.0.5",
+		"ts-loader": "^9.5.1",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.6.2",
+		"webpack": "^5.94.0",
+		"webpack-cli": "^5.1.4",
+		"yaml": "^2.5.1"
+	},
+	"type": "commonjs"
+}

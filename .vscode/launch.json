@@ -1,0 +1,27 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "启动",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/out/easy-builder.js",
+			"stopOnEntry": false,
+			"args": [],
+			"cwd": "${workspaceRoot}",
+			"preLaunchTask": null,
+			"runtimeExecutable": null,
+			"runtimeArgs": [
+				"--nolazy"
+			],
+			"env": {
+				"NODE_ENV": "development"
+			},
+			"sourceMaps": true,
+			"sourceMapPathOverrides": {
+				"webpack:///./*": "${workspaceFolder}/src/*",
+				"webpack:///src/*": "${workspaceFolder}/src/*"
+			  }
+		}
+	]
+}

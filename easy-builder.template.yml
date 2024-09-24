@@ -1,0 +1,76 @@
+appId: "com.example.app"
+copyright: "Copyright (C) 2024-2024 My Company Name. All rights reserved"
+productName: "Editor Electron Template"
+asar: true
+asarUnpack:
+  - test/test
+  - test2/test2
+buildDependenciesFromSource: false
+nodeGypRebuild: false
+npmRebuild: false
+
+files:
+  - out/**/*
+  - "!node_modules/**"   
+
+output: dist
+
+fileAssociations:
+  - ext: txt
+    name: Text Document
+    description: Text Files
+    icon: "path/to/icon.ico"
+
+  - ext: md
+    name: Markdown Document
+    description: Markdown Files
+    icon: path/to/icon.ico
+
+mac:
+  category: public.app-category.developer-tools
+  icon: build/darwin/app.icns
+  sign:
+    identity: "Developer ID Application: Your Name (Team ID)"
+    entitlements: path/to/entitlements.plist
+    entitlementsInherit: path/to/entitlements.plist
+  notarize:
+    appleId: my-name@email.com
+    appleIdPassword: abcd-abcd-abcd-abcd
+    teamId: my-team-id
+    notarytoolPath: path/to/notarytool
+  pack:
+    background: build/darwin/background.png
+    iconSize: 80
+    window:
+      width: 500
+      height: 300
+    contents:
+      - x: 135
+        y: 190
+      - x: 370
+        y: 190
+        type: link
+        path: /Applications
+
+win:
+  appIcon: build/win/app.ico
+  sign:
+    certificateFile: path/certificateFile.pfx
+    certificatePassword: my-password
+    timeStampServer: http://timestamp.digicert.com
+    rfc3161TimeStampServer: http://timestamp.digicert.com
+    signingHashAlgorithms:
+      - sha1
+      - sha256
+  pack:
+    setupIcon: build/win/app.ico
+    appUrl: http://my-website.com
+    appId: 00000000-0000-0000-0000-000000000000
+    publisherName: My Company Inc
+    licenseFile:
+      - language: chinese
+        file: path/license_chinese.txt
+      - language: english
+        file: path/license_english.txt
+    wizardSmallImageFile: path/wizardSmallImageFile.bmp
+    wizardImageFile: path/wizardImageFile.bmp

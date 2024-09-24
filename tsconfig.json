@@ -1,0 +1,26 @@
+{
+	"include": [
+	  "./src/**/*",
+	],
+	"compilerOptions": {
+	  "esModuleInterop": true,
+	  "forceConsistentCasingInFileNames": true,
+	  "target": "es5",
+	  "module": "commonjs",
+	  "sourceMap": true,
+	  "outDir": "./out",
+	  "allowJs": true,
+	  "baseUrl": "./src",
+	  "skipLibCheck": true,
+	  "alwaysStrict": true,
+	  "noImplicitAny": true,
+	  "moduleResolution": "node",
+	  "experimentalDecorators": true,
+	  "resolveJsonModule": true,
+	  "lib": [
+		"es5",
+		"dom",
+		"es2015.promise"
+	  ],
+	}
+  }
