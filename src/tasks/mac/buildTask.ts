@@ -19,14 +19,13 @@ export class BuildMacTask extends TaskBase implements ITask{
 
     public async run(): Promise<boolean> {
         const { build } = requireDynamically("electron-builder")
-        let result = await build({
+        await build({
             config:this.electronBuilderConfig,
             x64: true,
             arm64: true,
             mac:[],
             projectDir:this.projectDir
         })
-        console.log("fuck",result)
         return true;
     }
 } 

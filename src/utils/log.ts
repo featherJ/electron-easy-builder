@@ -12,7 +12,7 @@ export function log(data:string):void{
  * 信息
  * @param data 
  */
-export function info(data:string):void{
+export function info(data:any):void{
     console.log(`  ${chalk.blue('•')} ${data}`)
 }
 

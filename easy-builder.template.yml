@@ -29,28 +29,39 @@ fileAssociations:
 mac:
   category: public.app-category.developer-tools
   icon: build/darwin/app.icns
+  extendInfo: 
+    NSCameraUsageDescription: "We need access to your camera."  # 默认权限描述
+    NSMicrophoneUsageDescription: "We need access to your microphone."  # 默认权限描述
+  extraResources:
+    - from: build/darwin/en.lproj
+      to: en.lproj
+    - from: build/darwin/zh_CN.lproj
+      to: zh_CN.lproj
   sign:
     identity: "Developer ID Application: Your Name (Team ID)"
-    entitlements: path/to/entitlements.plist
-    entitlementsInherit: path/to/entitlements.plist
+    entitlements: build/darwin/entitlements.plist
+    entitlementsInherit: build/darwin/entitlements.plist
   notarize:
     appleId: my-name@email.com
     appleIdPassword: abcd-abcd-abcd-abcd
     teamId: my-team-id
     notarytoolPath: path/to/notarytool
   pack:
+    title: "window title"
     background: build/darwin/background.png
+    icon: build/darwin/app.icns
+    license: build/license
     iconSize: 80
     window:
       width: 500
       height: 300
     contents:
-      - x: 135
+      from:
+        x: 135
         y: 190
-      - x: 370
+      to:
+        x: 370
         y: 190
-        type: link
-        path: /Applications
 
 win:
   appIcon: build/win/app.ico

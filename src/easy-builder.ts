@@ -1,18 +1,42 @@
+import { requireDynamically } from "base/dynamicImport";
 import fs from "fs";
-import { extractElectronBuilderConfig, extractNotarizeConfig } from "helpers/configHelper";
+import { extractElectronBuilderConfig, extractNotarizeConfig, generateDmgLicenseConfig } from "helpers/configHelper";
 import path from "path";
-import {  runTasks } from "tasks/common";
+import {  runTask, runTasks } from "tasks/common";
+import { BuildInfoMacTask } from "tasks/mac/buildInfoTask";
 import { BuildMacTask } from "tasks/mac/buildTask";
 import { NotarizeMacTask } from "tasks/mac/notarizeTask";
+import { PackDmgTask } from "tasks/mac/packDmgTask";
+import { PackMacUpdateTask } from "tasks/mac/packUpdateTask";
 import { BuildWinTask } from "tasks/win/buildTask";
 import YAML from 'yaml';
 
-const filePath = path.join(__dirname, '../test/easy-builder.yml');
-const file = fs.readFileSync(filePath, 'utf8');
-const config = YAML.parse(file);
 
-const electronBuilderConfig = extractElectronBuilderConfig(config);
-const notarizeConfig = extractNotarizeConfig(config);
+// const alias = requireDynamically('macos-alias');
+
+// const aliasPath = '/Users/apple/Documents/FacnyGit/editor-electron-template/dist/Editor Electron Template-1.0.0-intel.dmg'; // DMG 的路径
+// const aliasData = fs.readFileSync(aliasPath); // 读取 DMG 的数据
+
+// // 解析别名数据
+// const aliasInfo = alias.resolve(aliasData);
+// console.log(aliasInfo); // 输出别名的信息，包括目标路径
+
+// console.log("fuck");
+
+
+let projectDir = "/Users/apple/Documents/FacnyGit/editor-electron-template";
+const builderConfigPath = path.join(__dirname, '../test/easy-builder.yml');
+const builderConfig = YAML.parse(fs.readFileSync(builderConfigPath, 'utf8'));
+
+const packageConfigPath = path.join(projectDir,"package.json");
+const packageConfig = JSON.parse(fs.readFileSync(packageConfigPath, 'utf8'))
+
+
+
+
+
+const electronBuilderConfig = extractElectronBuilderConfig(builderConfig);
+// const notarizeConfig = extractNotarizeConfig(builderConfig);
 
 
 // console.log(electronBuilderConfig);
@@ -22,17 +46,60 @@ const notarizeConfig = extractNotarizeConfig(config);
 // const builderWin = new BuildWinTask();
 // builderWin.init(electronBuilderConfig,"/Users/apple/Documents/FacnyGit/editor-electron-template");
 
-const buildMacTask = new BuildMacTask();
-buildMacTask.init(electronBuilderConfig,"/Users/apple/Documents/FacnyGit/editor-electron-template");
-const notarizeMacTask = new NotarizeMacTask();
-notarizeMacTask.init(electronBuilderConfig,notarizeConfig,"/Users/apple/Documents/FacnyGit/editor-electron-template");
+// const buildMacTask = new BuildMacTask();
+// buildMacTask.init(electronBuilderConfig,projectDir);
+// const notarizeMacTask = new NotarizeMacTask();
+// notarizeMacTask.init(electronBuilderConfig,notarizeConfig,"/Users/apple/Documents/FacnyGit/editor-electron-template");
+
+// const packDmgTask = new PackDmgTask();
+// packDmgTask.init(builderConfig,packageConfig,projectDir);
+// runTask(packDmgTask).then(outputs=>{
+//     console.log(outputs);
+// });
+
+// const packMacUpdateTask = new PackMacUpdateTask();
+// packMacUpdateTask.init(builderConfig,packageConfig,projectDir);
+// runTask(packMacUpdateTask).then(outputs=>{
+//         console.log(outputs);
+// });
 
 
-runTasks([buildMacTask,notarizeMacTask])
+// generateDmgLicenseConfig(builderConfig,projectDir);
 
+// let buttonsPath = "/Users/apple/Documents/FacnyGit/editor-electron-template/build/license/licenseButtons_en_US.json";
+// const buttons = JSON.parse(fs.readFileSync(buttonsPath, 'utf8'))
+
+// const jsonFile:any = {
+//     $schema: "https://github.com/argv-minus-one/dmg-license/raw/master/schema.json",
+//     body: [],
+//     labels: [],
+// };
+// jsonFile.body.push({
+//     file: "/Users/apple/Documents/FacnyGit/editor-electron-template/build/license/license_zh_CN.txt",
+//     lang: "zh-CN",
+// });
+// jsonFile.body.push({
+//     file: "/Users/apple/Documents/FacnyGit/editor-electron-template/build/license/license_en_US.txt",
+//     lang: "en-US",
+// });
+
+// jsonFile.labels.push(Object.assign({
+//     lang: "en-US",
+// }, buttons));
+
+// let dmgLicense = requireDynamically("dmg-license");
+// dmgLicense.dmgLicenseFromJSON(
+//     "/Users/apple/Documents/FacnyGit/editor-electron-template/dist/Editor Electron Template-1.0.0-intel.dmg",
+//     jsonFile,
+//     {
+//         onNonFatalError: (error:any)=>{console.log(error)},
+//     }
+// )
+
+
+// runTasks([buildMacTask])
 // console.log(electronBuilderConfig);
 // console.log("fuck");
-
 // async function pack() {
 //     const { build } = requireDynamically("electron-builder")
 //     try {
@@ -47,9 +114,11 @@ runTasks([buildMacTask,notarizeMacTask])
 //         console.error('打包失败:', error);
 //     }
 // }
-
 // pack();
 
+var buildInfoTask = new BuildInfoMacTask();
+buildInfoTask.init(builderConfig,projectDir);
+runTask(buildInfoTask);
 
 
 

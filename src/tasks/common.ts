@@ -17,7 +17,7 @@ export interface ITask {
      * 运行
      * @return 是否运行成功，true为成功，false为失败
      */
-    run(): Promise<boolean>;
+    run(): Promise<any>;
 }
 
 
@@ -39,12 +39,12 @@ export abstract class TaskBase {
  * @param task
  * @returns 是否运行成功，true为成功，false为失败
  */
-export async function runTask(task: ITask): Promise<boolean> {
+export async function runTask(task: ITask): Promise<any> {
     info(`${chalk.blue(task.name)} starting...`)
     try {
-        let success = await task.run();
+        let result = await task.run();
         info(`${chalk.blue(task.name)} completed.`)
-        return success;
+        return result;
     } catch (e) {
         error(e)
     }
@@ -59,8 +59,8 @@ export async function runTask(task: ITask): Promise<boolean> {
 export async function runTasks(tasks: ITask[]): Promise<boolean> {
     for (var i = 0; i < tasks.length; i++) {
         let curTask = tasks[i];
-        let success = await runTask(curTask);
-        if (!success) {
+        let result = await runTask(curTask);
+        if (!result) {
             return false;
         }
     }
