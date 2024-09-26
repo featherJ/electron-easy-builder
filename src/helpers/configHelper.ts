@@ -237,10 +237,9 @@ message: "Here is my own message"
  * @param projectDir 
  */
 export function getAppPaths(config: any, projectDir: string): AppPath[] {
-    let cwd = projectDir ? projectDir : __dirname;
     let output = config.output ? config.output : config.directories.output;
-    let pathX64 = path.join(cwd, output, "mac", config.productName + ".app")
-    let pathArm64 = path.join(cwd, output, "mac-arm64", config.productName + ".app")
+    let pathX64 = path.join(projectDir, output, "mac", config.productName + ".app")
+    let pathArm64 = path.join(projectDir, output, "mac-arm64", config.productName + ".app")
     let apps: AppPath[] = [];
     if (fs.existsSync(pathX64)) {
         apps.push({

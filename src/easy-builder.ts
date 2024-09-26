@@ -3,7 +3,7 @@ import fs from "fs";
 import { extractElectronBuilderConfig, extractNotarizeConfig, generateDmgLicenseConfig } from "helpers/configHelper";
 import path from "path";
 import {  runTask, runTasks } from "tasks/common";
-import { BuildInfoMacTask } from "tasks/mac/buildInfoTask";
+import { AddBuildInfoMacTask } from "tasks/mac/addBuildInfoTask";
 import { BuildMacTask } from "tasks/mac/buildTask";
 import { NotarizeMacTask } from "tasks/mac/notarizeTask";
 import { PackDmgTask } from "tasks/mac/packDmgTask";
@@ -116,9 +116,9 @@ const electronBuilderConfig = extractElectronBuilderConfig(builderConfig);
 // }
 // pack();
 
-var buildInfoTask = new BuildInfoMacTask();
-buildInfoTask.init(builderConfig,projectDir);
-runTask(buildInfoTask);
+// var buildInfoTask = new BuildInfoMacTask();
+// buildInfoTask.init(builderConfig,projectDir);
+// runTask(buildInfoTask);
 
 
 

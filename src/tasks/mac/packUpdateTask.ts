@@ -1,6 +1,6 @@
 import { requireDynamically } from "base/dynamicImport";
 import chalk from 'chalk';
-import { AppDmgConfig, AppPath, MacArch } from "configs/common";
+import { AppDmgConfig, AppPath, MacArch, ArchAll } from "configs/common";
 import { generateDmgLicenseConfig, generatePackDmgConfig, getAppPaths } from "helpers/configHelper";
 import { ITask, TaskBase } from "tasks/common";
 import { error, info } from "utils/log";
@@ -24,7 +24,7 @@ export class PackMacUpdateTask extends TaskBase implements ITask {
      * 初始化任务
      * @param sourceConfig 原始配置
      * @param packageConfig 项目的package.json
-     * @param packageConfig 项目的package.json
+     * @param projectDir 
      */
     public init(sourceConfig: any, packageConfig: any, projectDir: string): void {
         this.sourceConfig = sourceConfig;
@@ -52,7 +52,7 @@ export class PackMacUpdateTask extends TaskBase implements ITask {
         return outputs;
     }
 
-    private async packUpdate(appPath: string, arch: MacArch, outputDir: string, full: boolean): Promise<string> {
+    private async packUpdate(appPath: string, arch: ArchAll, outputDir: string, full: boolean): Promise<string> {
         info(`packaging update ${chalk.blue("arch")}=${arch} ${chalk.blue("type")}=${full ? "full" : "resource"}`)
         let archName = arch == "x64" ? "intel" : "apple-silicon";
         let contentsDir = path.join(appPath, "Contents");

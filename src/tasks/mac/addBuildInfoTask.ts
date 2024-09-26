@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import { BaseBuildConfig, BuildConfig, MacArch, WinArch } from "configs/common";
 import fs from "fs";
 import { getAppPaths } from "helpers/configHelper";
 import path from "path";
@@ -9,7 +10,7 @@ import { info } from "utils/log";
 /**
  * mac打包信息的任务，用户更新时候来判断是全量更新还是只更新resource
  */
-export class BuildInfoMacTask extends TaskBase implements ITask {
+export class AddBuildInfoMacTask extends TaskBase implements ITask {
     constructor() {
         super("Mac build info")
     }
@@ -27,7 +28,7 @@ export class BuildInfoMacTask extends TaskBase implements ITask {
         this.projectDir = projectDir;
     }
 
-    public async run(): Promise<void> {
+    public async run(): Promise<BaseBuildConfig> {
         let entitlementsPath = this.sourceConfig.mac?.sign?.entitlements;
         let entitlementsInheritPath = this.sourceConfig.mac?.sign?.entitlementsInherit;
         let extendInfo = this.sourceConfig.mac?.extendInfo;
@@ -56,19 +57,25 @@ export class BuildInfoMacTask extends TaskBase implements ITask {
         let electronPackagePath = path.join(this.projectDir,"node_modules/electron/package.json");
         const electronPackageConfig = JSON.parse(fs.readFileSync(electronPackagePath, 'utf8')) 
         let electronVersion = electronPackageConfig.version
-        let updateInfo = {
-            "electron":electronVersion,
-            "build":configHash
+
+        let baseBuildInfo:BaseBuildConfig = {
+            electron:electronVersion,
+            build:configHash,
         };
-        let updateInfoStr = JSON.stringify(updateInfo,null, 2)
 
         let apps = getAppPaths(this.sourceConfig, this.projectDir);
         for (let i = 0; i < apps.length; i++) {
             let appPath = apps[i];
-            let updateInfoPath = path.join(appPath.path,"Contents/Resources","app-update.json");
+            let buildInfo:BuildConfig = {
+                electron:electronVersion,
+                build:configHash,
+                arch:appPath.arch as MacArch | WinArch
+            };
+            let buildInfoStr = JSON.stringify(buildInfo,null, 2)
+            let updateInfoPath = path.join(appPath.path,"Contents/Resources","app-build.json");
             info(`create build info ${chalk.blue("file")}=${updateInfoPath}`)
-            fs.writeFileSync(updateInfoPath,updateInfoStr,{ encoding: 'utf8' });
+            fs.writeFileSync(updateInfoPath,buildInfoStr,{ encoding: 'utf8' });
         }
-
+        return baseBuildInfo;
     }
 } 
