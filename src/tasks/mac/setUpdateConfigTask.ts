@@ -1,11 +1,8 @@
 import chalk from "chalk";
-import { AppPath, ArchUpdate, BaseBuildConfig, MacArch, MacArchUpdate } from "configs/common";
+import { AppPath, BaseBuildConfig, MacArch, MacArchUpdate } from "configs/common";
 import fs from "fs";
-import { getAppPaths } from "helpers/configHelper";
 import { UpdateConfigHelper } from "helpers/updateHelper";
-import path from "path";
 import { ITask, TaskBase } from "tasks/common";
-import { hashString } from "utils/hash";
 import { info } from "utils/log";
 
 /**

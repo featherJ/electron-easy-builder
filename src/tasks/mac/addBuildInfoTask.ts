@@ -31,7 +31,9 @@ export class AddBuildInfoMacTask extends TaskBase implements ITask {
     public async run(): Promise<BaseBuildConfig> {
         let entitlementsPath = this.sourceConfig.mac?.sign?.entitlements;
         let entitlementsInheritPath = this.sourceConfig.mac?.sign?.entitlementsInherit;
+        let fileAssociations = this.sourceConfig.fileAssociations;
         let extendInfo = this.sourceConfig.mac?.extendInfo;
+       
 
         if(entitlementsPath){
             entitlementsPath = path.join(this.projectDir,entitlementsPath);
@@ -47,12 +49,13 @@ export class AddBuildInfoMacTask extends TaskBase implements ITask {
         if(entitlementsInheritPath && fs.existsSync(entitlementsInheritPath)){
             configString += fs.readFileSync(entitlementsInheritPath, 'utf8')
         }
+        if(fileAssociations){
+            configString += JSON.stringify(fileAssociations);
+        }
         if(extendInfo){
             configString += JSON.stringify(extendInfo);
         }
         let configHash = hashString(configString);
-
-
 
         let electronPackagePath = path.join(this.projectDir,"node_modules/electron/package.json");
         const electronPackageConfig = JSON.parse(fs.readFileSync(electronPackagePath, 'utf8')) 

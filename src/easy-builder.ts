@@ -1,13 +1,18 @@
 import { requireDynamically } from "base/dynamicImport";
+import { AppPath, BuildConfig } from "configs/common";
 import fs from "fs";
 import { extractElectronBuilderConfig, extractNotarizeConfig, generateDmgLicenseConfig } from "helpers/configHelper";
+import { buildCustomRoute } from "next/dist/build";
+import { setupDevBundler } from "next/dist/server/lib/router-utils/setup-dev-bundler";
 import path from "path";
 import {  runTask, runTasks } from "tasks/common";
 import { AddBuildInfoMacTask } from "tasks/mac/addBuildInfoTask";
 import { BuildMacTask } from "tasks/mac/buildTask";
+import { ClearMacTask } from "tasks/mac/clearMacTask";
 import { NotarizeMacTask } from "tasks/mac/notarizeTask";
 import { PackDmgTask } from "tasks/mac/packDmgTask";
 import { PackMacUpdateTask } from "tasks/mac/packUpdateTask";
+import { SetUpdateConfigMacTask } from "tasks/mac/setUpdateConfigTask";
 import { BuildWinTask } from "tasks/win/buildTask";
 import YAML from 'yaml';
 
@@ -51,8 +56,7 @@ const electronBuilderConfig = extractElectronBuilderConfig(builderConfig);
 // const notarizeMacTask = new NotarizeMacTask();
 // notarizeMacTask.init(electronBuilderConfig,notarizeConfig,"/Users/apple/Documents/FacnyGit/editor-electron-template");
 
-// const packDmgTask = new PackDmgTask();
-// packDmgTask.init(builderConfig,packageConfig,projectDir);
+
 // runTask(packDmgTask).then(outputs=>{
 //     console.log(outputs);
 // });
@@ -62,6 +66,38 @@ const electronBuilderConfig = extractElectronBuilderConfig(builderConfig);
 // runTask(packMacUpdateTask).then(outputs=>{
 //         console.log(outputs);
 // });
+
+
+async function pack():Promise<void>{
+    const clearMacTask = new ClearMacTask();
+    clearMacTask.init(builderConfig,packageConfig,projectDir,true);
+    await runTask(clearMacTask);
+
+    const buildMacTask = new BuildMacTask();
+    buildMacTask.init(electronBuilderConfig,projectDir);
+    await runTask(buildMacTask);
+
+    let addBuildInfoMacTask = new AddBuildInfoMacTask();
+    addBuildInfoMacTask.init(builderConfig,projectDir);
+    let config = (await runTask(addBuildInfoMacTask)) as BuildConfig
+
+    const packDmgTask = new PackDmgTask();
+    packDmgTask.init(builderConfig,packageConfig,projectDir);
+    let dmgOutputs = (await runTask(packDmgTask)) as AppPath[];
+    const packMacUpdateTask = new PackMacUpdateTask();
+    packMacUpdateTask.init(builderConfig,packageConfig,projectDir);
+    let updateOutputs = (await runTask(packMacUpdateTask)) as AppPath[];
+
+    let setUpdateConfigTask = new SetUpdateConfigMacTask();
+    setUpdateConfigTask.init(builderConfig,packageConfig,projectDir,dmgOutputs.concat(updateOutputs),config);
+    runTask(setUpdateConfigTask);
+
+    const clearMacAllTask = new ClearMacTask();
+    clearMacAllTask.init(builderConfig,packageConfig,projectDir,false);
+    await runTask(clearMacAllTask);
+}
+
+pack();
 
 
 // generateDmgLicenseConfig(builderConfig,projectDir);
