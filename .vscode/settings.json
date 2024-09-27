@@ -3,6 +3,9 @@
         "appdmg",
         "asar",
         "basepath",
+        "fseventsd",
+        "icns",
+        "Initer",
         "notarizer",
         "notarytool"
     ]

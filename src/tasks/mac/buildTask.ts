@@ -17,7 +17,7 @@ export class BuildMacTask extends TaskBase implements ITask{
         this.projectDir = projectDir;
     }
 
-    public async run(): Promise<boolean> {
+    public async run(): Promise<void> {
         const { build } = requireDynamically("electron-builder")
         await build({
             config:this.electronBuilderConfig,
@@ -26,6 +26,5 @@ export class BuildMacTask extends TaskBase implements ITask{
             mac:[],
             projectDir:this.projectDir
         })
-        return true;
     }
 } 

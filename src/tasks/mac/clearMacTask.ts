@@ -1,8 +1,6 @@
-import { ITask, TaskBase } from "tasks/common";
-import { Configuration } from "electron-builder"
-import { requireDynamically } from "base/dynamicImport";
+import fs from "fs-extra";
 import path from "path";
-import fs from "fs-extra"
+import { ITask, TaskBase } from "tasks/common";
 /**
  * 清理mac构建任务
  */

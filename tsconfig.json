@@ -1,6 +1,7 @@
 {
 	"include": [
 	  "./src/**/*",
+	  "./lib/declarations.d.ts"
 	],
 	"compilerOptions": {
 	  "esModuleInterop": true,

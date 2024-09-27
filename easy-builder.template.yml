@@ -27,8 +27,8 @@ fileAssociations:
     icon: path/to/icon.ico
 
 mac:
-  category: public.app-category.developer-tools
   icon: build/darwin/app.icns
+  category: public.app-category.developer-tools
   extendInfo: 
     NSCameraUsageDescription: "We need access to your camera."  # 默认权限描述
     NSMicrophoneUsageDescription: "We need access to your microphone."  # 默认权限描述

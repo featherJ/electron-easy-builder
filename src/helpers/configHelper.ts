@@ -6,63 +6,63 @@ import YAML from 'yaml';
 
 /**
  * 提取electron-builder使用的yml配置
- * @param sourceConfig 
+ * @param builderConfig 
  * @returns 
  */
-export function extractElectronBuilderConfig(sourceConfig: any): Configuration {
+export function extractElectronBuilderConfig(builderConfig: any): Configuration {
     let config: any = {};
     //base info
-    config.appId = sourceConfig.appId; //必须
-    config.productName = sourceConfig.productName; //必须
-    config.copyright = sourceConfig.copyright;
+    config.appId = builderConfig.appId; //必须
+    config.productName = builderConfig.productName; //必须
+    config.copyright = builderConfig.copyright;
 
     //asar info
-    config.asar = sourceConfig.asar;
-    config.asarUnpack = sourceConfig.asarUnpack;
+    config.asar = builderConfig.asar;
+    config.asarUnpack = builderConfig.asarUnpack;
 
     //build info
-    config.buildDependenciesFromSource = sourceConfig.buildDependenciesFromSource;
-    config.nodeGypRebuild = sourceConfig.nodeGypRebuild;
-    config.npmRebuild = sourceConfig.npmRebuild;
+    config.buildDependenciesFromSource = builderConfig.buildDependenciesFromSource;
+    config.nodeGypRebuild = builderConfig.nodeGypRebuild;
+    config.npmRebuild = builderConfig.npmRebuild;
 
     //files info
-    config.files = sourceConfig.files; //必须
-    config.directories = { output: sourceConfig.output } //必须
+    config.files = builderConfig.files; //必须
+    config.directories = { output: builderConfig.output } //必须
 
     //file associations
-    if (sourceConfig.fileAssociations) {
-        config.fileAssociations = (sourceConfig.fileAssociations as any[]).concat();
+    if (builderConfig.fileAssociations) {
+        config.fileAssociations = (builderConfig.fileAssociations as any[]).concat();
     }
 
     //mac config
-    if (sourceConfig.mac) {
+    if (builderConfig.mac) {
         config.mac = {
-            category: sourceConfig.mac.category,
-            icon: sourceConfig.mac.icon,
+            category: builderConfig.mac.category,
+            icon: builderConfig.mac.icon,
             type: "distribution",
             target: ["dir"],
-            extendInfo: sourceConfig.mac.extendInfo,
-            extraResources: sourceConfig.mac.extraResources,
+            extendInfo: builderConfig.mac.extendInfo,
+            extraResources: builderConfig.mac.extraResources,
         }
-        if (sourceConfig.mac.sign) {
-            config.mac.identity = sourceConfig.mac.sign.identity;
-            config.mac.entitlements = sourceConfig.mac.sign.entitlements;
-            config.mac.entitlementsInherit = sourceConfig.mac.sign.entitlements;
+        if (builderConfig.mac.sign) {
+            config.mac.identity = builderConfig.mac.sign.identity;
+            config.mac.entitlements = builderConfig.mac.sign.entitlements;
+            config.mac.entitlementsInherit = builderConfig.mac.sign.entitlements;
         }
     }
 
     //win config
-    if (sourceConfig.win) {
+    if (builderConfig.win) {
         config.win = {
-            icon: sourceConfig.win.appIcon,
+            icon: builderConfig.win.appIcon,
             target: ["dir"]
         }
-        if (sourceConfig.win.sign) {
-            config.win.certificateFile = sourceConfig.win.sign.certificateFile;
-            config.win.certificatePassword = sourceConfig.win.sign.certificatePassword;
-            config.win.timeStampServer = sourceConfig.win.sign.timeStampServer;
-            config.win.rfc3161TimeStampServer = sourceConfig.win.sign.rfc3161TimeStampServer;
-            config.win.signingHashAlgorithms = sourceConfig.win.sign.signingHashAlgorithms;
+        if (builderConfig.win.sign) {
+            config.win.certificateFile = builderConfig.win.sign.certificateFile;
+            config.win.certificatePassword = builderConfig.win.sign.certificatePassword;
+            config.win.timeStampServer = builderConfig.win.sign.timeStampServer;
+            config.win.rfc3161TimeStampServer = builderConfig.win.sign.rfc3161TimeStampServer;
+            config.win.signingHashAlgorithms = builderConfig.win.sign.signingHashAlgorithms;
         }
     }
 
@@ -71,15 +71,15 @@ export function extractElectronBuilderConfig(sourceConfig: any): Configuration {
 
 /**
  * 提取公证用的配置
- * @param sourceConfig 
+ * @param builderConfig 
  */
-export function extractNotarizeConfig(sourceConfig: any): NotarizeConfig {
-    if (sourceConfig.mac?.notarize) {
+export function extractNotarizeConfig(builderConfig: any): NotarizeConfig {
+    if (builderConfig.mac?.notarize) {
         let config: NotarizeConfig = {
-            appleId: sourceConfig.mac.notarize.appleId,
-            appleIdPassword: sourceConfig.mac.notarize.appleIdPassword,
-            teamId: sourceConfig.mac.notarize.teamId,
-            notarytoolPath: sourceConfig.mac.notarize.notarytoolPath,
+            appleId: builderConfig.mac.notarize.appleId,
+            appleIdPassword: builderConfig.mac.notarize.appleIdPassword,
+            teamId: builderConfig.mac.notarize.teamId,
+            notarytoolPath: builderConfig.mac.notarize.notarytoolPath,
         };
         return config;
     }
@@ -87,22 +87,22 @@ export function extractNotarizeConfig(sourceConfig: any): NotarizeConfig {
 }
 /**
  * 提取打包dmg的配置
- * @param sourceConfig 
+ * @param builderConfig 
  * @returns 
  */
-export function generatePackDmgConfig(sourceConfig: any, packageConfig: any, projectDir: string, appPath: AppPath): AppDmgConfig {
-    if (sourceConfig.mac?.pack) {
-        let windowWidth = sourceConfig.mac.pack.window.width;
-        let windowHeight = sourceConfig.mac.pack.window.height;
-        let iconSize = sourceConfig.mac.pack.iconSize;
+export function generatePackDmgConfig(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath): AppDmgConfig {
+    if (builderConfig.mac?.pack) {
+        let windowWidth = builderConfig.mac.pack.window.width;
+        let windowHeight = builderConfig.mac.pack.window.height;
+        let iconSize = builderConfig.mac.pack.iconSize;
         let config: AppDmgConfig = {
             basepath: projectDir,
-            target: path.join(projectDir, sourceConfig.output, `${sourceConfig.productName}-${packageConfig.version}-${appPath.arch == "x64" ? "intel" : "apple-silicon"}.dmg`),
+            target: path.join(projectDir, builderConfig.output, `${builderConfig.productName}-${packageConfig.version}-${appPath.arch == "x64" ? "intel" : "apple-silicon"}.dmg`),
             specification: {
-                title: sourceConfig.mac.pack.title ? sourceConfig.mac.pack.title : `${sourceConfig.productName} ${packageConfig.version}`,
-                icon: sourceConfig.mac.pack.icon ? sourceConfig.mac.pack.icon : sourceConfig.mac.icon,
+                title: builderConfig.mac.pack.title ? builderConfig.mac.pack.title : `${builderConfig.productName} ${packageConfig.version}`,
+                icon: builderConfig.mac.pack.icon ? builderConfig.mac.pack.icon : builderConfig.mac.icon,
                 "icon-size": iconSize,
-                background: sourceConfig.mac.pack.background,
+                background: builderConfig.mac.pack.background,
                 window: {
                     size: {
                         width: windowWidth,
@@ -110,8 +110,8 @@ export function generatePackDmgConfig(sourceConfig: any, packageConfig: any, pro
                     }
                 },
                 contents: [
-                    { x: sourceConfig.mac.pack.contents.from.x, y: sourceConfig.mac.pack.contents.from.y, type: "file", path: appPath.path },
-                    { x: sourceConfig.mac.pack.contents.to.x, y: sourceConfig.mac.pack.contents.to.y, type: "link", path: "/Applications" },
+                    { x: builderConfig.mac.pack.contents.from.x, y: builderConfig.mac.pack.contents.from.y, type: "file", path: appPath.path },
+                    { x: builderConfig.mac.pack.contents.to.x, y: builderConfig.mac.pack.contents.to.y, type: "link", path: "/Applications" },
                     { x: 2760, y: 170, type: "position", path: ".VolumeIcon.icns" },
                     { x: 2610, y: 170, type: "position", path: ".DS_Store" },
                     { x: 2560, y: 170, type: "position", path: ".background" },
@@ -125,16 +125,14 @@ export function generatePackDmgConfig(sourceConfig: any, packageConfig: any, pro
     return null;
 }
 
-
 /**
  * 生成dmg打包的license配置
- * @param sourceConfig 
+ * @param builderConfig 
  * @returns 
  */
-export function generateDmgLicenseConfig(sourceConfig: any, projectDir: string): any {
-    if (sourceConfig.mac?.pack?.license) {
-        let licensePath = path.join(projectDir, sourceConfig.mac.pack.license);
-        console.log(licensePath);
+export function generateDmgLicenseConfig(builderConfig: any, projectDir: string): any {
+    if (builderConfig.mac?.pack?.license) {
+        let licensePath = path.join(projectDir, builderConfig.mac.pack.license);
         if (!fs.existsSync(licensePath)) {
             throw `Folder ${licensePath} does not exist`
         } else if (!fs.statSync(licensePath).isDirectory) {

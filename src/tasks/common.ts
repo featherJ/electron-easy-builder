@@ -39,31 +39,9 @@ export abstract class TaskBase {
  * @param task
  * @returns 是否运行成功，true为成功，false为失败
  */
-export async function runTask(task: ITask): Promise<any> {
+export async function runTask<T extends ITask>(task: T): Promise<Awaited<ReturnType<T['run']>>> {
     info(`${chalk.blue(task.name)} starting...`)
-    try {
-        let result = await task.run();
-        info(`${chalk.blue(task.name)} completed.`)
-        return result;
-    } catch (e) {
-        error(e)
-    }
-    return false;
+    let result = await task.run();
+    info(`${chalk.blue(task.name)} completed.`)
+    return result;
 }
-
-/**
- * 运行一组任务，如果中间有任务失败则中断所有任务
- * @param tasks 
- * @returns 
- */
-export async function runTasks(tasks: ITask[]): Promise<boolean> {
-    for (var i = 0; i < tasks.length; i++) {
-        let curTask = tasks[i];
-        let result = await runTask(curTask);
-        if (!result) {
-            return false;
-        }
-    }
-    return true;
-}
-

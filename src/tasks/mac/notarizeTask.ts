@@ -30,7 +30,7 @@ export class NotarizeMacTask extends TaskBase implements ITask {
         this.notarizeConfig = notarizeConfig;
     }
 
-    public async run(): Promise<boolean> {
+    public async run(): Promise<void> {
         let apps = getAppPaths(this.electronBuilderConfig, this.projectDir);
         for (var i = 0; i < apps.length; i++) {
             let appPath = apps[i];
@@ -43,6 +43,5 @@ export class NotarizeMacTask extends TaskBase implements ITask {
                 notarytoolPath: this.notarizeConfig.notarytoolPath
             });
         }
-        return true;
     }
 } 

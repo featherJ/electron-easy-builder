@@ -1,7 +1,6 @@
-import { ITask, TaskBase } from "tasks/common";
-import { Configuration } from "electron-builder"
 import { requireDynamically } from "base/dynamicImport";
-// import { build } from "electron-builder"
+import { Configuration } from "electron-builder";
+import { ITask, TaskBase } from "tasks/common";
 
 /**
  * win 应用构建任务

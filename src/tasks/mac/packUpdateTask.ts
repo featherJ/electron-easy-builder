@@ -1,12 +1,11 @@
-import { requireDynamically } from "base/dynamicImport";
-import chalk from 'chalk';
-import { AppDmgConfig, AppPath, MacArch, ArchAll } from "configs/common";
-import { generateDmgLicenseConfig, generatePackDmgConfig, getAppPaths } from "helpers/configHelper";
-import { ITask, TaskBase } from "tasks/common";
-import { error, info } from "utils/log";
-import * as fs from 'fs-extra';
-import * as path from 'path';
 import archiver from "archiver";
+import chalk from 'chalk';
+import { AppPath, ArchAll } from "configs/common";
+import * as fs from 'fs-extra';
+import { getAppPaths } from "helpers/configHelper";
+import * as path from 'path';
+import { ITask, TaskBase } from "tasks/common";
+import { info } from "utils/log";
 
 /**
  * 打包mac更新包的任务

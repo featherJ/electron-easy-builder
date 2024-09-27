@@ -33,6 +33,10 @@ module.exports = {
 			{
 				test: /\.ts(x?)$/,
 				use: ['ts-loader'],
+			},
+			{
+				test: /\.ya?ml$/,
+				use: 'raw-loader' // 使用 raw-loader 来获取文件内容作为字符串
 			}
 		]
 	},
