@@ -3,6 +3,8 @@ import { Configuration } from "electron-builder";
 import path from "path";
 import fs from "fs";
 import YAML from 'yaml';
+import setupIss from '../../lib/setup.iss';
+import { tmpdir } from "os";
 
 /**
  * 提取electron-builder使用的yml配置
@@ -55,6 +57,7 @@ export function extractElectronBuilderConfig(builderConfig: any): Configuration 
     if (builderConfig.win) {
         config.win = {
             icon: builderConfig.win.appIcon,
+            extraResources: builderConfig.win.extraResources,
             target: ["dir"]
         }
         if (builderConfig.win.sign) {
@@ -64,6 +67,7 @@ export function extractElectronBuilderConfig(builderConfig: any): Configuration 
             config.win.rfc3161TimeStampServer = builderConfig.win.sign.rfc3161TimeStampServer;
             config.win.signingHashAlgorithms = builderConfig.win.sign.signingHashAlgorithms;
         }
+
     }
 
     return config;
@@ -230,11 +234,11 @@ message: "Here is my own message"
 
 
 /**
- * 得到两个输出的app的路径
+ * 得到mac两个输出的app的路径
  * @param config 原始配置或打包配置都可以 
  * @param projectDir 
  */
-export function getAppPaths(config: any, projectDir: string): AppPath[] {
+export function getMacAppPaths(config: any, projectDir: string): AppPath[] {
     let output = config.output ? config.output : config.directories.output;
     let pathX64 = path.join(projectDir, output, "mac", config.productName + ".app")
     let pathArm64 = path.join(projectDir, output, "mac-arm64", config.productName + ".app")
@@ -252,4 +256,76 @@ export function getAppPaths(config: any, projectDir: string): AppPath[] {
         });
     }
     return apps;
+}
+
+/**
+ * 得到win两个输出的app的路径
+ * @param config 原始配置或打包配置都可以 
+ * @param projectDir 
+ */
+export function getWinAppPaths(config: any, projectDir: string): AppPath[] {
+    let output = config.output ? config.output : config.directories.output;
+    let pathX64 = path.join(projectDir, output, "win-unpacked")
+    let pathX86 = path.join(projectDir, output, "win-ia32-unpacked")
+    let apps: AppPath[] = [];
+    if (fs.existsSync(pathX64)) {
+        apps.push({
+            path: pathX64,
+            arch: "x64"
+        });
+    }
+    if (fs.existsSync(pathX86)) {
+        apps.push({
+            path: pathX86,
+            arch: "x86"
+        });
+    }
+    return apps;
+}
+
+
+export function generateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath:AppPath): string {
+    if(builderConfig.win?.pack){
+        let config = "";
+        config += `#define AppId "${builderConfig.appId}"\n`;
+        config += `#define AppName "${builderConfig.productName}"\n`;
+        let nameVersion = builderConfig.win?.pack?.verName ? builderConfig.win?.pack?.verName : builderConfig.productName;
+        config += `#define NameVersion "${nameVersion}"\n`;
+        let publisher = builderConfig.win?.pack?.publisherName ? builderConfig.win?.pack?.publisherName : "";
+        config += `#define Publisher "${publisher}"\n`;
+        let publisherURL = builderConfig.win?.pack?.publisherName && builderConfig.win?.pack?.appUrl ? builderConfig.win?.pack?.appUrl : "";
+        config += `#define PublisherURL "${publisherURL}"\n`;
+        let supportURL = builderConfig.win?.pack?.appUrl ? builderConfig.win?.pack?.appUrl : "";
+        config += `#define SupportURL "${supportURL}"\n`;
+        let updatesURL = builderConfig.win?.pack?.appUrl ? builderConfig.win?.pack?.appUrl : "";
+        config += `#define UpdatesURL "${updatesURL}"\n`;
+        config += `#define OutputDir "${path.join(projectDir, builderConfig.output)}"\n`;
+        let outputBasename = `${builderConfig.productName}-${packageConfig.version}-${appPath.arch == "x64" ? "x64" : "x86"}`
+        config += `#define OutputBasename "${outputBasename}"\n`;
+        let wizardImageFile = builderConfig.win?.pack?.wizardImageFile ? path.join(projectDir, builderConfig.win?.pack?.wizardImageFile) : "";
+        config += `#define WizardImageFile "${wizardImageFile}"\n`;
+        let wizardSmallImageFile = builderConfig.win?.pack?.wizardSmallImageFile ? path.join(projectDir, builderConfig.win?.pack?.wizardSmallImageFile) : "";
+        config += `#define WizardSmallImageFile "${wizardSmallImageFile}"\n`;
+        let setupIcon = builderConfig.win?.pack?.setupIcon ? path.join(projectDir, builderConfig.win?.pack?.setupIcon) : "";
+        config += `#define WizardSmallImageFile "${setupIcon}"\n`;
+        config += `#define ExeBasename "${builderConfig.productName + ".exe"}"\n`;
+        config += `#define HasAssociations ${builderConfig.fileAssociations ? "yes" : "no"}\n`;
+        config += `#define SourceDir "${appPath.path}"\n`;
+        config += `#define Version "${packageConfig.version}"\n`;
+        config += `#define ArchitecturesAllowed "${appPath.arch}"\n`;
+        config += `#define DirName "${builderConfig.productName}"\n`;
+        config += "\n";
+    
+        let baseConfig: string = setupIss;
+        config += baseConfig;
+    
+    
+        let output = path.join(tmpdir(), "setup.iss");
+        // const gbkBuffer = iconv.encode(config, 'gbk');
+        // fs.writeFileSync(output,gbkBuffer);
+        fs.writeFileSync(output, config, { encoding: 'utf8' });
+    
+        return output;
+    }
+    return null;
 }

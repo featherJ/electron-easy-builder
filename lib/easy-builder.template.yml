@@ -65,6 +65,11 @@ mac:
 
 win:
   appIcon: build/win/app.ico
+  extraResources:
+    - from: build/darwin/en.lproj
+      to: en.lproj
+    - from: build/darwin/zh_CN.lproj
+      to: zh_CN.lproj
   sign:
     certificateFile: path/certificateFile.pfx
     certificatePassword: my-password
@@ -74,9 +79,9 @@ win:
       - sha1
       - sha256
   pack:
+    verName: Editor Electron Template
     setupIcon: build/win/app.ico
     appUrl: http://my-website.com
-    appId: 00000000-0000-0000-0000-000000000000
     publisherName: My Company Inc
     licenseFile:
       - language: chinese

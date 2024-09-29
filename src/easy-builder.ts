@@ -1,37 +1,20 @@
 #!/usr/bin/env node
 import { program } from "commander";
 import { promptToContinue } from "utils/program";
-import fs from "fs";
-import path from "path";
-import chalk from "chalk";
-
-import curPackage from "../package.json";
-import templateContent from '../easy-builder.template.yml';
 import { Initer } from "pack/initer";
 import { error } from "utils/log";
 import { MacPacker } from "pack/macPacker";
+import { WinPacker } from "pack/winPacker";
+import chalk from "chalk";
+import fs from "fs";
+import path from "path";
 
+import curPackage from "../package.json";
+//todo 改成动态读取
+import templateContent from '../lib/easy-builder.template.yml';
+// import { libDir } from "utils/path";
 
-// let projectDir = "/Users/apple/Documents/FacnyGit/editor-electron-template";
-
-
-// const initer = new Initer(projectDir);
-// let valid = initer.init();
-
-// async function packMac(initer: Initer): Promise<void> {
-//     let macPacker = new MacPacker(initer);
-//     try {
-//         await macPacker.pack();
-//     } catch (e) {
-//         error(e);
-//     }
-// }
-
-
-
-// if (valid) {
-//     packMac(initer);
-// }
+// console.log(libDir());
 
 
 program
@@ -104,10 +87,25 @@ program.command('build')
         }
     }
     if(win){
-        //TODO
+        if(!initer.builderConfig.win){
+            error(`The file 'easy-builder.yml' does not contain 'win' configuration. Please add it and try again.`);
+            return;
+        }
+        let winPacker = new WinPacker(initer);
+        try {
+            await winPacker.pack();
+        } catch (e) {
+            error(e);
+            return;
+        }
     }
 
 });
 
 
 program.parse(process.argv);
+
+// const initer = new Initer("/Users/apple/Documents/FacnyGit/editor-electron-template/");
+// let valid = initer.init();
+// let winPacker = new WinPacker(initer);
+// winPacker.pack();

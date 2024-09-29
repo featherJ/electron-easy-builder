@@ -17,21 +17,21 @@ export class MacPacker {
 
     public async pack(): Promise<void> {
         //先清理输出目录
-        const clearMacTask = new ClearMacTask();
-        clearMacTask.init(this.initer.builderConfig, this.initer.packageConfig, this.initer.projectDir, true);
-        await runTask(clearMacTask);
+        const clearTask = new ClearMacTask();
+        clearTask.init(this.initer.builderConfig, this.initer.packageConfig, this.initer.projectDir, true);
+        await runTask(clearTask);
 
         const electronBuilderConfig = extractElectronBuilderConfig(this.initer.builderConfig);
 
         //打包mac的app
-        const buildMacTask = new BuildMacTask();
-        buildMacTask.init(electronBuilderConfig, this.initer.projectDir);
-        await runTask(buildMacTask);
+        const buildTask = new BuildMacTask();
+        buildTask.init(electronBuilderConfig, this.initer.projectDir);
+        await runTask(buildTask);
 
         //添加构建信息
-        const addBuildInfoMacTask = new AddBuildInfoMacTask();
-        addBuildInfoMacTask.init(this.initer.builderConfig, this.initer.projectDir);
-        const buildConfig = await runTask(addBuildInfoMacTask);
+        const addBuildInfoTask = new AddBuildInfoMacTask();
+        addBuildInfoTask.init(this.initer.builderConfig, this.initer.projectDir);
+        const buildConfig = await runTask(addBuildInfoTask);
 
         //公正与装订
         let notarizeConfig = extractNotarizeConfig(this.initer.builderConfig);

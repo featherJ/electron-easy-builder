@@ -2,7 +2,7 @@ import { notarize } from '@electron/notarize';
 import chalk from 'chalk';
 import { NotarizeConfig } from "configs/common";
 import { Configuration } from "electron-builder";
-import { getAppPaths } from "helpers/configHelper";
+import { getMacAppPaths } from "helpers/configHelper";
 import { ITask, TaskBase } from "tasks/common";
 import { info } from "utils/log";
 
@@ -31,7 +31,7 @@ export class NotarizeMacTask extends TaskBase implements ITask {
     }
 
     public async run(): Promise<void> {
-        let apps = getAppPaths(this.electronBuilderConfig, this.projectDir);
+        let apps = getMacAppPaths(this.electronBuilderConfig, this.projectDir);
         for (var i = 0; i < apps.length; i++) {
             let appPath = apps[i];
             info(`notarizing ${chalk.blue("file")}=${appPath.path}`)

@@ -1,7 +1,7 @@
 import { requireDynamically } from "base/dynamicImport";
 import chalk from 'chalk';
 import { AppDmgConfig, AppPath } from "configs/common";
-import { generateDmgLicenseConfig, generatePackDmgConfig, getAppPaths } from "helpers/configHelper";
+import { generateDmgLicenseConfig, generatePackDmgConfig, getMacAppPaths } from "helpers/configHelper";
 import { ITask, TaskBase } from "tasks/common";
 import { error, info } from "utils/log";
 
@@ -30,7 +30,7 @@ export class PackDmgTask extends TaskBase implements ITask {
     }
 
     public async run(): Promise<AppPath[]> {
-        let apps = getAppPaths(this.sourceConfig, this.projectDir);
+        let apps = getMacAppPaths(this.sourceConfig, this.projectDir);
         let dmgLicenseConfig = generateDmgLicenseConfig(this.sourceConfig, this.projectDir);
         let outputs: AppPath[] = [];
         for (let i = 0; i < apps.length; i++) {

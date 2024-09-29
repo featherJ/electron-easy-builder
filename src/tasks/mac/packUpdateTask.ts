@@ -2,7 +2,7 @@ import archiver from "archiver";
 import chalk from 'chalk';
 import { AppPath, ArchAll } from "configs/common";
 import * as fs from 'fs-extra';
-import { getAppPaths } from "helpers/configHelper";
+import { getMacAppPaths } from "helpers/configHelper";
 import * as path from 'path';
 import { ITask, TaskBase } from "tasks/common";
 import { info } from "utils/log";
@@ -32,7 +32,7 @@ export class PackMacUpdateTask extends TaskBase implements ITask {
     }
 
     public async run(): Promise<AppPath[]> {
-        let apps = getAppPaths(this.sourceConfig, this.projectDir);
+        let apps = getMacAppPaths(this.sourceConfig, this.projectDir);
         let outputDir = path.join(this.projectDir, this.sourceConfig.output);
         let outputs: AppPath[] = [];
         for (var i = 0; i < apps.length; i++) {

@@ -44,7 +44,7 @@ module.exports = {
                 use: ['ts-loader'],
             },
             {
-				test: /\.ya?ml$/,
+				test: /\.(ya?ml|iss)$/,
 				use: 'raw-loader' // 使用 raw-loader 来获取文件内容作为字符串
 			}
         ]
