@@ -105,7 +105,7 @@ program.command('build')
 
 program.parse(process.argv);
 
-// const initer = new Initer("/Users/apple/Documents/FacnyGit/editor-electron-template/");
+// const initer = new Initer("C:\\Users\\Agua.L\\Documents\\project\\editor-electron-template");
 // let valid = initer.init();
 // let winPacker = new WinPacker(initer);
 // winPacker.pack();

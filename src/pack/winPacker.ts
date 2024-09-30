@@ -27,14 +27,14 @@ export class WinPacker {
         const electronBuilderConfig = extractElectronBuilderConfig(this.initer.builderConfig);
 
         //打包win的app
-        // const buildTask = new BuildWinTask();
-        // buildTask.init(electronBuilderConfig, this.initer.projectDir);
-        // await runTask(buildTask);
+        const buildTask = new BuildWinTask();
+        buildTask.init(electronBuilderConfig, this.initer.projectDir);
+        await runTask(buildTask);
 
         //添加构建信息
-        // const addBuildInfoTask = new AddBuildInfoWinTask();
-        // addBuildInfoTask.init(this.initer.builderConfig, this.initer.projectDir);
-        // const buildConfig = await runTask(addBuildInfoTask);
+        const addBuildInfoTask = new AddBuildInfoWinTask();
+        addBuildInfoTask.init(this.initer.builderConfig, this.initer.projectDir);
+        const buildConfig = await runTask(addBuildInfoTask);
 
 
 
