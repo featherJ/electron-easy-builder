@@ -40,9 +40,9 @@ export class PackExeTask extends TaskBase implements ITask {
             console.log(issFilename);
             if (issFilename) {
                 info(`packaging ${chalk.blue("file")}=${appPath.path}`)
-                let output = await this.pack(issFilename);
+                await this.pack(issFilename);
                 outputs.push({
-                    path: output,
+                    path: "",
                     arch: appPath.arch
                 })
             }
@@ -50,17 +50,11 @@ export class PackExeTask extends TaskBase implements ITask {
         return outputs;
     }
 
-    private pack(issFilename: string): Promise<string> {
-        // const innoSetupPath = path.join(path.dirname(path.dirname(require.resolve('innosetup'))), 'bin', 'ISCC.exe');
-        const innoSetupPath = path.join(nodeModulesDir(),'innosetup', 'bin', 'ISCC.exe');
+    private pack(issFilename: string): Promise<void> {
+        const innoSetupPath = `"${path.join(nodeModulesDir(),'innosetup', 'bin', 'ISCC.exe')}"`
         const args = [
-            // "WINEARCH=win32 WINEPREFIX=~/.wine32",
-            // "wine",
-            innoSetupPath,
             issFilename
         ];
-        return new Promise((resolve, reject) => {
-            runCommand(args);
-        });
+        return runCommand(innoSetupPath,args);
     }
 } 

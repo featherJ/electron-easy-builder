@@ -29,13 +29,15 @@ export function warn(data:string):void{
  * @param data 
  */
 export function error(data:any):void{
-    let output = "";
-    if(typeof data === 'string' ){
-        output = data
-    }else if(typeof data === "object" && "message" in data){
-        output = data.message;
-    }else {
-        output = data;
+    if(data){
+        let output = "";
+        if(typeof data === 'string' ){
+            output = data
+        }else if(typeof data === "object" && "message" in data){
+            output = data.message;
+        }else {
+            output = data;
+        }
+        console.log(chalk.red(`  ⨯ ${output}`))
     }
-    console.log(chalk.red(`  ⨯ ${output}`))
 }
