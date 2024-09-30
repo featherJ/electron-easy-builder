@@ -65,10 +65,10 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; {if Defined(AppUserId) and AppUserId <> ""} AppUserModelID: "{#AppUserId}"; {endif}
 Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: desktopicon; {if Defined(AppUserId) and AppUserId <> ""} AppUserModelID: "{#AppUserId}"; {endif}
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#NameLong}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: quicklaunchicon; {if Defined(AppUserId) and AppUserId <> ""} AppUserModelID: "{#AppUserId}"; {endif}
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: quicklaunchicon; {if Defined(AppUserId) and AppUserId <> ""} AppUserModelID: "{#AppUserId}"; {endif}
 
 [Run]
-Filename: "{app}\{#ExeBasename}"; Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; Flags: nowait postinstall
+Filename: "{app}\{#ExeBasename}"; Description: "{cm:LaunchProgram,{#AppName}}"; Flags: nowait postinstall
 
 [Files]
 Source: "*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
