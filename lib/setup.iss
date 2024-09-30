@@ -18,8 +18,9 @@ AppName={#AppName}
 #endif
 OutputDir={#OutputDir}
 OutputBaseFilename={#OutputBasename}
-Compression=lzma2/ultra64
-SolidCompression=yes
+; Compression=lzma2/ultra64
+Compression=none
+; SolidCompression=yes
 #if "" != WizardImageFile
   WizardImageFile={#WizardImageFile}
 #endif
@@ -100,8 +101,9 @@ end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
-  if CurStep = ssPreInstall then
+  if CurStep = ssInstall  then
   begin
+    MsgBox('测试，在ssInstall中。程序名：{#ExeBasename}', mbConfirmation, MB_OKCANCEL);
     if IsBackgroundUpdate() then
     begin
       // 直接调用等待应用程序退出的过程
@@ -130,4 +132,10 @@ begin
       end;
     end;
   end;
+end;
+
+function InitializeSetup():Boolean;
+begin
+ MsgBox('测试，初始化中。程序名：{#ExeBasename}', mbConfirmation, MB_OKCANCEL);
+ Result := True
 end;

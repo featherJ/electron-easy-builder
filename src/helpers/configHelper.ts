@@ -5,6 +5,7 @@ import fs from "fs";
 import YAML from 'yaml';
 import setupIss from '../../lib/setup.iss';
 import { tmpdir } from "os";
+import iconv from "iconv-lite";
 
 /**
  * 提取electron-builder使用的yml配置
@@ -323,9 +324,9 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
     
     
         let output = path.join(tmpdir(), "setup.iss");
-        // const gbkBuffer = iconv.encode(config, 'gbk');
-        // fs.writeFileSync(output,gbkBuffer);
-        fs.writeFileSync(output, config, { encoding: 'utf8' });
+        const gbkBuffer = iconv.encode(config, 'gbk');
+        fs.writeFileSync(output,gbkBuffer);
+        // fs.writeFileSync(output, config, { encoding: 'utf8' });
     
         return output;
     }
