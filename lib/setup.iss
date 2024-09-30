@@ -63,9 +63,15 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 
 [Icons]
-Name: "{group}\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; {if Defined(AppUserId) and AppUserId <> ""} AppUserModelID: "{#AppUserId}"; {endif}
-Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: desktopicon; {if Defined(AppUserId) and AppUserId <> ""} AppUserModelID: "{#AppUserId}"; {endif}
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: quicklaunchicon; {if Defined(AppUserId) and AppUserId <> ""} AppUserModelID: "{#AppUserId}"; {endif}
+#if "" == AppUserId
+  Name: "{group}\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"
+  Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: desktopicon
+  Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: quicklaunchicon
+#else
+  Name: "{group}\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; AppUserModelID: "{#AppUserId}"
+  Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: desktopicon; AppUserModelID: "{#AppUserId}"
+  Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: quicklaunchicon; AppUserModelID: "{#AppUserId}"
+#endif
 
 [Run]
 Filename: "{app}\{#ExeBasename}"; Description: "{cm:LaunchProgram,{#AppName}}"; Flags: nowait postinstall
@@ -109,7 +115,6 @@ procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssInstall  then
   begin
-    MsgBox('测试，在ssInstall中。程序名：{#ExeBasename}', mbConfirmation, MB_OKCANCEL);
     if IsBackgroundUpdate() then
     begin
       // 直接调用等待应用程序退出的过程
