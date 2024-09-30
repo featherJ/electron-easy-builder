@@ -1,6 +1,5 @@
 import { exec } from 'child_process';
 import { platform } from 'os';
-import path from 'path';
 
 // 检查是否拥有管理员权限
 function isElevated() {
