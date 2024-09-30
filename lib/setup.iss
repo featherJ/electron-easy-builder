@@ -68,6 +68,7 @@ Filename: "{app}\{#ExeBasename}"; Description: "{cm:LaunchProgram,{#StringChange
 [Files]
 Source: "*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
+
 [Code]
 function IsBackgroundUpdate(): Boolean;
 begin
@@ -118,10 +119,9 @@ begin
     begin
       while IsAppRunning('{#ExeBasename}') do
       begin
-        if MsgBox(Format(ExpandConstant('{cm:SetupAppRunningError}'), ['YourApplication.exe']), mbError, MB_OKCANCEL) = IDOK then
+        if MsgBox(FmtMessage(SetupMessage(msgSetupAppRunningError), ['{#ExeBasename}']), mbError, MB_OKCANCEL) = IDOK then
         begin
           // 用户选择“确定”，再次检测
-          Log('用户点击确定，检查程序状态...');
         end
         else
         begin
@@ -132,10 +132,4 @@ begin
       end;
     end;
   end;
-end;
-
-function InitializeSetup():Boolean;
-begin
- MsgBox('测试，初始化中。程序名：{#ExeBasename}', mbConfirmation, MB_OKCANCEL);
- Result := True
 end;
