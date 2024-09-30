@@ -34,9 +34,10 @@ export class PackExeTask extends TaskBase implements ITask {
     public async run(): Promise<AppPath[]> {
         let apps = getWinAppPaths(this.sourceConfig, this.projectDir);
         let outputs: AppPath[] = [];
-        for (let i = 0; i < apps.length; i++) {
+        for (let i = 0; i < 1; i++) {
             let appPath = apps[i];
             let issFilename = generateIss(this.sourceConfig, this.packageConfig, this.projectDir, appPath);
+            console.log(issFilename);
             if (issFilename) {
                 info(`packaging ${chalk.blue("file")}=${appPath.path}`)
                 let output = await this.pack(issFilename);

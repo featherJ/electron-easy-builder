@@ -3,35 +3,35 @@ AppId={#AppId}
 AppName={#AppName}
 #if "" != NameVersion
   AppVerName={#NameVersion}
-#else
+#endif
 #if "" != Publisher
   AppPublisher={#Publisher}
-#else
+#endif
 #if "" != PublisherURL
   AppPublisherURL={#PublisherURL}
-#else
+#endif
 #if "" != SupportURL
   AppSupportURL={#SupportURL}
-#else
+#endif
 #if "" != UpdatesURL
   AppUpdatesURL={#UpdatesURL}
-#else
+#endif
 OutputDir={#OutputDir}
 OutputBaseFilename={#OutputBasename}
 Compression=lzma2/ultra64
 SolidCompression=yes
 #if "" != WizardImageFile
   WizardImageFile={#WizardImageFile}
-#else
+#endif
 #if "" != WizardSmallImageFile
   WizardSmallImageFile={#WizardSmallImageFile}
-#else
+#endif
 #if "" != SetupIconFile
   SetupIconFile={#SetupIconFile}
-#else
+#endif
 UninstallDisplayIcon={app}\\{#ExeBasename}\n";
 ChangesAssociations={#HasAssociations}
-MinVersion=6.1,1  ; Windows 7 SP1 或更高版本
+MinVersion=6.1sp1
 SourceDir={#SourceDir}
 AppVersion={#Version}
 ShowLanguageDialog=auto
@@ -58,11 +58,11 @@ Name: "{commonprograms}\{#AppName}"; Filename: "{app}\\{#ExeBasename}"
 Name: "{commondesktop}\{#AppName}"; Filename: "{app}\{#ExeBasename}"; Tasks: desktopicon
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checked
-Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
 
 [Run]
-Filename: "{app}\{#ExeBasename}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#ExeBasename}"; Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [Files]
 Source: "*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -79,7 +79,7 @@ begin
 end;
 
 
-function IsAppRunning(const FileName : string): Boolean;\n"
+function IsAppRunning(const FileName : string): Boolean;
 var
     FSWbemLocator: Variant;
     FWMIService   : Variant;
@@ -109,7 +109,7 @@ begin
         Sleep(1000); // 每秒检查一次应用程序是否退出
       end;
       Log('应用程序已退出，继续安装...');
-    end;
+    end
     else
     begin
       while IsAppRunning('{#ExeBasename}') do
@@ -118,7 +118,7 @@ begin
         begin
           // 用户选择“确定”，再次检测
           Log('用户点击确定，检查程序状态...');
-        end;
+        end
         else
         begin
           // 用户选择“取消”，退出安装

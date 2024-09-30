@@ -26,11 +26,13 @@
 		"easy-builder": "bin/easy-builder.js"
 	},
 	"dependencies": {
+		"electron-builder": "^25.0.5"
+	},
+	"optionalDependencies": {
 		"appdmg": "~0.6.6",
 		"dmg-license": "~1.0.11",
-		"electron-builder": "^25.0.5",
-		"innosetup": "^6.0.5",
-		"macos-alias": "github:featherJ/node-alias"
+		"macos-alias": "github:featherJ/node-alias",
+		"innosetup": "^6.0.5"
 	},
 	"devDependencies": {
 		"@electron/notarize": "^2.5.0",
