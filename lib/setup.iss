@@ -18,8 +18,9 @@ AppName={#AppName}
 #endif
 OutputDir={#OutputDir}
 OutputBaseFilename={#OutputBasename}
-Compression=lzma2/ultra64
-SolidCompression=yes
+; Compression=lzma2/ultra64
+Compression=none
+; SolidCompression=yes
 #if "" != WizardImageFile
   WizardImageFile={#WizardImageFile}
 #endif
@@ -86,20 +87,29 @@ var
     FWbemObjectSet: Variant;
 begin
     Result := false;
+    MsgBox('isRunning 1', mbConfirmation, MB_OKCANCEL);
     FSWbemLocator := CreateOleObject('WBEMScripting.SWBEMLocator');
+    MsgBox('isRunning 2', mbConfirmation, MB_OKCANCEL);
     FWMIService := FSWbemLocator.ConnectServer('', 'root\\CIMV2', '', '');
+    MsgBox('isRunning 3', mbConfirmation, MB_OKCANCEL);
     FWbemObjectSet := FWMIService.ExecQuery(Format('SELECT Name FROM Win32_Process Where Name="%s"',[FileName]));
+    MsgBox('isRunning 4', mbConfirmation, MB_OKCANCEL);
     Result := (FWbemObjectSet.Count > 0);
+    MsgBox('isRunning 5', mbConfirmation, MB_OKCANCEL);
     FWbemObjectSet := Unassigned;
+    MsgBox('isRunning 6', mbConfirmation, MB_OKCANCEL);
     FWMIService := Unassigned;
+    MsgBox('isRunning 7', mbConfirmation, MB_OKCANCEL);
     FSWbemLocator := Unassigned;
+    MsgBox('isRunning 8', mbConfirmation, MB_OKCANCEL);
 end;
 
 
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
-  if CurStep = ssPreInstall then
+  if CurStep = ssInstall  then
   begin
+    MsgBox('测试，在ssInstall中。程序名：{#ExeBasename}', mbConfirmation, MB_OKCANCEL);
     if IsBackgroundUpdate() then
     begin
       // 直接调用等待应用程序退出的过程
@@ -128,4 +138,10 @@ begin
       end;
     end;
   end;
+end;
+
+function InitializeSetup():Boolean;
+begin
+ MsgBox('测试，初始化中。程序名：{#ExeBasename}', mbConfirmation, MB_OKCANCEL);
+ Result := True
 end;
