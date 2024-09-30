@@ -27,7 +27,7 @@ export async function ensureElevated():Promise<void> {
     
             const elevatedProcess = spawn('powershell', [
                 '-Command',
-                `Start-Process node -ArgumentList '${[scriptPath, ...args].join(' ')}' -Verb RunAs -Wait -NoNewWindow`
+                `"Start-Process node -ArgumentList '${scriptPath} ${args}' -Verb RunAs"`
             ], { stdio: ['inherit','inherit','inherit'] });
             elevatedProcess.on('close', (code) => {
                 console.log(`脚本以管理员权限执行完毕，退出码: ${code}`);
