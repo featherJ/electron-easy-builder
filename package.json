@@ -31,13 +31,15 @@
 	"optionalDependencies": {
 		"appdmg": "~0.6.6",
 		"dmg-license": "~1.0.11",
-		"macos-alias": "github:featherJ/node-alias",
-		"innosetup": "^6.0.5"
+		"innosetup": "^6.0.5",
+		"macos-alias": "github:featherJ/node-alias"
 	},
 	"devDependencies": {
 		"@electron/notarize": "^2.5.0",
 		"@types/appdmg": "~0.5.5",
 		"@types/archiver": "~6.0.2",
+		"@types/node": "^22.7.4",
+		"@types/readdir-glob": "^1.1.5",
 		"ajv": "~8.17.1",
 		"ajv-errors": "~3.0.0",
 		"ajv-formats": "~3.0.1",
