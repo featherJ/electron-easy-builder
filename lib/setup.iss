@@ -64,13 +64,13 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Icons]
 #if "" == AppUserId
-  Name: "{group}\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"
-  Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: desktopicon
-  Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: quicklaunchicon
+  Name: "{group}\{#AppName}"; Filename: "{app}\{#ExeBasename}"
+  Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#ExeBasename}"; Tasks: desktopicon
+  Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#AppName}"; Filename: "{app}\{#ExeBasename}"; Tasks: quicklaunchicon
 #else
-  Name: "{group}\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; AppUserModelID: "{#AppUserId}"
-  Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: desktopicon; AppUserModelID: "{#AppUserId}"
-  Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: quicklaunchicon; AppUserModelID: "{#AppUserId}"
+  Name: "{group}\{#AppName}"; Filename: "{app}\{#ExeBasename}"; AppUserModelID: "{#AppUserId}"
+  Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#ExeBasename}"; Tasks: desktopicon; AppUserModelID: "{#AppUserId}"
+  Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#AppName}"; Filename: "{app}\{#ExeBasename}"; Tasks: quicklaunchicon; AppUserModelID: "{#AppUserId}"
 #endif
 
 [Run]
@@ -120,10 +120,8 @@ begin
       // 直接调用等待应用程序退出的过程
       while IsAppRunning('{#ExeBasename}') do
       begin
-        Log(Format('%s 仍在运行，等待退出...', ['{#ExeBasename}']));
         Sleep(1000); // 每秒检查一次应用程序是否退出
       end;
-      Log('应用程序已退出，继续安装...');
     end
     else
     begin
