@@ -307,13 +307,15 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
         let wizardSmallImageFile = builderConfig.win?.pack?.wizardSmallImageFile ? path.join(projectDir, builderConfig.win?.pack?.wizardSmallImageFile) : "";
         config += `#define WizardSmallImageFile "${wizardSmallImageFile}"\n`;
         let setupIcon = builderConfig.win?.pack?.setupIcon ? path.join(projectDir, builderConfig.win?.pack?.setupIcon) : "";
-        config += `#define WizardSmallImageFile "${setupIcon}"\n`;
+        config += `#define SetupIconFile "${setupIcon}"\n`;
         config += `#define ExeBasename "${builderConfig.productName + ".exe"}"\n`;
         config += `#define HasAssociations ${builderConfig.fileAssociations ? "yes" : "no"}\n`;
         config += `#define SourceDir "${appPath.path}"\n`;
         config += `#define Version "${packageConfig.version}"\n`;
         config += `#define ArchitecturesAllowed "${appPath.arch}"\n`;
         config += `#define DirName "${builderConfig.productName}"\n`;
+        config += `#define InstallTarget "user"\n`;
+        
         config += "\n";
     
         let baseConfig: string = setupIss;

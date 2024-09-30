@@ -10,7 +10,7 @@ export function runCommand(command: string, args: string[]): Promise<void> {
         const childProcess = spawn(command, args);
         // 监听标准输出，实时打印子进程的输出
         childProcess.stdout.on('data', (data) => {
-            info(data.toString());
+            process.stdout.write(data);
         });
         // 监听标准错误输出，实时打印错误
         childProcess.stderr.on('data', (data) => {
@@ -18,10 +18,10 @@ export function runCommand(command: string, args: string[]): Promise<void> {
         });
         // 监听子进程结束
         childProcess.on('close', (code) => {
-            info(`Process exited with code ${code}`);
             if(code == 0){
                 resolve();
             }else{
+                error(`Process exited with code ${code}`);
                 reject();
             }
         });

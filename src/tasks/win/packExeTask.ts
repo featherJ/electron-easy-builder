@@ -51,7 +51,7 @@ export class PackExeTask extends TaskBase implements ITask {
     }
 
     private pack(issFilename: string): Promise<void> {
-        const innoSetupPath = `"${path.join(nodeModulesDir(),'innosetup', 'bin', 'ISCC.exe')}"`
+        const innoSetupPath = `${path.join(nodeModulesDir(),'innosetup', 'bin', 'ISCC.exe')}`
         const args = [
             issFilename
         ];
