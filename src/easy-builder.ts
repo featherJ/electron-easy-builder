@@ -12,6 +12,7 @@ import path from "path";
 import curPackage from "../package.json";
 //todo 改成动态读取
 import templateContent from '../lib/easy-builder.template.yml';
+import { ensureElevated } from "utils/elevate";
 // import { libDir } from "utils/path";
 
 // console.log(libDir());
@@ -91,6 +92,7 @@ program.command('build')
             error(`The file 'easy-builder.yml' does not contain 'win' configuration. Please add it and try again.`);
             return;
         }
+        await ensureElevated();
         let winPacker = new WinPacker(initer);
         try {
             await winPacker.pack();
