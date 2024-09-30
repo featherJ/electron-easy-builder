@@ -83,6 +83,7 @@ win:
     setupIcon: build/win/app.ico
     appUrl: http://my-website.com
     publisherName: My Company Inc
+    appUserModelID: MyCompany.Template
     licenseFile:
       - language: chinese
         file: path/license_chinese.txt

@@ -315,6 +315,8 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
         config += `#define Version "${packageConfig.version}"\n`;
         config += `#define ArchitecturesAllowed "${appPath.arch}"\n`;
         config += `#define DirName "${builderConfig.productName}"\n`;
+        let appUserModelID = builderConfig.win?.pack?.appUserModelID ?  builderConfig.win?.pack?.appUserModelID : "";
+        config += `#define AppUserId "${appUserModelID}"\n`;
         config += `#define InstallTarget "user"\n`;
         
         config += "\n";

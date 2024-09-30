@@ -16,6 +16,7 @@ AppName={#AppName}
 #if "" != UpdatesURL
   AppUpdatesURL={#UpdatesURL}
 #endif
+DefaultGroupName={#AppName}
 OutputDir={#OutputDir}
 OutputBaseFilename={#OutputBasename}
 ; Compression=lzma2/ultra64
@@ -54,16 +55,20 @@ CloseApplications=no
     #endif
 #endif
 
-[Icons]
-Name: "{commonprograms}\{#AppName}"; Filename: "{app}\\{#ExeBasename}"
-Name: "{commondesktop}\{#AppName}"; Filename: "{app}\{#ExeBasename}"; Tasks: desktopicon
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
-Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone
+; https://stackoverflow.com/questions/56441620/quick-lanch-bar-and-inno-setup-v6
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: checkablealone; OnlyBelowVersion: 0,6.1
+
+
+[Icons]
+Name: "{group}\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; {if Defined(AppUserId) and AppUserId <> ""} AppUserModelID: "{#AppUserId}"; {endif}
+Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: desktopicon; {if Defined(AppUserId) and AppUserId <> ""} AppUserModelID: "{#AppUserId}"; {endif}
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#NameLong}"; Filename: "{app}\{#ExeBasename}.exe"; Tasks: quicklaunchicon; {if Defined(AppUserId) and AppUserId <> ""} AppUserModelID: "{#AppUserId}"; {endif}
 
 [Run]
-Filename: "{app}\{#ExeBasename}"; Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#ExeBasename}"; Description: "{cm:LaunchProgram,{#StringChange(AppName, '&', '&&')}}"; Flags: nowait postinstall
 
 [Files]
 Source: "*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
