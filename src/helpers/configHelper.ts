@@ -473,7 +473,7 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
 
         //文件关联
         if(winFileAssociations){
-            let fileTypeConfig = "";
+            let fileTypeConfig = "[Registry]\n";
             fileTypeConfig += `#if "user" == InstallTarget\n`;
             fileTypeConfig += `  #define SoftwareClassesRootKey "HKCU"\n`;
             fileTypeConfig += `#else\n`;
