@@ -480,6 +480,12 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
             fileTypeConfig += `  #define SoftwareClassesRootKey "HKLM"\n`;
             fileTypeConfig += `#endif\n`;
             fileTypeConfig += "\n";
+
+            fileTypeConfig += `; 注册当前应用程序\n`;
+            fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "{app}\{#ExeBasename}"; ValueType: string; ValueName: ""; ValueData: "My Application"; Flags: uninsdeletekey\n`;
+
+            fileTypeConfig += "\n";
+            
             for(var i = 0;i<winFileAssociations.length;i++){
                 let fileType = winFileAssociations[i];
                 fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "Software\\Classes\\.${fileType.ext}\\OpenWithProgids"; ValueType: none; ValueName: "{#RegValueName}"; Flags: deletevalue uninsdeletevalue\n`;
