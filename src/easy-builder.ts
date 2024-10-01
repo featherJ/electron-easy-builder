@@ -13,6 +13,8 @@ import curPackage from "../package.json";
 //todo 改成动态读取
 import templateContent from '../lib/easy-builder.template.yml';
 import { ensureElevated } from "utils/elevate";
+import { generateIss } from "helpers/configHelper";
+import { AppPath } from "configs/common";
 // import { libDir } from "utils/path";
 
 // console.log(libDir());
@@ -105,9 +107,16 @@ program.command('build')
 });
 
 
-program.parse(process.argv);
+// program.parse(process.argv);
 
 // const initer = new Initer("C:\\Users\\Agua.L\\Documents\\project\\editor-electron-template");
 // let valid = initer.init();
 // let winPacker = new WinPacker(initer);
 // winPacker.pack();
+// const initer = new Initer("/Users/apple/Documents/FacnyGit/editor-electron-template/");
+// let valid = initer.init();
+// let appPath:AppPath = {
+//     path:"/Users/apple/Documents/FacnyGit/editor-electron-template/dist/win-unpacked",
+//     arch:"x64"
+// }
+// generateIss(initer.builderConfig,initer.packageConfig,initer.projectDir,appPath);

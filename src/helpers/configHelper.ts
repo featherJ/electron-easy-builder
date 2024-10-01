@@ -1,11 +1,13 @@
 import { AppDmgConfig, AppPath, NotarizeConfig } from "configs/common";
 import { Configuration } from "electron-builder";
-import path from "path";
 import fs from "fs";
+import iconv from "iconv-lite";
+import { tmpdir } from "os";
+import path from "path";
+import { libDir } from "utils/path";
 import YAML from 'yaml';
 import setupIss from '../../lib/setup.iss';
-import { tmpdir } from "os";
-import iconv from "iconv-lite";
+import { warn } from "utils/log";
 
 /**
  * 提取electron-builder使用的yml配置
@@ -137,11 +139,11 @@ export function generatePackDmgConfig(builderConfig: any, packageConfig: any, pr
  */
 export function generateDmgLicenseConfig(builderConfig: any, projectDir: string): any {
     if (builderConfig.mac?.pack?.license) {
-        let licensePath = path.join(projectDir, builderConfig.mac.pack.license);
-        if (!fs.existsSync(licensePath)) {
-            throw `Folder ${licensePath} does not exist`
-        } else if (!fs.statSync(licensePath).isDirectory) {
-            throw `${licensePath} is not a folder`
+        let licenseDir = path.join(projectDir, builderConfig.mac.pack.license);
+        if (!fs.existsSync(licenseDir)) {
+            throw `Folder ${licenseDir} does not exist`
+        } else if (!fs.statSync(licenseDir).isDirectory) {
+            throw `${licenseDir} is not a folder`
         } else {
             const jsonFile: any = {
                 $schema: "https://github.com/argv-minus-one/dmg-license/raw/master/schema.json",
@@ -149,19 +151,19 @@ export function generateDmgLicenseConfig(builderConfig: any, projectDir: string)
                 labels: [],
             };
 
-            const licenseRegex = /^license\.([a-z]{2}_[A-Z]{2})\.txt$/;
-            const licenseButtonsJsonRegex = /^license_buttons\.([a-z]{2}_[A-Z]{2})\.json$/;
-            const licenseButtonsYmlRegex = /^license_buttons\.([a-z]{2}_[A-Z]{2})\.yml$/;
+            const licenseRegex = /^license\.([a-z]{2}(?:[-_][A-Z]{2})?)\.txt$/;
+            const licenseButtonsJsonRegex = /^license_buttons\.([a-z]{2}(?:[-_][A-Z]{2})?)\.json$/;
+            const licenseButtonsYmlRegex = /^license_buttons\.([a-z]{2}(?:[-_][A-Z]{2})?)\.yml$/;
 
-            let files = fs.readdirSync(licensePath);
-            files.forEach((value) => {
-                let filePath = path.join(licensePath, value);
+            let files = fs.readdirSync(licenseDir);
+            files.forEach(value => {
+                let filename = path.join(licenseDir, value);
                 const licenseMatches = value.match(licenseRegex);
                 if (licenseMatches && licenseMatches[1]) {
                     //协议文本文件
                     let lang = licenseMatches[1].replace("_", "-");
                     jsonFile.body.push({
-                        file: filePath,
+                        file: filename,
                         lang: lang,
                     });
                 }
@@ -173,24 +175,24 @@ export function generateDmgLicenseConfig(builderConfig: any, projectDir: string)
                 const licenseButtonsJsonMatches = value.match(licenseButtonsJsonRegex);
                 if (licenseButtonsJsonMatches && licenseButtonsJsonMatches[1]) {
                     buttonsLang = licenseButtonsJsonMatches[1].replace("_", "-");
-                    let jsonContent = fs.readFileSync(filePath, 'utf8');
+                    let jsonContent = fs.readFileSync(filename, 'utf8');
                     try {
                         buttonsData = JSON.parse(jsonContent);
                         buttonsType = "json";
                     } catch (error) {
-                        throw `File ${filePath} cannot be parsed into Json. Please ensure that the file content is in the correct format and is UTF8 encoded.`
+                        throw `File ${filename} cannot be parsed into Json. Please ensure that the file content is in the correct format and is UTF8 encoded.`
                     }
                 }
 
                 const licenseButtonsYmlMatches = value.match(licenseButtonsYmlRegex);
                 if (licenseButtonsYmlMatches && licenseButtonsYmlMatches[1]) {
                     buttonsLang = licenseButtonsYmlMatches[1].replace("_", "-");
-                    let ymlContent = fs.readFileSync(filePath, 'utf8');
+                    let ymlContent = fs.readFileSync(filename, 'utf8');
                     try {
                         buttonsData = YAML.parse(ymlContent);
                         buttonsType = "yml";
                     } catch (error) {
-                        throw `File ${filePath} cannot be parsed into Yml. Please ensure that the file content is in the correct format and is UTF8 encoded.`;
+                        throw `File ${filename} cannot be parsed into Yml. Please ensure that the file content is in the correct format and is UTF8 encoded.`;
                     }
                 }
 
@@ -202,7 +204,7 @@ export function generateDmgLicenseConfig(builderConfig: any, projectDir: string)
                         "message" in buttonsData && typeof buttonsData["message"] === 'string') {
                         jsonFile.labels.push(Object.assign({ lang: buttonsLang }, buttonsData));
                     } else {
-                        throw `The content of file ${filePath} has a format error.
+                        throw `The content of file ${filename} has a format error.
 The json file template is:
 {
     "agree": "Agree",
@@ -288,6 +290,7 @@ export function getWinAppPaths(config: any, projectDir: string): AppPath[] {
 export function generateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath:AppPath): string {
     if(builderConfig.win?.pack){
         let config = "";
+        // define
         config += `#define AppId "${builderConfig.appId}"\n`;
         config += `#define AppName "${builderConfig.productName}"\n`;
         let nameVersion = builderConfig.win?.pack?.verName ? builderConfig.win?.pack?.verName : builderConfig.productName;
@@ -318,8 +321,76 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
         let appUserModelID = builderConfig.win?.pack?.appUserModelID ?  builderConfig.win?.pack?.appUserModelID : "";
         config += `#define AppUserId "${appUserModelID}"\n`;
         config += `#define InstallTarget "user"\n`;
-        
         config += "\n";
+        //languages
+        if (builderConfig.win?.pack?.license) {
+            let licenseDir:string = path.join(projectDir,builderConfig.win?.pack?.license);
+            let languagesDir = path.join(libDir(),"languages");
+            //遍历已有的语言文件
+            const islRegex = /^([A-Za-z]+)\.([a-z]{2}(?:[-_][A-Z]{2})?)\.isl$/;
+            let files = fs.readdirSync(languagesDir);
+            let existMessagesMap:{[langCode:string]:{
+                langName:string,
+                langCode:string,
+                filename:string
+            }} = {}
+            files.forEach(value=>{
+                let filename = path.join(languagesDir, value);
+                const islMatches = value.match(islRegex);
+                if(islMatches && islMatches[1] && islMatches[2]){
+                    let languageName = islMatches[1];
+                    languageName = languageName.charAt(0).toLowerCase() + languageName.slice(1);
+                    const languageCode = islMatches[2].replace("_", "-");
+                    existMessagesMap[languageCode] = {
+                        langName:languageName,
+                        langCode:languageCode,
+                        filename:filename
+                    };
+                }
+            });
+
+            if(!fs.existsSync(licenseDir)){
+                throw `Folder ${licenseDir} does not exist`
+            }else if(!fs.statSync(licenseDir).isDirectory){
+                throw `${licenseDir} is not a folder`
+            }else{
+                const licenseRegex = /^license\.([a-z]{2}(?:[-_][A-Z]{2})?)\.txt$/;
+                let files = fs.readdirSync(licenseDir);
+                let findLang = false;
+                let langConfig = `[Languages]\n`;
+                files.forEach(value=>{
+                    let filename = path.join(licenseDir, value);
+                    const licenseMatches = value.match(licenseRegex);
+                    if (licenseMatches && licenseMatches[1]) {
+                        //协议文本文件
+                        let lang = licenseMatches[1].replace("_", "-");
+                        let fileContent = fs.readFileSync(filename,{encoding:"utf-8"});
+                        let output = path.join(tmpdir(),value);
+                        let gbkBuffer = iconv.encode(fileContent, 'gbk');
+                        fs.writeFileSync(output,gbkBuffer);
+                        //查找对应的默认文本
+                        let existMessage = existMessagesMap[lang];
+                        if(!existMessage){
+                            let lang2 = lang.split("-")[0];
+                            existMessage = existMessagesMap[lang2];
+                        }
+                        if(existMessage){
+                            findLang = true;
+                            langConfig += `Name: "${existMessage.langName}"; MessagesFile: "${existMessage.filename}"; LicenseFile:"${output}"\n`;
+                        }else{
+                            warn(`There is no built-in ${lang} language file yet`);
+                        }
+                    }
+                });
+                if(findLang){
+                    config += langConfig;
+                    config += "\n";
+                }
+            }
+        }
+        
+
+
     
         let baseConfig: string = setupIss;
         config += baseConfig;
@@ -329,7 +400,6 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
         const gbkBuffer = iconv.encode(config, 'gbk');
         fs.writeFileSync(output,gbkBuffer);
         // fs.writeFileSync(output, config, { encoding: 'utf8' });
-    
         return output;
     }
     return null;

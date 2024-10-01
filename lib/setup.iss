@@ -120,7 +120,8 @@ begin
       // 直接调用等待应用程序退出的过程
       while IsAppRunning('{#ExeBasename}') do
       begin
-        Sleep(1000); // 每秒检查一次应用程序是否退出
+        // 每秒检查一次应用程序是否退出
+        Sleep(1000); 
       end;
     end
     else

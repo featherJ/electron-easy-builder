@@ -50,7 +50,7 @@ mac:
     title: "window title"
     background: build/darwin/background.png
     icon: build/darwin/app.icns
-    license: build/license
+    license: build/license #支持license.en-US.txt 和 license_buttons.en-US.json | license_buttons.en-US.yml，utf8格式
     iconSize: 80
     window:
       width: 500
@@ -91,3 +91,4 @@ win:
         file: path/license_english.txt
     wizardSmallImageFile: path/wizardSmallImageFile.bmp
     wizardImageFile: path/wizardImageFile.bmp
+    license: build/license #目前仅支持license.en-US.txt，utf8格式
