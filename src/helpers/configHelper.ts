@@ -482,7 +482,7 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
             fileTypeConfig += "\n";
 
             fileTypeConfig += `; 注册当前应用程序\n`;
-            fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "{app}\{#ExeBasename}"; ValueType: string; ValueName: ""; ValueData: "My Application"; Flags: uninsdeletekey\n`;
+            fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "Software\Classes\Applications\{#ExeBasename}"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "Test test"; Flags: uninsdeletekey\n`;
 
             fileTypeConfig += "\n";
             
