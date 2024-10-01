@@ -364,7 +364,11 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
                     if (licenseMatches && licenseMatches[1]) {
                         //协议文本文件
                         let lang = licenseMatches[1].replace("_", "-");
-                        let fileContent = fs.readFileSync(filename,{encoding:"utf-8"});
+                        let fileContent = fs.readFileSync(filename,{encoding:"utf8"});
+                        // 检查并移除 BOM
+                        if (fileContent.charCodeAt(0) === 0xFEFF) {
+                            fileContent = fileContent.slice(1);
+                        }
                         let output = path.join(tmpdir(),value);
                         let gbkBuffer = iconv.encode(fileContent, 'gbk');
                         fs.writeFileSync(output,gbkBuffer);
@@ -393,13 +397,16 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
 
     
         let baseConfig: string = setupIss;
+        // 检查并移除 BOM
+        if (baseConfig.charCodeAt(0) === 0xFEFF) {
+            baseConfig = baseConfig.slice(1);
+        }
         config += baseConfig;
     
     
         let output = path.join(tmpdir(), "setup.iss");
         const gbkBuffer = iconv.encode(config, 'gbk');
         fs.writeFileSync(output,gbkBuffer);
-        // fs.writeFileSync(output, config, { encoding: 'utf8' });
         return output;
     }
     return null;
