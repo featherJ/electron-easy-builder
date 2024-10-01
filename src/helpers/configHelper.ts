@@ -1,4 +1,4 @@
-import { AppDmgConfig, AppPath, NotarizeConfig, WinFileAssociation } from "configs/common";
+import { AppDmgConfig, AppPath, NotarizeConfig, WinFileAssociation, WinSign } from "configs/common";
 import { Configuration } from "electron-builder";
 import fs from "fs";
 import iconv from "iconv-lite";
@@ -85,7 +85,6 @@ export function extractElectronBuilderConfig(builderConfig: any, platform: "mac"
             config.win.rfc3161TimeStampServer = builderConfig.win.sign.rfc3161TimeStampServer;
             config.win.signingHashAlgorithms = builderConfig.win.sign.signingHashAlgorithms;
         }
-
     }
 
     return config;
@@ -310,7 +309,7 @@ export function getWinAppPaths(config: any, projectDir: string): AppPath[] {
 }
 
 
-export function generateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath, winFileAssociations: WinFileAssociation[]): string {
+export function generateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath, winFileAssociations: WinFileAssociation[],sign:boolean): string {
     if (builderConfig.win?.pack) {
         let config = "";
         // define
@@ -348,6 +347,7 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
         config += `#define RegValueName "${regValueName}"\n`;
         let friendlyAppName = builderConfig.win?.pack?.friendlyAppName ? builderConfig.win?.pack?.friendlyAppName : builderConfig.productName;
         config += `#define FriendlyName "${friendlyAppName}"\n`;
+        config += `#define Sign "${sign ? "sign" : ""}"\n`;
 
         config += "\n";
         //languages
@@ -513,6 +513,26 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
         const gbkBuffer = iconv.encode(config, 'gbk');
         fs.writeFileSync(output, gbkBuffer);
         return output;
+    }
+    return null;
+}
+
+/**
+ * 打包配置
+ * @param builderConfig 
+ * @param projectDir 
+ */
+export function generateWinSign(builderConfig: any,projectDir:string):WinSign{
+    if(builderConfig.win?.sign){
+        let sourceSign = builderConfig.win?.sign;
+        var sign:WinSign = {
+            certificateFile: path.join(projectDir,sourceSign.certificateFile),
+            certificatePassword:sourceSign.certificatePassword,
+            timeStampServer:sourceSign.timeStampServer ? sourceSign.timeStampServer : "http://timestamp.digicert.com",
+            rfc3161TimeStampServer:sourceSign.rfc3161TimeStampServer ? sourceSign.rfc3161TimeStampServer : "http://timestamp.digicert.com",
+            signingHashAlgorithms: sourceSign.signingHashAlgorithms ? sourceSign.signingHashAlgorithms : ["sha1","sha256"]
+        }
+        return sign;
     }
     return null;
 }

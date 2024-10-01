@@ -1,11 +1,11 @@
 import chalk from 'chalk';
-import { AppPath, WinFileAssociation } from "configs/common";
-import { generateIss, getWinAppPaths } from "helpers/configHelper";
+import { AppPath, WinFileAssociation, WinSign } from "configs/common";
+import { generateIss, generateWinSign, getWinAppPaths } from "helpers/configHelper";
 import { ITask, TaskBase } from "tasks/common";
 import { info } from "utils/log";
 import path from "path";
 import {  runCommand } from 'utils/exec';
-import { nodeModulesDir } from 'utils/path';
+import { nodeModulesDir, signToolFilename } from 'utils/path';
 
 /**
  * 打包exe安装包的任务
@@ -36,14 +36,15 @@ export class PackExeTask extends TaskBase implements ITask {
 
     public async run(): Promise<AppPath[]> {
         let apps = getWinAppPaths(this.sourceConfig, this.projectDir);
+        let sign = generateWinSign(this.sourceConfig,this.projectDir);
         let outputs: AppPath[] = [];
         for (let i = 0; i < 1; i++) {
             let appPath = apps[i];
-            let issFilename = generateIss(this.sourceConfig, this.packageConfig, this.projectDir, appPath,this.winFileAssociations);
+            let issFilename = generateIss(this.sourceConfig, this.packageConfig, this.projectDir, appPath,this.winFileAssociations,!!sign);
             console.log(issFilename);
             if (issFilename) {
                 info(`packaging ${chalk.blue("file")}=${appPath.path}`)
-                await this.pack(issFilename);
+                await this.pack(issFilename,sign);
                 outputs.push({
                     path: "",
                     arch: appPath.arch
@@ -53,12 +54,18 @@ export class PackExeTask extends TaskBase implements ITask {
         return outputs;
     }
 
-    private pack(issFilename: string): Promise<void> {
-        //todo 签名 文件关联
+    private pack(issFilename: string,sign:WinSign): Promise<void> {
         const innoSetupPath = `${path.join(nodeModulesDir(),'innosetup', 'bin', 'ISCC.exe')}`
-        const args = [
-            issFilename
-        ];
+        let args:string[] = [];
+        if(sign){
+            if(sign.signingHashAlgorithms.indexOf("sha1") != -1){
+                args.push(`"/ssha1='${signToolFilename()}' /f '${sign.certificateFile}' /p ${sign.certificatePassword} /fd SHA1 /t ${sign.signingHashAlgorithms} /v $f"`);
+            }
+            if(sign.signingHashAlgorithms.indexOf("sha256") != -1){
+                args.push(`"/ssha256='${signToolFilename()}' /f '${sign.certificateFile}' /p ${sign.certificatePassword} /fd SHA256 /tr ${sign.rfc3161TimeStampServer} /td SHA256 /as /v $f"`);
+            }
+        }
+        args.push(issFilename);
         return runCommand(innoSetupPath,args);
     }
 } 

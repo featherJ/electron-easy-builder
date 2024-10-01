@@ -84,7 +84,7 @@ win:
       - sha1
       - sha256
   pack: 
-    verName: Editor Electron Template
+    verName: Editor Electron Template # https://jrsoftware.org/is6help/index.php?topic=setup_appvername
     setupIcon: build/win/app.ico
     appUrl: http://my-website.com
     publisherName: My Company Inc

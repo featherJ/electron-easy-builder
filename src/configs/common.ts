@@ -61,6 +61,14 @@ export interface WinFileAssociation {
     icon: string;
 }
 
+export interface WinSign{
+    certificateFile: string;
+    certificatePassword: string;
+    timeStampServer: string;
+    rfc3161TimeStampServer: string;
+    signingHashAlgorithms:string[];
+}
+
 export interface BuildConfig extends BaseBuildConfig {
     arch: MacArch | WinArch
 }

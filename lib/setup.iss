@@ -43,6 +43,11 @@ DisableProgramGroupPage=yes
 DisableWelcomePage=no
 CloseApplications=no
 
+#if "sign" == Sign
+  SignTool=sha1
+  SignTool=sha256
+  SignedUninstaller=yes
+#endif
 
 #if "user" == InstallTarget
     DefaultDirName={userpf}\{#DirName}
