@@ -89,6 +89,7 @@ win:
     appUrl: http://my-website.com
     publisherName: My Company Inc
     appUserModelID: MyCompany.Template
+    friendlyAppName: Editor Electron Template #右键"open with"里显示的内容，没有的话使用productName
     regValueName: EditorTemplate #必须的,不能包含空格
     wizardSmallImageFile: path/wizardSmallImageFile.bmp
     wizardImageFile: path/wizardImageFile.bmp

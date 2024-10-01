@@ -15,7 +15,7 @@ import { json } from "stream/consumers";
  * @param builderConfig 
  * @returns 
  */
-export function extractElectronBuilderConfig(builderConfig: any,platform:"mac" | "win"): Configuration {
+export function extractElectronBuilderConfig(builderConfig: any, platform: "mac" | "win"): Configuration {
     let config: any = {};
     //base info
     config.appId = builderConfig.appId; //必须
@@ -38,17 +38,17 @@ export function extractElectronBuilderConfig(builderConfig: any,platform:"mac" |
     //file associations
     if (platform == "mac" && builderConfig.fileAssociations) {
         config.fileAssociations = [];
-        for(var i = 0;i<builderConfig.fileAssociations.length;i++){
+        for (var i = 0; i < builderConfig.fileAssociations.length; i++) {
             let curFile = builderConfig.fileAssociations[i];
-            if("iconMac" in curFile){
+            if ("iconMac" in curFile) {
                 config.fileAssociations.push({
-                    ext:curFile.ext,
-                    name:curFile.name,
-                    description:curFile.description,
-                    icon:curFile.iconMac,
-                    role:curFile.role ? curFile.role : "Editor"
+                    ext: curFile.ext,
+                    name: curFile.name,
+                    description: curFile.description,
+                    icon: curFile.iconMac,
+                    role: curFile.role ? curFile.role : "Editor"
                 });
-            }else{
+            } else {
                 throw `Unable to find "iconMac" in "${curFile.name}" of "fileAssociations"`;
             }
         }
@@ -160,7 +160,7 @@ export function generateDmgLicenseConfig(builderConfig: any, projectDir: string)
         } else if (!fs.statSync(licenseDir).isDirectory) {
             throw `${licenseDir} is not a folder`
         } else {
-            const jsonFile:any = {
+            const jsonFile: any = {
                 $schema: "https://github.com/argv-minus-one/dmg-license/raw/master/schema.json",
                 body: [],
                 labels: [],
@@ -178,12 +178,12 @@ export function generateDmgLicenseConfig(builderConfig: any, projectDir: string)
                     //协议文本文件
                     let lang = licenseMatches[1].replace("_", "-");
                     let isDefault = licenseMatches[2] == "default";
-                    if(isDefault){
+                    if (isDefault) {
                         jsonFile.body.unshift({
-                                file: filename,
-                                lang: lang,
-                            });
-                    }else{
+                            file: filename,
+                            lang: lang,
+                        });
+                    } else {
                         jsonFile.body.push({
                             file: filename,
                             lang: lang,
@@ -310,7 +310,7 @@ export function getWinAppPaths(config: any, projectDir: string): AppPath[] {
 }
 
 
-export function generateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath,winFileAssociations:WinFileAssociation[]): string {
+export function generateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath, winFileAssociations: WinFileAssociation[]): string {
     if (builderConfig.win?.pack) {
         let config = "";
         // define
@@ -346,6 +346,9 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
         config += `#define InstallTarget "user"\n`;
         let regValueName = builderConfig.win?.pack?.regValueName
         config += `#define RegValueName "${regValueName}"\n`;
+        let friendlyAppName = builderConfig.win?.pack?.friendlyAppName ? builderConfig.win?.pack?.friendlyAppName : builderConfig.productName;
+        config += `#define FriendlyName "${friendlyAppName}"\n`;
+
         config += "\n";
         //languages
         type MessageItem = {
@@ -391,7 +394,7 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
             } else {
                 const licenseRegex = /^license\.([a-z]{2}(?:[-_][A-Z]{2})?)\.?(default)?\.txt$/;
                 let files = fs.readdirSync(licenseDir);
-             
+
                 files.forEach(value => {
                     let filename = path.join(licenseDir, value);
                     const licenseMatches = value.match(licenseRegex);
@@ -461,9 +464,9 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
             //没有设置任何的协议文件
             englishMessage = messagesMap["en"];
             langConfig += `Name: "${englishMessage.langName}"; MessagesFile: "${englishMessage.filename}"\n`;
-            for(let l  in messagesMap){
+            for (let l in messagesMap) {
                 let message = messagesMap[l];
-                if(l != "en"){
+                if (l != "en") {
                     langConfig += `Name: "${message.langName}"; MessagesFile: "${message.filename}"\n`;
                 }
             }
@@ -472,21 +475,20 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
         config += "\n";
 
         //文件关联
-        if(winFileAssociations){
-            let fileTypeConfig = "[Registry]\n";
-            fileTypeConfig += `#if "user" == InstallTarget\n`;
-            fileTypeConfig += `  #define SoftwareClassesRootKey "HKCU"\n`;
-            fileTypeConfig += `#else\n`;
-            fileTypeConfig += `  #define SoftwareClassesRootKey "HKLM"\n`;
-            fileTypeConfig += `#endif\n`;
-            fileTypeConfig += "\n";
+        let fileTypeConfig = "[Registry]\n";
+        fileTypeConfig += `#if "user" == InstallTarget\n`;
+        fileTypeConfig += `  #define SoftwareClassesRootKey "HKCU"\n`;
+        fileTypeConfig += `#else\n`;
+        fileTypeConfig += `  #define SoftwareClassesRootKey "HKLM"\n`;
+        fileTypeConfig += `#endif\n`;
+        fileTypeConfig += "\n";
 
-            fileTypeConfig += `; 注册当前应用程序\n`;
-            fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "Software\Classes\Applications\{#ExeBasename}"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "Test test"; Flags: uninsdeletekey\n`;
+        fileTypeConfig += `; 注册当前应用程序\n`;
+        fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "Software\\Classes\\Applications\\{#ExeBasename}"; ValueType: string; ValueName: "FriendlyAppName"; ValueData: "{#FriendlyName}"; Flags: uninsdeletekey\n`;
+        fileTypeConfig += "\n";
 
-            fileTypeConfig += "\n";
-            
-            for(var i = 0;i<winFileAssociations.length;i++){
+        if (winFileAssociations) {
+            for (var i = 0; i < winFileAssociations.length; i++) {
                 let fileType = winFileAssociations[i];
                 fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "Software\\Classes\\.${fileType.ext}\\OpenWithProgids"; ValueType: none; ValueName: "{#RegValueName}"; Flags: deletevalue uninsdeletevalue\n`;
                 fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "Software\\Classes\\.${fileType.ext}\\OpenWithProgids"; ValueType: string; ValueName: "{#RegValueName}.${fileType.name}"; ValueData: ""; Flags: uninsdeletevalue\n`;
@@ -497,7 +499,6 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
                 fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "Software\\Classes\\{#RegValueName}.${fileType.name}\\shell\\open\\command"; ValueType: string; ValueName: ""; ValueData: """{app}\\{#ExeBasename}"" ""%1"""\n`;
                 fileTypeConfig += "\n";
             }
-
             config += fileTypeConfig;
         }
         let baseConfig: string = setupIss;
