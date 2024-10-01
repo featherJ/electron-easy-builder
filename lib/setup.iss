@@ -120,10 +120,8 @@ begin
       // 直接调用等待应用程序退出的过程
       while IsAppRunning('{#ExeBasename}') do
       begin
-        Log(Format('%s 仍在运行，等待退出...', ['{#ExeBasename}']));
         Sleep(1000); // 每秒检查一次应用程序是否退出
       end;
-      Log('应用程序已退出，继续安装...');
     end
     else
     begin

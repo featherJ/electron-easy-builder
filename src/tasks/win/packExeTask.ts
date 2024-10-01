@@ -51,6 +51,7 @@ export class PackExeTask extends TaskBase implements ITask {
     }
 
     private pack(issFilename: string): Promise<void> {
+        //todo 签名 协议 多语言 文件关联
         const innoSetupPath = `${path.join(nodeModulesDir(),'innosetup', 'bin', 'ISCC.exe')}`
         const args = [
             issFilename
