@@ -1,4 +1,4 @@
-import { AppDmgConfig, AppPath, NotarizeConfig } from "configs/common";
+import { AppDmgConfig, AppPath, NotarizeConfig, WinFileAssociation } from "configs/common";
 import { Configuration } from "electron-builder";
 import fs from "fs";
 import iconv from "iconv-lite";
@@ -15,7 +15,7 @@ import { json } from "stream/consumers";
  * @param builderConfig 
  * @returns 
  */
-export function extractElectronBuilderConfig(builderConfig: any): Configuration {
+export function extractElectronBuilderConfig(builderConfig: any,platform:"mac" | "win"): Configuration {
     let config: any = {};
     //base info
     config.appId = builderConfig.appId; //必须
@@ -36,12 +36,26 @@ export function extractElectronBuilderConfig(builderConfig: any): Configuration 
     config.directories = { output: builderConfig.output } //必须
 
     //file associations
-    if (builderConfig.fileAssociations) {
-        config.fileAssociations = (builderConfig.fileAssociations as any[]).concat();
+    if (platform == "mac" && builderConfig.fileAssociations) {
+        config.fileAssociations = [];
+        for(var i = 0;i<builderConfig.fileAssociations.length;i++){
+            let curFile = builderConfig.fileAssociations[i];
+            if("iconMac" in curFile){
+                config.fileAssociations.push({
+                    ext:curFile.ext,
+                    name:curFile.name,
+                    description:curFile.description,
+                    icon:curFile.iconMac,
+                    role:curFile.role ? curFile.role : "Editor"
+                });
+            }else{
+                throw `Unable to find "iconMac" in "${curFile.name}" of "fileAssociations"`;
+            }
+        }
     }
 
     //mac config
-    if (builderConfig.mac) {
+    if (platform == "mac" && builderConfig.mac) {
         config.mac = {
             category: builderConfig.mac.category,
             icon: builderConfig.mac.icon,
@@ -58,7 +72,7 @@ export function extractElectronBuilderConfig(builderConfig: any): Configuration 
     }
 
     //win config
-    if (builderConfig.win) {
+    if (platform == "win" && builderConfig.win) {
         config.win = {
             icon: builderConfig.win.appIcon,
             extraResources: builderConfig.win.extraResources,
@@ -296,7 +310,7 @@ export function getWinAppPaths(config: any, projectDir: string): AppPath[] {
 }
 
 
-export function generateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath): string {
+export function generateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath,winFileAssociations:WinFileAssociation[]): string {
     if (builderConfig.win?.pack) {
         let config = "";
         // define
@@ -330,6 +344,8 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
         let appUserModelID = builderConfig.win?.pack?.appUserModelID ? builderConfig.win?.pack?.appUserModelID : "";
         config += `#define AppUserId "${appUserModelID}"\n`;
         config += `#define InstallTarget "user"\n`;
+        let regValueName = builderConfig.win?.pack?.regValueName
+        config += `#define RegValueName "${regValueName}"\n`;
         config += "\n";
         //languages
         type MessageItem = {
@@ -455,7 +471,29 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
         config += langConfig;
         config += "\n";
 
+        //文件关联
+        if(winFileAssociations){
+            let fileTypeConfig = "";
+            fileTypeConfig += `#if "user" == InstallTarget\n`;
+            fileTypeConfig += `  #define SoftwareClassesRootKey "HKCU"\n`;
+            fileTypeConfig += `#else\n`;
+            fileTypeConfig += `  #define SoftwareClassesRootKey "HKLM"\n`;
+            fileTypeConfig += `#endif\n`;
+            fileTypeConfig += "\n";
+            for(var i = 0;i<winFileAssociations.length;i++){
+                let fileType = winFileAssociations[i];
+                fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "Software\\Classes\\.${fileType.ext}\\OpenWithProgids"; ValueType: none; ValueName: "{#RegValueName}"; Flags: deletevalue uninsdeletevalue\n`;
+                fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "Software\\Classes\\.${fileType.ext}\\OpenWithProgids"; ValueType: string; ValueName: "{#RegValueName}.${fileType.name}"; ValueData: ""; Flags: uninsdeletevalue\n`;
+                fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "Software\\Classes\\{#RegValueName}.${fileType.name}"; ValueType: string; ValueName: ""; ValueData: "${fileType.description}"; Flags: uninsdeletekey\n`;
+                fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "Software\\Classes\\{#RegValueName}.${fileType.name}"; ValueType: string; ValueName: "AppUserModelID"; ValueData: "{#AppUserId}"; Flags: uninsdeletekey\n`;
+                fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "Software\\Classes\\{#RegValueName}.${fileType.name}\\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\\${fileType.icon}"\n`;
+                fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "Software\\Classes\\{#RegValueName}.${fileType.name}\\shell\\open"; ValueType: string; ValueName: "Icon"; ValueData: """{app}\\{#ExeBasename}"""\n`;
+                fileTypeConfig += `Root: {#SoftwareClassesRootKey}; Subkey: "Software\\Classes\\{#RegValueName}.${fileType.name}\\shell\\open\\command"; ValueType: string; ValueName: ""; ValueData: """{app}\\{#ExeBasename}"" ""%1"""\n`;
+                fileTypeConfig += "\n";
+            }
 
+            config += fileTypeConfig;
+        }
         let baseConfig: string = setupIss;
         // 检查并移除 BOM
         if (baseConfig.charCodeAt(0) === 0xFEFF) {

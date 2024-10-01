@@ -17,14 +17,19 @@ output: dist
 
 fileAssociations:
   - ext: txt
-    name: Text Document
+    name: Text
     description: Text Files
-    icon: "path/to/icon.ico"
+    role: "Editor"
+    iconMac: "path/to/icon.ico"
+    iconWin: "path/to/icon.ico"
 
   - ext: md
-    name: Markdown Document
-    description: Markdown Files
-    icon: path/to/icon.ico
+    name: Markdown
+    role: "Editor"
+    description: Markdown Files #win
+    iconMac: "path/to/icon.ico"
+    iconWin: "path/to/icon.ico"
+   
 
 mac:
   icon: build/darwin/app.icns
@@ -78,12 +83,13 @@ win:
     signingHashAlgorithms:
       - sha1
       - sha256
-  pack:
+  pack: 
     verName: Editor Electron Template
     setupIcon: build/win/app.ico
     appUrl: http://my-website.com
     publisherName: My Company Inc
     appUserModelID: MyCompany.Template
+    regValueName: EditorTemplate #必须的,不能包含空格
     wizardSmallImageFile: path/wizardSmallImageFile.bmp
     wizardImageFile: path/wizardImageFile.bmp
     license: build/license #目前仅支持license.en-US.txt，utf8格式

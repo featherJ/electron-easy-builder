@@ -29,15 +29,28 @@ export class AddBuildInfoWinTask extends TaskBase implements ITask {
     }
 
     public async run(): Promise<BaseBuildConfig> {
+        let configString = "";
+
         let iconPath = this.sourceConfig.win?.icon;
         if(iconPath){
             iconPath = path.join(this.projectDir,iconPath);
         }
-
-        let configString = "";
         if(iconPath && fs.existsSync(iconPath)){
             configString += fs.readFileSync(iconPath, 'utf8')
         }
+        if(this.sourceConfig.fileAssociations){
+            configString += JSON.stringify(this.sourceConfig.fileAssociations);
+        }
+
+        if(this.sourceConfig.win?.pack?.appUserModelID){
+            configString += this.sourceConfig.win?.pack?.appUserModelID
+        }
+        
+        if(this.sourceConfig.win?.pack?.regValueName){
+            configString += this.sourceConfig.win?.pack?.regValueName
+        }
+
+
         let configHash = hashString(configString);
 
         let electronPackagePath = path.join(this.projectDir,"node_modules/electron/package.json");

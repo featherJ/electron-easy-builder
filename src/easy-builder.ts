@@ -1,23 +1,18 @@
 #!/usr/bin/env node
+import chalk from "chalk";
 import { program } from "commander";
-import { promptToContinue } from "utils/program";
+import fs from "fs";
 import { Initer } from "pack/initer";
-import { error } from "utils/log";
 import { MacPacker } from "pack/macPacker";
 import { WinPacker } from "pack/winPacker";
-import chalk from "chalk";
-import fs from "fs";
 import path from "path";
-
-import curPackage from "../package.json";
+import { error } from "utils/log";
+import { promptToContinue } from "utils/program";
+import { ensureElevated } from "utils/elevate";
 //todo 改成动态读取
 import templateContent from '../lib/easy-builder.template.yml';
-import { ensureElevated } from "utils/elevate";
-import { generateIss } from "helpers/configHelper";
-import { AppPath } from "configs/common";
-// import { libDir } from "utils/path";
-
-// console.log(libDir());
+//todo 改成动态读取
+import curPackage from "../package.json";
 
 
 program
@@ -107,7 +102,7 @@ program.command('build')
 });
 
 
-// program.parse(process.argv);
+program.parse(process.argv);
 
 // const initer = new Initer("C:\\Users\\Agua.L\\Documents\\project\\editor-electron-template");
 // let valid = initer.init();
@@ -119,4 +114,5 @@ program.command('build')
 //     path:"/Users/apple/Documents/FacnyGit/editor-electron-template/dist/win-unpacked",
 //     arch:"x64"
 // }
-// generateIss(initer.builderConfig,initer.packageConfig,initer.projectDir,appPath);
+// let winPacker = new WinPacker(initer);
+// winPacker.pack();

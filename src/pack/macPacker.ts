@@ -21,7 +21,7 @@ export class MacPacker {
         clearTask.init(this.initer.builderConfig, this.initer.packageConfig, this.initer.projectDir, true);
         await runTask(clearTask);
 
-        const electronBuilderConfig = extractElectronBuilderConfig(this.initer.builderConfig);
+        const electronBuilderConfig = extractElectronBuilderConfig(this.initer.builderConfig,"mac");
 
         //打包mac的app
         const buildTask = new BuildMacTask();

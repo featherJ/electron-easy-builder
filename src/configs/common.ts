@@ -54,6 +54,13 @@ export interface BaseBuildConfig {
     build?: string,
 }
 
+export interface WinFileAssociation {
+    ext: string,
+    name: string,
+    description: string,
+    icon: string;
+}
+
 export interface BuildConfig extends BaseBuildConfig {
     arch: MacArch | WinArch
 }
@@ -118,12 +125,36 @@ export const buildConfigSchema = {
                 type: "object",
                 properties: {
                     ext: { type: "string" },
-                    name: { type: "string" },
+                    name: {
+                        type: "string",
+                        pattern: "^[a-zA-Z0-9-_]+$",
+                        errorMessage: {
+                            pattern: '"name" must not contain spaces or special characters'
+                        }
+                    },
                     description: { type: "string" },
-                    icon: { type: "string" },
+                    role: { type: "string" },
+                    iconMac: {
+                        type: "string",
+                        pattern: "\\.icns$",
+                        errorMessage: {
+                            pattern: '"iconMac" must be an icns format file',
+                        }
+                    },
+                    iconWin: {
+                        type: "string",
+                        pattern: "\\.ico$",
+                        errorMessage: {
+                            pattern: '"iconWin" must be an ico format file',
+                        }
+                    },
                 },
-                required: ["ext", "name", "description", "icon"],
-                additionalProperties: false
+                required: ["ext", "name"],
+                additionalProperties: false,
+                anyOf: [
+                    { required: ["iconMac"] },
+                    { required: ["iconWin"] }
+                ]
             }
         },
         mac: {

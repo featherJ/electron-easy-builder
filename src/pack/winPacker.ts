@@ -11,6 +11,8 @@ import { SetUpdateConfigMacTask } from "tasks/mac/setUpdateConfigTask";
 import { BuildWinTask } from "tasks/win/buildTask";
 import { AddBuildInfoWinTask } from "tasks/win/addBuildInfoTask";
 import { PackExeTask } from "tasks/win/packExeTask";
+import { AddFileAssociationsTask } from "tasks/win/addFileAssociationsTask";
+import { WinFileAssociation } from "configs/common";
 
 export class WinPacker {
     private initer: Initer;
@@ -24,8 +26,7 @@ export class WinPacker {
         // clearMacTask.init(this.initer.builderConfig, this.initer.packageConfig, this.initer.projectDir, true);
         // await runTask(clearMacTask);
 
-        const electronBuilderConfig = extractElectronBuilderConfig(this.initer.builderConfig);
-
+        const electronBuilderConfig = extractElectronBuilderConfig(this.initer.builderConfig,"win");
         // //打包win的app
         // const buildTask = new BuildWinTask();
         // buildTask.init(electronBuilderConfig, this.initer.projectDir);
@@ -37,12 +38,16 @@ export class WinPacker {
         // const buildConfig = await runTask(addBuildInfoTask);
 
 
+        //添加图标资源
+        const addFileAssociationsTask = new AddFileAssociationsTask();
+        addFileAssociationsTask.init(this.initer.builderConfig, this.initer.projectDir);
+        let winFileAssociations = await runTask(addFileAssociationsTask);
+
 
         //打包exe 安装包
         const packExeTask = new PackExeTask();
-        packExeTask.init(this.initer.builderConfig, this.initer.packageConfig, this.initer.projectDir);
+        packExeTask.init(this.initer.builderConfig, this.initer.packageConfig, this.initer.projectDir,winFileAssociations);
         let exeOutputs = await runTask(packExeTask);
-
 
 
         // //打更新包
