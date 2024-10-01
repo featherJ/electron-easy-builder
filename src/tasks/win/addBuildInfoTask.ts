@@ -50,6 +50,13 @@ export class AddBuildInfoWinTask extends TaskBase implements ITask {
             configString += this.sourceConfig.win?.pack?.regValueName
         }
 
+        if(this.sourceConfig.win?.pack?.friendlyAppName){
+            configString += this.sourceConfig.win?.pack?.friendlyAppName
+        }
+
+        if(this.sourceConfig.win?.pack?.productName){
+            configString += this.sourceConfig.win?.pack?.productName
+        }
 
         let configHash = hashString(configString);
 

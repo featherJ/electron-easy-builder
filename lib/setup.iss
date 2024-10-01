@@ -31,7 +31,7 @@ Compression=none
 #if "" != SetupIconFile
   SetupIconFile={#SetupIconFile}
 #endif
-UninstallDisplayIcon={app}\\{#ExeBasename}\n";
+UninstallDisplayIcon={app}\{#ExeBasename}
 ChangesAssociations={#HasAssociations}
 MinVersion=6.1sp1
 SourceDir={#SourceDir}
