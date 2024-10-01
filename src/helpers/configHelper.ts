@@ -8,6 +8,7 @@ import { libDir } from "utils/path";
 import YAML from 'yaml';
 import setupIss from '../../lib/setup.iss';
 import { warn } from "utils/log";
+import { json } from "stream/consumers";
 
 /**
  * 提取electron-builder使用的yml配置
@@ -145,13 +146,13 @@ export function generateDmgLicenseConfig(builderConfig: any, projectDir: string)
         } else if (!fs.statSync(licenseDir).isDirectory) {
             throw `${licenseDir} is not a folder`
         } else {
-            const jsonFile: any = {
+            const jsonFile:any = {
                 $schema: "https://github.com/argv-minus-one/dmg-license/raw/master/schema.json",
                 body: [],
                 labels: [],
             };
 
-            const licenseRegex = /^license\.([a-z]{2}(?:[-_][A-Z]{2})?)\.txt$/;
+            const licenseRegex = /^license\.([a-z]{2}(?:[-_][A-Z]{2})?)\.?(default)?\.txt$/;
             const licenseButtonsJsonRegex = /^license_buttons\.([a-z]{2}(?:[-_][A-Z]{2})?)\.json$/;
             const licenseButtonsYmlRegex = /^license_buttons\.([a-z]{2}(?:[-_][A-Z]{2})?)\.yml$/;
 
@@ -162,10 +163,18 @@ export function generateDmgLicenseConfig(builderConfig: any, projectDir: string)
                 if (licenseMatches && licenseMatches[1]) {
                     //协议文本文件
                     let lang = licenseMatches[1].replace("_", "-");
-                    jsonFile.body.push({
-                        file: filename,
-                        lang: lang,
-                    });
+                    let isDefault = licenseMatches[2] == "default";
+                    if(isDefault){
+                        jsonFile.body.unshift({
+                                file: filename,
+                                lang: lang,
+                            });
+                    }else{
+                        jsonFile.body.push({
+                            file: filename,
+                            lang: lang,
+                        });
+                    }
                 }
 
                 let buttonsData: any = null;
@@ -287,8 +296,8 @@ export function getWinAppPaths(config: any, projectDir: string): AppPath[] {
 }
 
 
-export function generateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath:AppPath): string {
-    if(builderConfig.win?.pack){
+export function generateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath): string {
+    if (builderConfig.win?.pack) {
         let config = "";
         // define
         config += `#define AppId "${builderConfig.appId}"\n`;
@@ -318,95 +327,146 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
         config += `#define Version "${packageConfig.version}"\n`;
         config += `#define ArchitecturesAllowed "${appPath.arch}"\n`;
         config += `#define DirName "${builderConfig.productName}"\n`;
-        let appUserModelID = builderConfig.win?.pack?.appUserModelID ?  builderConfig.win?.pack?.appUserModelID : "";
+        let appUserModelID = builderConfig.win?.pack?.appUserModelID ? builderConfig.win?.pack?.appUserModelID : "";
         config += `#define AppUserId "${appUserModelID}"\n`;
         config += `#define InstallTarget "user"\n`;
         config += "\n";
         //languages
-        if (builderConfig.win?.pack?.license) {
-            let licenseDir:string = path.join(projectDir,builderConfig.win?.pack?.license);
-            let languagesDir = path.join(libDir(),"languages");
-            //遍历已有的语言文件
-            const islRegex = /^([A-Za-z]+)\.([a-z]{2}(?:[-_][A-Z]{2})?)\.isl$/;
-            let files = fs.readdirSync(languagesDir);
-            let existMessagesMap:{[langCode:string]:{
-                langName:string,
-                langCode:string,
-                filename:string
-            }} = {}
-            files.forEach(value=>{
-                let filename = path.join(languagesDir, value);
-                const islMatches = value.match(islRegex);
-                if(islMatches && islMatches[1] && islMatches[2]){
-                    let languageName = islMatches[1];
-                    languageName = languageName.charAt(0).toLowerCase() + languageName.slice(1);
-                    const languageCode = islMatches[2].replace("_", "-");
-                    existMessagesMap[languageCode] = {
-                        langName:languageName,
-                        langCode:languageCode,
-                        filename:filename
-                    };
-                }
-            });
+        type MessageItem = {
+            langName: string,
+            langCode: string,
+            filename: string,
+            isPreferred: boolean,
+            license: string
+        };
 
-            if(!fs.existsSync(licenseDir)){
+        //遍历已有的语言文件
+        let languagesDir = path.join(libDir(), "languages");
+        const islRegex = /^([A-Za-z]+)\.([a-z]{2}(?:[-_][A-Z]{2})?)\.isl$/;
+        let files = fs.readdirSync(languagesDir);
+        let messagesMap: { [langCode: string]: MessageItem } = {}
+        files.forEach(value => {
+            let filename = path.join(languagesDir, value);
+            const islMatches = value.match(islRegex);
+            if (islMatches && islMatches[1] && islMatches[2]) {
+                let languageName = islMatches[1];
+                languageName = languageName.charAt(0).toLowerCase() + languageName.slice(1);
+                const languageCode = islMatches[2].replace("_", "-");
+                messagesMap[languageCode] = {
+                    langName: languageName,
+                    langCode: languageCode,
+                    filename: filename,
+                    isPreferred: false,
+                    license: ""
+                };
+            }
+        });
+        let firstMessage: MessageItem = null;
+        let englishMessage: MessageItem = null;
+        let defaultMessage: MessageItem = null;
+        let langConfig = `[Languages]\n`;
+
+        if (builderConfig.win?.pack?.license) {
+            let licenseDir: string = path.join(projectDir, builderConfig.win?.pack?.license);
+            if (!fs.existsSync(licenseDir)) {
                 throw `Folder ${licenseDir} does not exist`
-            }else if(!fs.statSync(licenseDir).isDirectory){
+            } else if (!fs.statSync(licenseDir).isDirectory) {
                 throw `${licenseDir} is not a folder`
-            }else{
-                const licenseRegex = /^license\.([a-z]{2}(?:[-_][A-Z]{2})?)\.txt$/;
+            } else {
+                const licenseRegex = /^license\.([a-z]{2}(?:[-_][A-Z]{2})?)\.?(default)?\.txt$/;
                 let files = fs.readdirSync(licenseDir);
-                let findLang = false;
-                let langConfig = `[Languages]\n`;
-                files.forEach(value=>{
+             
+                files.forEach(value => {
                     let filename = path.join(licenseDir, value);
                     const licenseMatches = value.match(licenseRegex);
                     if (licenseMatches && licenseMatches[1]) {
                         //协议文本文件
                         let lang = licenseMatches[1].replace("_", "-");
-                        let fileContent = fs.readFileSync(filename,{encoding:"utf8"});
+                        let isDefault = licenseMatches[2] == "default";
+
+                        let fileContent = fs.readFileSync(filename, { encoding: "utf8" });
                         // 检查并移除 BOM
                         if (fileContent.charCodeAt(0) === 0xFEFF) {
                             fileContent = fileContent.slice(1);
                         }
-                        let output = path.join(tmpdir(),value);
+                        let output = path.join(tmpdir(), value);
                         let gbkBuffer = iconv.encode(fileContent, 'gbk');
-                        fs.writeFileSync(output,gbkBuffer);
+                        fs.writeFileSync(output, gbkBuffer);
                         //查找对应的默认文本
-                        let existMessage = existMessagesMap[lang];
-                        if(!existMessage){
+                        let existMessage = messagesMap[lang];
+                        if (!existMessage) {
                             let lang2 = lang.split("-")[0];
-                            existMessage = existMessagesMap[lang2];
+                            existMessage = messagesMap[lang2];
                         }
-                        if(existMessage){
-                            findLang = true;
-                            langConfig += `Name: "${existMessage.langName}"; MessagesFile: "${existMessage.filename}"; LicenseFile:"${output}"\n`;
-                        }else{
+                        if (existMessage) {
+                            existMessage.license = output;
+                            if (!firstMessage) {
+                                firstMessage = existMessage;
+                            }
+                            if (isDefault) {
+                                defaultMessage = existMessage;
+                            }
+                            if (existMessage.langCode == "en") {
+                                englishMessage = existMessage;
+                            }
+                        } else {
                             warn(`There is no built-in ${lang} language file yet`);
                         }
                     }
                 });
-                if(findLang){
-                    config += langConfig;
-                    config += "\n";
+                if (!defaultMessage) {
+                    //没有配置任何多语言
+                    if (englishMessage) {
+                        //优先选择英语
+                        defaultMessage = englishMessage;
+                    } else {
+                        //否则选择找到的第一个license作为默认
+                        englishMessage = firstMessage;
+                    }
                 }
             }
         }
-        
+
+        if (defaultMessage) {
+            defaultMessage.isPreferred = true;
+            langConfig += `Name: "${defaultMessage.langName}"; MessagesFile: "${defaultMessage.filename}"; LicenseFile:"${defaultMessage.license}"\n`;
+            //设置了协议文件
+            for (let l in messagesMap) {
+                let message = messagesMap[l];
+                if (!message.isPreferred) {
+                    if (message.license) {
+                        langConfig += `Name: "${message.langName}"; MessagesFile: "${message.filename}"; LicenseFile:"${message.license}"\n`;
+                    } else {
+                        langConfig += `Name: "${message.langName}"; MessagesFile: "${message.filename}"; LicenseFile:"${defaultMessage.license}"\n`;
+                    }
+                }
+            }
+        } else {
+            //没有设置任何的协议文件
+            englishMessage = messagesMap["en"];
+            langConfig += `Name: "${englishMessage.langName}"; MessagesFile: "${englishMessage.filename}"\n`;
+            for(let l  in messagesMap){
+                let message = messagesMap[l];
+                if(l != "en"){
+                    langConfig += `Name: "${message.langName}"; MessagesFile: "${message.filename}"\n`;
+                }
+            }
+        }
+        config += langConfig;
+        config += "\n";
 
 
-    
         let baseConfig: string = setupIss;
         // 检查并移除 BOM
         if (baseConfig.charCodeAt(0) === 0xFEFF) {
             baseConfig = baseConfig.slice(1);
         }
         config += baseConfig;
-    
-    
+
+
         let output = path.join(tmpdir(), "setup.iss");
         const gbkBuffer = iconv.encode(config, 'gbk');
-        fs.writeFileSync(output,gbkBuffer);
+        fs.writeFileSync(output, gbkBuffer);
         return output;
     }
     return null;

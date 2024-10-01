@@ -84,11 +84,6 @@ win:
     appUrl: http://my-website.com
     publisherName: My Company Inc
     appUserModelID: MyCompany.Template
-    licenseFile:
-      - language: chinese
-        file: path/license_chinese.txt
-      - language: english
-        file: path/license_english.txt
     wizardSmallImageFile: path/wizardSmallImageFile.bmp
     wizardImageFile: path/wizardImageFile.bmp
     license: build/license #目前仅支持license.en-US.txt，utf8格式
