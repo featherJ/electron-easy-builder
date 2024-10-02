@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { AppPath, WinFileAssociation, WinSign } from "configs/common";
-import { generateSetupIss, generateWinSign, getWinAppPaths } from "helpers/configHelper";
+import { generateResourceUpdateIss, generateSetupIss, generateWinSign, getWinAppPaths } from "helpers/configHelper";
 import { ITask, TaskBase } from "tasks/common";
 import { info } from "utils/log";
 import path from "path";
@@ -8,11 +8,11 @@ import { runCommand } from 'utils/exec';
 import { nodeModulesDir, signToolFilename } from 'utils/path';
 
 /**
- * 打包exe安装包的任务
+ * 打包exe更新包的任务
  */
-export class PackExeTask extends TaskBase implements ITask {
+export class PackExeUpdaterTask extends TaskBase implements ITask {
     constructor() {
-        super("Exe installer Package")
+        super("Exe updater Package")
     }
 
     private sourceConfig: any;
@@ -40,7 +40,7 @@ export class PackExeTask extends TaskBase implements ITask {
         let outputs: AppPath[] = [];
         for (let i = 0; i < 1; i++) {
             let appPath = apps[i];
-            let issFilename = generateSetupIss(this.sourceConfig, this.packageConfig, this.projectDir, appPath, this.winFileAssociations, !!sign);
+            let issFilename = generateResourceUpdateIss(this.sourceConfig, this.packageConfig, this.projectDir, appPath, this.winFileAssociations, !!sign);
             console.log(issFilename);
             if (issFilename) {
                 info(`packaging ${chalk.blue("file")}=${appPath.path}`)

@@ -7,6 +7,7 @@ import path from "path";
 import { libDir } from "utils/path";
 import YAML from 'yaml';
 import setupIss from '../../lib/setup.iss';
+import updateIss from '../../lib/update.iss';
 import { warn } from "utils/log";
 import { json } from "stream/consumers";
 
@@ -309,7 +310,7 @@ export function getWinAppPaths(config: any, projectDir: string): AppPath[] {
 }
 
 
-export function generateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath, winFileAssociations: WinFileAssociation[],sign:boolean): string {
+export function generateSetupIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath, winFileAssociations: WinFileAssociation[],sign:boolean): string {
     if (builderConfig.win?.pack) {
         let config = "";
         // define
@@ -510,6 +511,54 @@ export function generateIss(builderConfig: any, packageConfig: any, projectDir: 
 
 
         let output = path.join(tmpdir(), "setup.iss");
+        const gbkBuffer = iconv.encode(config, 'gbk');
+        fs.writeFileSync(output, gbkBuffer);
+        return output;
+    }
+    return null;
+}
+
+
+export function generateResourceUpdateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath, winFileAssociations: WinFileAssociation[],sign:boolean): string {
+    if (builderConfig.win?.pack) {
+        let config = "";
+        // define
+        config += `#define AppId "${builderConfig.appId}"\n`;
+        config += `#define AppName "${builderConfig.productName}"\n`;
+        let nameVersion = builderConfig.win?.pack?.verName ? builderConfig.win?.pack?.verName : builderConfig.productName;
+        config += `#define NameVersion "${nameVersion}"\n`;
+        let publisher = builderConfig.win?.pack?.publisherName ? builderConfig.win?.pack?.publisherName : "";
+        config += `#define Publisher "${publisher}"\n`;
+        let publisherURL = builderConfig.win?.pack?.publisherName && builderConfig.win?.pack?.appUrl ? builderConfig.win?.pack?.appUrl : "";
+        config += `#define PublisherURL "${publisherURL}"\n`;
+        let supportURL = builderConfig.win?.pack?.appUrl ? builderConfig.win?.pack?.appUrl : "";
+        config += `#define SupportURL "${supportURL}"\n`;
+        let updatesURL = builderConfig.win?.pack?.appUrl ? builderConfig.win?.pack?.appUrl : "";
+        config += `#define UpdatesURL "${updatesURL}"\n`;
+        config += `#define OutputDir "${path.join(projectDir, builderConfig.output)}"\n`;
+        let outputBasename = `${builderConfig.productName}-${packageConfig.version}-${appPath.arch == "x64" ? "x64-resource-update" : "x86-resource-update"}`
+        config += `#define OutputBasename "${outputBasename}"\n`;
+        let setupIcon = builderConfig.win?.pack?.setupIcon ? path.join(projectDir, builderConfig.win?.pack?.setupIcon) : "";
+        config += `#define SetupIconFile "${setupIcon}"\n`;
+        config += `#define ExeBasename "${builderConfig.productName + ".exe"}"\n`;
+        config += `#define SourceDir "${appPath.path}"\n`;
+        config += `#define Version "${packageConfig.version}"\n`;
+        config += `#define ArchitecturesAllowed "${appPath.arch}"\n`;
+        config += `#define DirName "${builderConfig.productName}"\n`;
+        config += `#define InstallTarget "user"\n`;
+        config += `#define Sign "${sign ? "sign" : ""}"\n`;
+
+        config += "\n";
+
+        let baseConfig: string = updateIss;
+        // 检查并移除 BOM
+        if (baseConfig.charCodeAt(0) === 0xFEFF) {
+            baseConfig = baseConfig.slice(1);
+        }
+        config += baseConfig;
+
+
+        let output = path.join(tmpdir(), "update.iss");
         const gbkBuffer = iconv.encode(config, 'gbk');
         fs.writeFileSync(output, gbkBuffer);
         return output;

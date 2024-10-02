@@ -20,6 +20,9 @@ export function signToolFilename(): string {
         return path.join(libDir(), "signtool", "windows-6", "signtool.exe");
     }
     else {
-        return path.join(libDir(), "signtool", "windows-10", process.arch, "signtool.exe");
+        if (process.arch == "x64") {
+            return path.join(libDir(), "signtool", "windows-10", "x64", "signtool.exe");
+        }
+        return path.join(libDir(), "signtool", "windows-10", "ia32", "signtool.exe");
     }
 }

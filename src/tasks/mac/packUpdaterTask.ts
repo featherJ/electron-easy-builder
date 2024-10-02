@@ -10,9 +10,9 @@ import { info } from "utils/log";
 /**
  * 打包mac更新包的任务
  */
-export class PackMacUpdateTask extends TaskBase implements ITask {
+export class PackMacUpdaterTask extends TaskBase implements ITask {
     constructor() {
-        super("Mac update Package")
+        super("Mac updater Package")
     }
 
     private sourceConfig: any;

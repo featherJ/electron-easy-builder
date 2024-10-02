@@ -6,7 +6,7 @@ import { ClearMacTask } from "tasks/mac/clearMacTask";
 import { NotarizeMacTask } from "tasks/mac/notarizeTask";
 import { PackDmgTask } from "tasks/mac/packDmgTask";
 import { Initer } from "./initer";
-import { PackMacUpdateTask } from "tasks/mac/packUpdateTask";
+import { PackMacUpdaterTask } from "tasks/mac/packUpdaterTask";
 import { SetUpdateConfigMacTask } from "tasks/mac/setUpdateConfigTask";
 
 export class MacPacker {
@@ -47,7 +47,7 @@ export class MacPacker {
         let dmgOutputs = await runTask(packDmgTask);
 
         //打更新包
-        const packMacUpdateTask = new PackMacUpdateTask();
+        const packMacUpdateTask = new PackMacUpdaterTask();
         packMacUpdateTask.init(this.initer.builderConfig, this.initer.packageConfig, this.initer.projectDir);
         let updateOutputs = await runTask(packMacUpdateTask);
 
