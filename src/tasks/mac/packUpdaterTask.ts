@@ -6,6 +6,7 @@ import { getMacAppPaths } from "helpers/configHelper";
 import * as path from 'path';
 import { ITask, TaskBase } from "tasks/common";
 import { info } from "utils/log";
+import { removeSpace } from "utils/string";
 
 /**
  * 打包mac更新包的任务
@@ -56,7 +57,7 @@ export class PackMacUpdaterTask extends TaskBase implements ITask {
         let archName = arch == "x64" ? "intel" : "apple-silicon";
         let contentsDir = path.join(appPath, "Contents");
         let files = fs.readdirSync(contentsDir);
-        let outputName = path.join(outputDir, `${this.sourceConfig.productName}-${this.packageConfig.version}-${archName}-${full ? "full" : "resource"}-update.zip`);
+        let outputName = path.join(outputDir, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-${archName}-${full ? "full" : "resource"}-update.zip`);
         const output = fs.createWriteStream(outputName);
         const archive = archiver('zip', {
             zlib: { level: 9 },

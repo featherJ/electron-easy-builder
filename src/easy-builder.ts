@@ -108,11 +108,8 @@ program.parse(process.argv);
 // let valid = initer.init();
 // let winPacker = new WinPacker(initer);
 // winPacker.pack();
+
 // const initer = new Initer("/Users/apple/Documents/FacnyGit/editor-electron-template/");
 // let valid = initer.init();
-// let appPath:AppPath = {
-//     path:"/Users/apple/Documents/FacnyGit/editor-electron-template/dist/win-unpacked",
-//     arch:"x64"
-// }
-// let winPacker = new WinPacker(initer);
-// winPacker.pack();
+// let macPacker = new MacPacker(initer);
+// macPacker.pack();

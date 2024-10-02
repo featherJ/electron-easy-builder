@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { AppPath, BaseBuildConfig, MacArch, MacArchUpdate } from "configs/common";
+import { AppPath, BaseBuildConfig, MacArch, MacArchUpdate, WinArch, WinArchUpdate } from "configs/common";
 import fs from "fs";
 import { UpdateConfigHelper } from "helpers/updateHelper";
 import path from "path";
@@ -9,9 +9,9 @@ import { info } from "utils/log";
 /**
  * 更新配置文件
  */
-export class SetUpdateConfigMacTask extends TaskBase implements ITask {
+export class SetUpdateConfigWinTask extends TaskBase implements ITask {
     constructor() {
-        super("Mac update config")
+        super("Win update config")
     }
 
     private sourceConfig: any;
@@ -37,14 +37,14 @@ export class SetUpdateConfigMacTask extends TaskBase implements ITask {
     }
 
     public async run(): Promise<void> {
-        var helper = new UpdateConfigHelper(this.sourceConfig,this.projectDir,"mac");
+        var helper = new UpdateConfigHelper(this.sourceConfig,this.projectDir,"win");
         let updateConfig = helper.getUpdateConfig();
         updateConfig.electron = this.buildConfig.electron;
         updateConfig.build = this.buildConfig.build;
         updateConfig.version = this.packageConfig.version;
         for(var i = 0;i<this.apps.length;i++){
             var appPath = this.apps[i];
-            let arch = appPath.arch as (MacArch | MacArchUpdate);
+            let arch = appPath.arch as (WinArch | WinArchUpdate);
             const stats = fs.statSync(appPath.path);
             const fileSizeInBytes = stats.size;
             if(arch == "x64"){
@@ -52,10 +52,8 @@ export class SetUpdateConfigMacTask extends TaskBase implements ITask {
                 let archConfig = helper.getArchUpdateConfig(updateConfig,"x64");
                 archConfig.download.url = path.basename(appPath.path);
                 archConfig.download.size = fileSizeInBytes;
-            }
-            if(arch == "x64-full-update"){
                 info(`setting ${chalk.blue("arch")}=x64 ${chalk.blue("type")}=full`)
-                let archConfig = helper.getArchUpdateConfig(updateConfig,"x64");
+                archConfig = helper.getArchUpdateConfig(updateConfig,"x64");
                 archConfig.full.url = path.basename(appPath.path);
                 archConfig.full.size = fileSizeInBytes;
             }
@@ -65,22 +63,19 @@ export class SetUpdateConfigMacTask extends TaskBase implements ITask {
                 archConfig.resource.url = path.basename(appPath.path);
                 archConfig.resource.size = fileSizeInBytes;
             }
-
-            if(arch == "arm64"){
-                info(`setting ${chalk.blue("arch")}=arm64 ${chalk.blue("type")}=download`)
-                let archConfig = helper.getArchUpdateConfig(updateConfig,"arm64");
+            if(arch == "x86"){
+                info(`setting ${chalk.blue("arch")}=x86 ${chalk.blue("type")}=download`)
+                let archConfig = helper.getArchUpdateConfig(updateConfig,"x86");
                 archConfig.download.url = path.basename(appPath.path);
                 archConfig.download.size = fileSizeInBytes;
-            }
-            if(arch == "arm64-full-update"){
-                info(`setting ${chalk.blue("arch")}=arm64 ${chalk.blue("type")}=full`)
-                let archConfig = helper.getArchUpdateConfig(updateConfig,"arm64");
+                info(`setting ${chalk.blue("arch")}=x86 ${chalk.blue("type")}=full`)
+                archConfig = helper.getArchUpdateConfig(updateConfig,"x86");
                 archConfig.full.url = path.basename(appPath.path);
                 archConfig.full.size = fileSizeInBytes;
             }
-            if(arch == "arm64-resource-update"){
-                info(`setting ${chalk.blue("arch")}=arm64 ${chalk.blue("type")}=resource`)
-                let archConfig = helper.getArchUpdateConfig(updateConfig,"arm64");
+            if(arch == "x86-resource-update"){
+                info(`setting ${chalk.blue("arch")}=x86 ${chalk.blue("type")}=resource`)
+                let archConfig = helper.getArchUpdateConfig(updateConfig,"x86");
                 archConfig.resource.url = path.basename(appPath.path);
                 archConfig.resource.size = fileSizeInBytes;
             }

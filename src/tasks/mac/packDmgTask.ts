@@ -30,6 +30,7 @@ export class PackDmgTask extends TaskBase implements ITask {
     }
 
     public async run(): Promise<AppPath[]> {
+        //TODO 看如何使用electron-builder内置的dmg打包
         let apps = getMacAppPaths(this.sourceConfig, this.projectDir);
         let dmgLicenseConfig = generateDmgLicenseConfig(this.sourceConfig, this.projectDir);
         let outputs: AppPath[] = [];

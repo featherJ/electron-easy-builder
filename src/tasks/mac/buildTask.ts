@@ -1,6 +1,7 @@
 import { ITask, TaskBase } from "tasks/common";
 import { Configuration } from "electron-builder"
 import { requireDynamically } from "base/dynamicImport";
+// import { build } from "electron-builder";
 
 /**
  * mac app 构建任务

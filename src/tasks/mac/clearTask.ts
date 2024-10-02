@@ -1,6 +1,7 @@
 import fs from "fs-extra";
 import path from "path";
 import { ITask, TaskBase } from "tasks/common";
+import { removeSpace } from "utils/string";
 /**
  * 清理mac构建任务
  */
@@ -31,12 +32,12 @@ export class ClearMacTask extends TaskBase implements ITask{
         fs.removeSync(builderEffectiveConfigFilename);
         fs.removeSync(builderDebugFilename);
         if(this.all){
-            let x64DmgFilename = path.join(outputName, `${this.sourceConfig.productName}-${this.packageConfig.version}-intel.dmg`);
-            let x64ResourceFilename = path.join(outputName, `${this.sourceConfig.productName}-${this.packageConfig.version}-intel-resource-update.zip`);
-            let x64FullFilename = path.join(outputName, `${this.sourceConfig.productName}-${this.packageConfig.version}-intel-full-update.zip`);
-            let arm64DmgFilename = path.join(outputName, `${this.sourceConfig.productName}-${this.packageConfig.version}-apple-silicon.dmg`);
-            let arm64ResourceFilename = path.join(outputName, `${this.sourceConfig.productName}-${this.packageConfig.version}-apple-silicon-resource-update.zip`);
-            let arm64FullFilename = path.join(outputName, `${this.sourceConfig.productName}-${this.packageConfig.version}-apple-silicon-full-update.zip`);
+            let x64DmgFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-intel.dmg`);
+            let x64ResourceFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-intel-resource-update.zip`);
+            let x64FullFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-intel-full-update.zip`);
+            let arm64DmgFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-apple-silicon.dmg`);
+            let arm64ResourceFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-apple-silicon-resource-update.zip`);
+            let arm64FullFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-apple-silicon-full-update.zip`);
             fs.removeSync(x64DmgFilename);
             fs.removeSync(x64ResourceFilename);
             fs.removeSync(x64FullFilename);

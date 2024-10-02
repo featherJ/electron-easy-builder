@@ -2,7 +2,7 @@ import { extractElectronBuilderConfig, extractNotarizeConfig } from "helpers/con
 import { runTask } from "tasks/common";
 import { AddBuildInfoMacTask } from "tasks/mac/addBuildInfoTask";
 import { BuildMacTask } from "tasks/mac/buildTask";
-import { ClearMacTask } from "tasks/mac/clearMacTask";
+import { ClearMacTask } from "tasks/mac/clearTask";
 import { NotarizeMacTask } from "tasks/mac/notarizeTask";
 import { PackDmgTask } from "tasks/mac/packDmgTask";
 import { Initer } from "./initer";

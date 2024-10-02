@@ -10,6 +10,7 @@ import setupIss from '../../lib/setup.iss';
 import updateIss from '../../lib/update.iss';
 import { warn } from "utils/log";
 import { json } from "stream/consumers";
+import { removeSpace } from "utils/string";
 
 /**
  * 提取electron-builder使用的yml配置
@@ -35,6 +36,7 @@ export function extractElectronBuilderConfig(builderConfig: any, platform: "mac"
     //files info
     config.files = builderConfig.files; //必须
     config.directories = { output: builderConfig.output } //必须
+    config.extends = path.join(libDir(),"empty.json");//避免使用项目已经存在的electron-builder
 
     //file associations
     if (platform == "mac" && builderConfig.fileAssociations) {
@@ -119,7 +121,7 @@ export function generatePackDmgConfig(builderConfig: any, packageConfig: any, pr
         let iconSize = builderConfig.mac.pack.iconSize;
         let config: AppDmgConfig = {
             basepath: projectDir,
-            target: path.join(projectDir, builderConfig.output, `${builderConfig.productName}-${packageConfig.version}-${appPath.arch == "x64" ? "intel" : "apple-silicon"}.dmg`),
+            target: path.join(projectDir, builderConfig.output, `${removeSpace(builderConfig.productName)}-${packageConfig.version}-${appPath.arch == "x64" ? "intel" : "apple-silicon"}.dmg`),
             specification: {
                 title: builderConfig.mac.pack.title ? builderConfig.mac.pack.title : `${builderConfig.productName} ${packageConfig.version}`,
                 icon: builderConfig.mac.pack.icon ? builderConfig.mac.pack.icon : builderConfig.mac.icon,
@@ -327,9 +329,9 @@ export function generateSetupIss(builderConfig: any, packageConfig: any, project
         let updatesURL = builderConfig.win?.pack?.appUrl ? builderConfig.win?.pack?.appUrl : "";
         config += `#define UpdatesURL "${updatesURL}"\n`;
         config += `#define OutputDir "${path.join(projectDir, builderConfig.output)}"\n`;
-        let outputBasename = `${builderConfig.productName}-${packageConfig.version}-${appPath.arch == "x64" ? "x64" : "x86"}`
+        let outputBasename = `${removeSpace(builderConfig.productName)}-${packageConfig.version}-${appPath.arch == "x64" ? "x64" : "x86"}`
         config += `#define OutputBasename "${outputBasename}"\n`;
-        let outputFilename = path.join(projectDir, builderConfig.output,outputBasename);
+        let outputFilename = path.join(projectDir, builderConfig.output,outputBasename+".exe");
 
         let wizardImageFile = builderConfig.win?.pack?.wizardImageFile ? path.join(projectDir, builderConfig.win?.pack?.wizardImageFile) : "";
         config += `#define WizardImageFile "${wizardImageFile}"\n`;
@@ -544,9 +546,9 @@ export function generateResourceUpdateIss(builderConfig: any, packageConfig: any
         let updatesURL = builderConfig.win?.pack?.appUrl ? builderConfig.win?.pack?.appUrl : "";
         config += `#define UpdatesURL "${updatesURL}"\n`;
         config += `#define OutputDir "${path.join(projectDir, builderConfig.output)}"\n`;
-        let outputBasename = `${builderConfig.productName}-${packageConfig.version}-${appPath.arch == "x64" ? "x64-resource-update" : "x86-resource-update"}`
+        let outputBasename = `${removeSpace(builderConfig.productName)}-${packageConfig.version}-${appPath.arch == "x64" ? "x64-resource-update" : "x86-resource-update"}`
         config += `#define OutputBasename "${outputBasename}"\n`;
-        let outputFilename = path.join(projectDir, builderConfig.output,outputBasename);
+        let outputFilename = path.join(projectDir, builderConfig.output,outputBasename+".exe");
         let setupIcon = builderConfig.win?.pack?.setupIcon ? path.join(projectDir, builderConfig.win?.pack?.setupIcon) : "";
         config += `#define SetupIconFile "${setupIcon}"\n`;
         config += `#define ExeBasename "${builderConfig.productName + ".exe"}"\n`;
