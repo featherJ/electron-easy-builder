@@ -98,18 +98,6 @@ program.command('build')
             return;
         }
     }
-
 });
 
-
 program.parse(process.argv);
-
-// const initer = new Initer("C:\\Users\\Agua.L\\Documents\\project\\editor-electron-template");
-// let valid = initer.init();
-// let winPacker = new WinPacker(initer);
-// winPacker.pack();
-
-// const initer = new Initer("/Users/apple/Documents/FacnyGit/editor-electron-template/");
-// let valid = initer.init();
-// let macPacker = new MacPacker(initer);
-// macPacker.pack();
