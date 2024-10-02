@@ -67,7 +67,7 @@ Source: "resources\*"; DestDir: "{app}\resources"; Flags: ignoreversion recurses
 [Code]
 function IsBackgroundUpdate(): Boolean;
 begin
-  Result := ExpandConstant('{param:update|false}') <> 'false';
+  Result := (Pos('/update', LowerCase(ExpandConstant('{cmdline}'))) > 0);
 end;
 
 function IsNotBackgroundUpdate(): Boolean;
