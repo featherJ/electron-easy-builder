@@ -88,7 +88,7 @@ Source: "*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubd
 [Code]
 function IsBackgroundUpdate(): Boolean;
 begin
-  Result := (Pos('/update', LowerCase(ExpandConstant('{cmdline}'))) > 0);
+  Result := ExpandConstant('{param:update|false}') <> 'false';
 end;
 
 function IsNotBackgroundUpdate(): Boolean;
