@@ -550,14 +550,57 @@ export function generateResourceUpdateIss(builderConfig: any, packageConfig: any
 
         config += "\n";
 
+         //languages
+         type MessageItem = {
+            langName: string,
+            langCode: string,
+            filename: string,
+            isPreferred: boolean,
+            license: string
+        };
+
+        //遍历已有的语言文件
+        let languagesDir = path.join(libDir(), "languages");
+        const islRegex = /^([A-Za-z]+)\.([a-z]{2}(?:[-_][A-Z]{2})?)\.isl$/;
+        let files = fs.readdirSync(languagesDir);
+        let messagesMap: { [langCode: string]: MessageItem } = {}
+        files.forEach(value => {
+            let filename = path.join(languagesDir, value);
+            const islMatches = value.match(islRegex);
+            if (islMatches && islMatches[1] && islMatches[2]) {
+                let languageName = islMatches[1];
+                languageName = languageName.charAt(0).toLowerCase() + languageName.slice(1);
+                const languageCode = islMatches[2].replace("_", "-");
+                messagesMap[languageCode] = {
+                    langName: languageName,
+                    langCode: languageCode,
+                    filename: filename,
+                    isPreferred: false,
+                    license: ""
+                };
+            }
+        });
+        let englishMessage: MessageItem = null;
+        let langConfig = `[Languages]\n`;
+
+        englishMessage = messagesMap["en"];
+        langConfig += `Name: "${englishMessage.langName}"; MessagesFile: "${englishMessage.filename}"\n`;
+        for (let l in messagesMap) {
+            let message = messagesMap[l];
+            if (l != "en") {
+                langConfig += `Name: "${message.langName}"; MessagesFile: "${message.filename}"\n`;
+            }
+        }
+        config += langConfig;
+        config += "\n";
+
+
         let baseConfig: string = updateIss;
         // 检查并移除 BOM
         if (baseConfig.charCodeAt(0) === 0xFEFF) {
             baseConfig = baseConfig.slice(1);
         }
         config += baseConfig;
-
-
         let output = path.join(tmpdir(), "update.iss");
         const gbkBuffer = iconv.encode(config, 'gbk');
         fs.writeFileSync(output, gbkBuffer);

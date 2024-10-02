@@ -26,7 +26,6 @@ Compression=none
   SetupIconFile={#SetupIconFile}
 #endif
 UninstallDisplayIcon={app}\{#ExeBasename}
-ChangesAssociations={#HasAssociations}
 MinVersion=6.1sp1
 SourceDir={#SourceDir}
 AppVersion={#Version}
