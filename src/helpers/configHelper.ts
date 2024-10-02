@@ -343,7 +343,7 @@ export function generateSetupIss(builderConfig: any, packageConfig: any, project
         config += `#define HasAssociations ${builderConfig.fileAssociations ? "yes" : "no"}\n`;
         config += `#define SourceDir "${appPath.path}"\n`;
         config += `#define Version "${packageConfig.version}"\n`;
-        config += `#define ArchitecturesAllowed "${appPath.arch}"\n`;
+        config += `#define ArchitecturesAllowed "${appPath.arch == "x64" ? "x64" : ""}"\n`;
         config += `#define DirName "${builderConfig.productName}"\n`;
         let appUserModelID = builderConfig.win?.pack?.appUserModelID ? builderConfig.win?.pack?.appUserModelID : "";
         config += `#define AppUserId "${appUserModelID}"\n`;
@@ -554,7 +554,6 @@ export function generateResourceUpdateIss(builderConfig: any, packageConfig: any
         config += `#define ExeBasename "${builderConfig.productName + ".exe"}"\n`;
         config += `#define SourceDir "${appPath.path}"\n`;
         config += `#define Version "${packageConfig.version}"\n`;
-        config += `#define ArchitecturesAllowed "${appPath.arch}"\n`;
         config += `#define DirName "${builderConfig.productName}"\n`;
         config += `#define InstallTarget "user"\n`;
         config += `#define Sign "${sign ? "sign" : ""}"\n`;

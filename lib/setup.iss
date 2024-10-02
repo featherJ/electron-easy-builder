@@ -36,7 +36,9 @@ MinVersion=6.1sp1
 SourceDir={#SourceDir}
 AppVersion={#Version}
 ShowLanguageDialog=auto
-ArchitecturesAllowed={#ArchitecturesAllowed}
+#if "" != ArchitecturesAllowed
+  ArchitecturesAllowed={#ArchitecturesAllowed}
+#endif
 WizardStyle=modern
 DisableProgramGroupPage=yes
 DisableWelcomePage=no
