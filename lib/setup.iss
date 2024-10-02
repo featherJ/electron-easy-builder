@@ -19,9 +19,8 @@ AppName={#AppName}
 DefaultGroupName={#AppName}
 OutputDir={#OutputDir}
 OutputBaseFilename={#OutputBasename}
-; Compression=lzma2/ultra64
-Compression=none
-; SolidCompression=yes
+Compression=lzma2/ultra64
+SolidCompression=yes
 #if "" != WizardImageFile
   WizardImageFile={#WizardImageFile}
 #endif
