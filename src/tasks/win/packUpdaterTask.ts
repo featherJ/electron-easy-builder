@@ -38,16 +38,15 @@ export class PackExeUpdaterTask extends TaskBase implements ITask {
         let apps = getWinAppPaths(this.sourceConfig, this.projectDir);
         let sign = generateWinSign(this.sourceConfig, this.projectDir);
         let outputs: AppPath[] = [];
-        for (let i = 0; i < 1; i++) {
+        for (let i = 0; i < apps.length; i++) {
             let appPath = apps[i];
-            let issFilename = generateResourceUpdateIss(this.sourceConfig, this.packageConfig, this.projectDir, appPath, this.winFileAssociations, !!sign);
-            console.log(issFilename);
-            if (issFilename) {
+            let iss = generateResourceUpdateIss(this.sourceConfig, this.packageConfig, this.projectDir, appPath, !!sign);
+            if (iss) {
                 info(`packaging ${chalk.blue("file")}=${appPath.path}`)
-                await this.pack(issFilename, sign);
+                await this.pack(iss.issFilename, sign);
                 outputs.push({
-                    path: "",
-                    arch: appPath.arch
+                    path: iss.outputFilename,
+                    arch: appPath.arch == "x64" ? "x64-resource-update" : "x86-resource-update"
                 })
             }
         }

@@ -310,7 +310,7 @@ export function getWinAppPaths(config: any, projectDir: string): AppPath[] {
 }
 
 
-export function generateSetupIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath, winFileAssociations: WinFileAssociation[],sign:boolean): string {
+export function generateSetupIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath, winFileAssociations: WinFileAssociation[],sign:boolean): {issFilename:string,outputFilename:string} {
     if (builderConfig.win?.pack) {
         let config = "";
         // define
@@ -329,6 +329,8 @@ export function generateSetupIss(builderConfig: any, packageConfig: any, project
         config += `#define OutputDir "${path.join(projectDir, builderConfig.output)}"\n`;
         let outputBasename = `${builderConfig.productName}-${packageConfig.version}-${appPath.arch == "x64" ? "x64" : "x86"}`
         config += `#define OutputBasename "${outputBasename}"\n`;
+        let outputFilename = path.join(projectDir, builderConfig.output,outputBasename);
+
         let wizardImageFile = builderConfig.win?.pack?.wizardImageFile ? path.join(projectDir, builderConfig.win?.pack?.wizardImageFile) : "";
         config += `#define WizardImageFile "${wizardImageFile}"\n`;
         let wizardSmallImageFile = builderConfig.win?.pack?.wizardSmallImageFile ? path.join(projectDir, builderConfig.win?.pack?.wizardSmallImageFile) : "";
@@ -510,16 +512,22 @@ export function generateSetupIss(builderConfig: any, packageConfig: any, project
         config += baseConfig;
 
 
-        let output = path.join(tmpdir(), "setup.iss");
+        let issFilename = path.join(tmpdir(), "setup.iss");
         const gbkBuffer = iconv.encode(config, 'gbk');
-        fs.writeFileSync(output, gbkBuffer);
-        return output;
+        fs.writeFileSync(issFilename, gbkBuffer);
+        return {
+            issFilename:issFilename,
+            outputFilename:outputFilename
+        };
     }
     return null;
 }
 
 
-export function generateResourceUpdateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath, winFileAssociations: WinFileAssociation[],sign:boolean): string {
+export function generateResourceUpdateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath,sign:boolean): {
+    issFilename:string,
+    outputFilename:string
+} {
     if (builderConfig.win?.pack) {
         let config = "";
         // define
@@ -538,6 +546,7 @@ export function generateResourceUpdateIss(builderConfig: any, packageConfig: any
         config += `#define OutputDir "${path.join(projectDir, builderConfig.output)}"\n`;
         let outputBasename = `${builderConfig.productName}-${packageConfig.version}-${appPath.arch == "x64" ? "x64-resource-update" : "x86-resource-update"}`
         config += `#define OutputBasename "${outputBasename}"\n`;
+        let outputFilename = path.join(projectDir, builderConfig.output,outputBasename);
         let setupIcon = builderConfig.win?.pack?.setupIcon ? path.join(projectDir, builderConfig.win?.pack?.setupIcon) : "";
         config += `#define SetupIconFile "${setupIcon}"\n`;
         config += `#define ExeBasename "${builderConfig.productName + ".exe"}"\n`;
@@ -601,10 +610,13 @@ export function generateResourceUpdateIss(builderConfig: any, packageConfig: any
             baseConfig = baseConfig.slice(1);
         }
         config += baseConfig;
-        let output = path.join(tmpdir(), "update.iss");
+        let issFilename = path.join(tmpdir(), "update.iss");
         const gbkBuffer = iconv.encode(config, 'gbk');
-        fs.writeFileSync(output, gbkBuffer);
-        return output;
+        fs.writeFileSync(issFilename, gbkBuffer);
+        return {
+            issFilename:issFilename,
+            outputFilename:outputFilename
+        };
     }
     return null;
 }

@@ -17,7 +17,7 @@ export interface NotarizeConfig {
 export type MacArch = "x64" | "arm64";
 export type MacArchUpdate = "x64-resource-update" | "x64-full-update" | "arm64-resource-update" | "arm64-full-update";
 export type WinArch = "x64" | "x86";
-export type WinArchUpdate = "x64-resource-update" | "x64-full-update" | "x86-resource-update" | "x86-full-update";
+export type WinArchUpdate = "x64-resource-update" | "x86-resource-update" ;
 export type ArchAll = MacArch | MacArchUpdate | WinArch | WinArchUpdate;
 
 /**
