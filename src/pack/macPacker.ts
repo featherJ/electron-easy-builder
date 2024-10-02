@@ -1,13 +1,13 @@
-import { extractElectronBuilderConfig, extractNotarizeConfig } from "helpers/configHelper";
+import { generateNotarizeConfig } from "helpers/configHelper";
 import { runTask } from "tasks/common";
 import { AddBuildInfoMacTask } from "tasks/mac/addBuildInfoTask";
 import { BuildMacTask } from "tasks/mac/buildTask";
 import { ClearMacTask } from "tasks/mac/clearTask";
 import { NotarizeMacTask } from "tasks/mac/notarizeTask";
-import { PackDmgTask } from "tasks/mac/packDmgTask";
-import { Initer } from "./initer";
+import { PackDmgTask_electronBuilder } from "tasks/mac/packDmgTask_electronBuilder";
 import { PackMacUpdaterTask } from "tasks/mac/packUpdaterTask";
 import { SetUpdateConfigMacTask } from "tasks/mac/setUpdateConfigTask";
+import { Initer } from "./initer";
 
 export class MacPacker {
     private initer: Initer;
@@ -21,11 +21,9 @@ export class MacPacker {
         clearTask.init(this.initer.builderConfig, this.initer.packageConfig, this.initer.projectDir, true);
         await runTask(clearTask);
 
-        const electronBuilderConfig = extractElectronBuilderConfig(this.initer.builderConfig,"mac");
-
         //打包mac的app
         const buildTask = new BuildMacTask();
-        buildTask.init(electronBuilderConfig, this.initer.projectDir);
+        buildTask.init(this.initer.builderConfig, this.initer.projectDir);
         await runTask(buildTask);
 
         //添加构建信息
@@ -34,15 +32,17 @@ export class MacPacker {
         const buildConfig = await runTask(addBuildInfoTask);
 
         //公正与装订
-        let notarizeConfig = extractNotarizeConfig(this.initer.builderConfig);
+        let notarizeConfig = generateNotarizeConfig(this.initer.builderConfig);
         if (notarizeConfig) {
             const notarizeMacTask = new NotarizeMacTask();
-            notarizeMacTask.init(electronBuilderConfig, notarizeConfig, this.initer.projectDir);
+            notarizeMacTask.init(this.initer.builderConfig, notarizeConfig, this.initer.projectDir);
             await runTask(notarizeMacTask);
         }
 
         //打包dmg
-        const packDmgTask = new PackDmgTask();
+        // 由于appdmg，当title超过27个字符的时候会报错，所以我把库给改了。但是不知道是否会引发什么问题，所以改回了使用 electron builder 打包dmg
+        // const packDmgTask = new PackDmgTask_appdmg();
+        const packDmgTask = new PackDmgTask_electronBuilder();
         packDmgTask.init(this.initer.builderConfig, this.initer.packageConfig, this.initer.projectDir);
         let dmgOutputs = await runTask(packDmgTask);
 

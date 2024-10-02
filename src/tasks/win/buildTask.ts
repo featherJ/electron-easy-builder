@@ -1,5 +1,6 @@
 import { requireDynamically } from "base/dynamicImport";
 import { Configuration } from "electron-builder";
+import { generateElectronBuilderConfig } from "helpers/configHelper";
 import { ITask, TaskBase } from "tasks/common";
 
 /**
@@ -10,17 +11,18 @@ export class BuildWinTask extends TaskBase implements ITask {
         super("Win builder")
     }
 
-    private electronBuilderConfig: Configuration;
+    private sourceConfig: any;
     private projectDir: string;
-    public init(electronBuilderConfig: Configuration, projectDir: string): void {
-        this.electronBuilderConfig = electronBuilderConfig;
+    public init(sourceConfig: any, projectDir: string): void {
+        this.sourceConfig = sourceConfig;
         this.projectDir = projectDir;
     }
 
     public async run(): Promise<boolean> {
+        let electronBuilderConfig = generateElectronBuilderConfig(this.sourceConfig,"win");
         const { build } = requireDynamically("electron-builder")
         await build({
-            config: this.electronBuilderConfig,
+            config: electronBuilderConfig,
             x64: true,
             ia32: true,
             win: [],

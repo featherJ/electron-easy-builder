@@ -17,7 +17,7 @@ import { removeSpace } from "utils/string";
  * @param builderConfig 
  * @returns 
  */
-export function extractElectronBuilderConfig(builderConfig: any, platform: "mac" | "win"): Configuration {
+export function generateElectronBuilderConfig(builderConfig: any, platform: "mac" | "win"): Configuration {
     let config: any = {};
     //base info
     config.appId = builderConfig.appId; //必须
@@ -36,7 +36,7 @@ export function extractElectronBuilderConfig(builderConfig: any, platform: "mac"
     //files info
     config.files = builderConfig.files; //必须
     config.directories = { output: builderConfig.output } //必须
-    config.extends = path.join(libDir(),"empty.json");//避免使用项目已经存在的electron-builder
+    config.extends = path.join(libDir(), "empty.json");//避免使用项目已经存在的electron-builder
 
     //file associations
     if (platform == "mac" && builderConfig.fileAssociations) {
@@ -93,11 +93,12 @@ export function extractElectronBuilderConfig(builderConfig: any, platform: "mac"
     return config;
 }
 
+
 /**
  * 提取公证用的配置
  * @param builderConfig 
  */
-export function extractNotarizeConfig(builderConfig: any): NotarizeConfig {
+export function generateNotarizeConfig(builderConfig: any): NotarizeConfig {
     if (builderConfig.mac?.notarize) {
         let config: NotarizeConfig = {
             appleId: builderConfig.mac.notarize.appleId,
@@ -110,11 +111,9 @@ export function extractNotarizeConfig(builderConfig: any): NotarizeConfig {
     return null;
 }
 /**
- * 提取打包dmg的配置
- * @param builderConfig 
- * @returns 
+ * 提取打包dmg的配置，暂时先不用了，能用自带的就用自带的
  */
-export function generatePackDmgConfig(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath): AppDmgConfig {
+export function generatePackDmgConfig_appdmg(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath): AppDmgConfig {
     if (builderConfig.mac?.pack) {
         let windowWidth = builderConfig.mac.pack.window.width;
         let windowHeight = builderConfig.mac.pack.window.height;
@@ -144,6 +143,42 @@ export function generatePackDmgConfig(builderConfig: any, packageConfig: any, pr
                 ]
             }
         };
+        return config;
+    }
+    return null;
+}
+
+/**
+ * 提取打包dmg的配置
+ */
+export function generatePackDmgConfig_electronBuilder(builderConfig: any,packageConfig: any,projectDir: string, appPath: AppPath): Configuration {
+    if (builderConfig.mac?.pack) {
+        let config: any = {};
+        config.extends = path.join(libDir(), "empty.json");//避免使用项目已经存在的electron-builder
+        config.productName = builderConfig.productName; //必须
+        config.directories = { output: builderConfig.output } //必须
+        config.dmg = {
+            artifactName:`${removeSpace(builderConfig.productName)}-${packageConfig.version}-${appPath.arch == "x64" ? "intel" : "apple-silicon"}.dmg`,
+            title:builderConfig.mac.pack.title ? builderConfig.mac.pack.title : undefined,
+            background: builderConfig.mac.pack.background,
+            iconSize: builderConfig.mac.pack.iconSize,
+            window: {
+                width: builderConfig.mac.pack.window.width,
+                height: builderConfig.mac.pack.window.height
+            },
+            contents: [
+                {
+                    x: builderConfig.mac.pack.contents.from.x,
+                    y: builderConfig.mac.pack.contents.from.y
+                },
+                {
+                    x: builderConfig.mac.pack.contents.to.x,
+                    y: builderConfig.mac.pack.contents.to.y,
+                    type: "link",
+                    path: "/Applications"
+                }
+            ]
+        }
         return config;
     }
     return null;
@@ -312,7 +347,7 @@ export function getWinAppPaths(config: any, projectDir: string): AppPath[] {
 }
 
 
-export function generateSetupIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath, winFileAssociations: WinFileAssociation[],sign:boolean): {issFilename:string,outputFilename:string} {
+export function generateSetupIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath, winFileAssociations: WinFileAssociation[], sign: boolean): { issFilename: string, outputFilename: string } {
     if (builderConfig.win?.pack) {
         let config = "";
         // define
@@ -331,7 +366,7 @@ export function generateSetupIss(builderConfig: any, packageConfig: any, project
         config += `#define OutputDir "${path.join(projectDir, builderConfig.output)}"\n`;
         let outputBasename = `${removeSpace(builderConfig.productName)}-${packageConfig.version}-${appPath.arch == "x64" ? "x64" : "x86"}`
         config += `#define OutputBasename "${outputBasename}"\n`;
-        let outputFilename = path.join(projectDir, builderConfig.output,outputBasename+".exe");
+        let outputFilename = path.join(projectDir, builderConfig.output, outputBasename + ".exe");
 
         let wizardImageFile = builderConfig.win?.pack?.wizardImageFile ? path.join(projectDir, builderConfig.win?.pack?.wizardImageFile) : "";
         config += `#define WizardImageFile "${wizardImageFile}"\n`;
@@ -518,17 +553,17 @@ export function generateSetupIss(builderConfig: any, packageConfig: any, project
         const gbkBuffer = iconv.encode(config, 'gbk');
         fs.writeFileSync(issFilename, gbkBuffer);
         return {
-            issFilename:issFilename,
-            outputFilename:outputFilename
+            issFilename: issFilename,
+            outputFilename: outputFilename
         };
     }
     return null;
 }
 
 
-export function generateResourceUpdateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath,sign:boolean): {
-    issFilename:string,
-    outputFilename:string
+export function generateResourceUpdateIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath, sign: boolean): {
+    issFilename: string,
+    outputFilename: string
 } {
     if (builderConfig.win?.pack) {
         let config = "";
@@ -548,7 +583,7 @@ export function generateResourceUpdateIss(builderConfig: any, packageConfig: any
         config += `#define OutputDir "${path.join(projectDir, builderConfig.output)}"\n`;
         let outputBasename = `${removeSpace(builderConfig.productName)}-${packageConfig.version}-${appPath.arch == "x64" ? "x64-resource-update" : "x86-resource-update"}`
         config += `#define OutputBasename "${outputBasename}"\n`;
-        let outputFilename = path.join(projectDir, builderConfig.output,outputBasename+".exe");
+        let outputFilename = path.join(projectDir, builderConfig.output, outputBasename + ".exe");
         let setupIcon = builderConfig.win?.pack?.setupIcon ? path.join(projectDir, builderConfig.win?.pack?.setupIcon) : "";
         config += `#define SetupIconFile "${setupIcon}"\n`;
         config += `#define ExeBasename "${builderConfig.productName + ".exe"}"\n`;
@@ -560,8 +595,8 @@ export function generateResourceUpdateIss(builderConfig: any, packageConfig: any
 
         config += "\n";
 
-         //languages
-         type MessageItem = {
+        //languages
+        type MessageItem = {
             langName: string,
             langCode: string,
             filename: string,
@@ -615,8 +650,8 @@ export function generateResourceUpdateIss(builderConfig: any, packageConfig: any
         const gbkBuffer = iconv.encode(config, 'gbk');
         fs.writeFileSync(issFilename, gbkBuffer);
         return {
-            issFilename:issFilename,
-            outputFilename:outputFilename
+            issFilename: issFilename,
+            outputFilename: outputFilename
         };
     }
     return null;
@@ -627,15 +662,15 @@ export function generateResourceUpdateIss(builderConfig: any, packageConfig: any
  * @param builderConfig 
  * @param projectDir 
  */
-export function generateWinSign(builderConfig: any,projectDir:string):WinSign{
-    if(builderConfig.win?.sign){
+export function generateWinSign(builderConfig: any, projectDir: string): WinSign {
+    if (builderConfig.win?.sign) {
         let sourceSign = builderConfig.win?.sign;
-        var sign:WinSign = {
-            certificateFile: path.join(projectDir,sourceSign.certificateFile),
-            certificatePassword:sourceSign.certificatePassword,
-            timeStampServer:sourceSign.timeStampServer ? sourceSign.timeStampServer : "http://timestamp.digicert.com",
-            rfc3161TimeStampServer:sourceSign.rfc3161TimeStampServer ? sourceSign.rfc3161TimeStampServer : "http://timestamp.digicert.com",
-            signingHashAlgorithms: sourceSign.signingHashAlgorithms ? sourceSign.signingHashAlgorithms : ["sha1","sha256"]
+        var sign: WinSign = {
+            certificateFile: path.join(projectDir, sourceSign.certificateFile),
+            certificatePassword: sourceSign.certificatePassword,
+            timeStampServer: sourceSign.timeStampServer ? sourceSign.timeStampServer : "http://timestamp.digicert.com",
+            rfc3161TimeStampServer: sourceSign.rfc3161TimeStampServer ? sourceSign.rfc3161TimeStampServer : "http://timestamp.digicert.com",
+            signingHashAlgorithms: sourceSign.signingHashAlgorithms ? sourceSign.signingHashAlgorithms : ["sha1", "sha256"]
         }
         return sign;
     }

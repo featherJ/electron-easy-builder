@@ -84,6 +84,7 @@ win:
       - sha1
       - sha256
   pack: 
+    # title: "asdfasdf" #默认是 ${productName} ${version}
     verName: Editor Electron Template # https://jrsoftware.org/is6help/index.php?topic=setup_appvername
     setupIcon: build/win/app.ico
     appUrl: http://my-website.com

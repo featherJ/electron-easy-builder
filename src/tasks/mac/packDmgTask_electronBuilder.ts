@@ -1,14 +1,16 @@
 import { requireDynamically } from "base/dynamicImport";
-import chalk from 'chalk';
-import { AppDmgConfig, AppPath } from "configs/common";
-import { generateDmgLicenseConfig, generatePackDmgConfig, getMacAppPaths } from "helpers/configHelper";
+import chalk from "chalk";
+import { AppPath } from "configs/common";
+import { Configuration } from "electron-builder";
+import { generateDmgLicenseConfig, generatePackDmgConfig_electronBuilder, getMacAppPaths } from "helpers/configHelper";
+import path from "path";
 import { ITask, TaskBase } from "tasks/common";
 import { error, info } from "utils/log";
 
 /**
  * 打包dmg的任务
  */
-export class PackDmgTask extends TaskBase implements ITask {
+export class PackDmgTask_electronBuilder extends TaskBase implements ITask {
     constructor() {
         super("Dmg Package")
     }
@@ -30,16 +32,15 @@ export class PackDmgTask extends TaskBase implements ITask {
     }
 
     public async run(): Promise<AppPath[]> {
-        //TODO 看如何使用electron-builder内置的dmg打包
         let apps = getMacAppPaths(this.sourceConfig, this.projectDir);
         let dmgLicenseConfig = generateDmgLicenseConfig(this.sourceConfig, this.projectDir);
         let outputs: AppPath[] = [];
         for (let i = 0; i < apps.length; i++) {
             let appPath = apps[i];
-            let appDmgConfig = generatePackDmgConfig(this.sourceConfig, this.packageConfig, this.projectDir, appPath);
+            let appDmgConfig = generatePackDmgConfig_electronBuilder(this.sourceConfig, this.packageConfig, this.projectDir, appPath);
             if (appDmgConfig) {
                 info(`packaging ${chalk.blue("file")}=${appPath.path}`)
-                let output = await this.pack(appDmgConfig);
+                let output = await this.pack(appDmgConfig,appPath);
                 if(dmgLicenseConfig){
                     info(`adding license ${chalk.blue("file")}=${output}`)
                     await this.addLicense(dmgLicenseConfig,output);
@@ -53,23 +54,18 @@ export class PackDmgTask extends TaskBase implements ITask {
         return outputs;
     }
 
-    private pack(config: AppDmgConfig): Promise<string> {
-        return new Promise((resolve, reject) => {
-            let appdmg = requireDynamically("appdmg");
-            const ee = appdmg(config);
-            ee.on('progress', (i: any) => {
-                if (i.type == "step-begin") {
-                    let output = `${i.title} ${chalk.blue(`${i.current}/${i.total}`)}`;
-                    info(output);
-                }
-            });
-            ee.on('finish', () => {
-                resolve(config.target);
-            });
-            ee.on('error', (e: any) => {
-                reject(e);
-            });
-        });
+    private async pack(config: Configuration,appPath:AppPath): Promise<string> {
+        const { build } = requireDynamically("electron-builder")
+        await build({
+            config:config,
+            x64:appPath.arch == "x64",
+            arm64: appPath.arch == "arm64",
+            mac:["dmg"],
+            projectDir:this.projectDir,
+            prepackaged:appPath.path
+        })
+        let artifactName = config.dmg.artifactName;
+        return path.join(this.projectDir,this.sourceConfig.output,artifactName);
     }
 
     private addLicense(config: any, target: string): Promise<void> {
@@ -82,4 +78,5 @@ export class PackDmgTask extends TaskBase implements ITask {
             }
         )
     }
+
 } 

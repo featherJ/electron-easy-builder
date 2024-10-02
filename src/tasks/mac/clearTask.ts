@@ -31,11 +31,18 @@ export class ClearMacTask extends TaskBase implements ITask{
         fs.removeSync(macArm64Filename);
         fs.removeSync(builderEffectiveConfigFilename);
         fs.removeSync(builderDebugFilename);
+        let x64BlockMapFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-intel.dmg.blockmap`);
+        let arm64BlockMapFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-apple-silicon.dmg.blockmap`);
+        fs.removeSync(x64BlockMapFilename);
+        fs.removeSync(arm64BlockMapFilename);
+        let latestMacFilename = path.join(outputName,"latest-mac.yml");
+        fs.removeSync(latestMacFilename);
         if(this.all){
             let x64DmgFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-intel.dmg`);
             let x64ResourceFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-intel-resource-update.zip`);
             let x64FullFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-intel-full-update.zip`);
             let arm64DmgFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-apple-silicon.dmg`);
+          
             let arm64ResourceFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-apple-silicon-resource-update.zip`);
             let arm64FullFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-apple-silicon-full-update.zip`);
             fs.removeSync(x64DmgFilename);

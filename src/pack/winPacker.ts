@@ -1,4 +1,4 @@
-import { extractElectronBuilderConfig } from "helpers/configHelper";
+import { generateElectronBuilderConfig } from "helpers/configHelper";
 import { runTask } from "tasks/common";
 import { AddBuildInfoWinTask } from "tasks/win/addBuildInfoTask";
 import { AddFileAssociationsTask } from "tasks/win/addFileAssociationsTask";
@@ -21,10 +21,9 @@ export class WinPacker {
         clearWinTask.init(this.initer.builderConfig, this.initer.packageConfig, this.initer.projectDir, true);
         await runTask(clearWinTask);
 
-        const electronBuilderConfig = extractElectronBuilderConfig(this.initer.builderConfig,"win");
         //打包win的app
         const buildTask = new BuildWinTask();
-        buildTask.init(electronBuilderConfig, this.initer.projectDir);
+        buildTask.init(this.initer.builderConfig, this.initer.projectDir);
         await runTask(buildTask);
 
         //添加构建信息

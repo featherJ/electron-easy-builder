@@ -14,7 +14,7 @@ export class NotarizeMacTask extends TaskBase implements ITask {
         super("Mac notarizer")
     }
 
-    private electronBuilderConfig: Configuration;
+    private sourceConfig: any;
     private projectDir: string;
     private notarizeConfig: NotarizeConfig;
 
@@ -24,14 +24,14 @@ export class NotarizeMacTask extends TaskBase implements ITask {
      * @param notarizeConfig 公证配置
      * @param projectDir 项目的工作目录
      */
-    public init(electronBuilderConfig: Configuration, notarizeConfig: NotarizeConfig, projectDir: string): void {
-        this.electronBuilderConfig = electronBuilderConfig;
+    public init(sourceConfig: any, notarizeConfig: NotarizeConfig, projectDir: string): void {
+        this.sourceConfig = sourceConfig;
         this.projectDir = projectDir;
         this.notarizeConfig = notarizeConfig;
     }
 
     public async run(): Promise<void> {
-        let apps = getMacAppPaths(this.electronBuilderConfig, this.projectDir);
+        let apps = getMacAppPaths(this.sourceConfig, this.projectDir);
         for (var i = 0; i < apps.length; i++) {
             let appPath = apps[i];
             info(`notarizing ${chalk.blue("file")}=${appPath.path}`)
