@@ -11,6 +11,7 @@ import updateIss from '../../lib/update.iss';
 import { warn } from "utils/log";
 import { json } from "stream/consumers";
 import { removeSpace } from "utils/string";
+import { detect } from "chardet";
 
 /**
  * 提取electron-builder使用的yml配置
@@ -123,7 +124,7 @@ export function generatePackDmgConfig_appdmg(builderConfig: any, packageConfig: 
             target: path.join(projectDir, builderConfig.output, `${removeSpace(builderConfig.productName)}-${packageConfig.version}-${appPath.arch == "x64" ? "intel" : "apple-silicon"}.dmg`),
             specification: {
                 title: builderConfig.mac.pack.title ? builderConfig.mac.pack.title : `${builderConfig.productName} ${packageConfig.version}`,
-                icon: builderConfig.mac.pack.icon ? builderConfig.mac.pack.icon : builderConfig.mac.icon,
+                icon: builderConfig.mac.icon,
                 "icon-size": iconSize,
                 background: builderConfig.mac.pack.background,
                 window: {
@@ -157,6 +158,7 @@ export function generatePackDmgConfig_electronBuilder(builderConfig: any,package
         config.extends = path.join(libDir(), "empty.json");//避免使用项目已经存在的electron-builder
         config.productName = builderConfig.productName; //必须
         config.directories = { output: builderConfig.output } //必须
+        config.icon = builderConfig.mac.icon;//必须，不然会报缺少icon的警告
         config.dmg = {
             artifactName:`${removeSpace(builderConfig.productName)}-${packageConfig.version}-${appPath.arch == "x64" ? "intel" : "apple-silicon"}.dmg`,
             title:builderConfig.mac.pack.title ? builderConfig.mac.pack.title : undefined,
@@ -203,7 +205,7 @@ export function generateDmgLicenseConfig(builderConfig: any, projectDir: string)
                 labels: [],
             };
 
-            const licenseRegex = /^license\.([a-z]{2}(?:[-_][A-Z]{2})?)\.?(default)?\.txt$/;
+            const licenseRegex = /^license\.([a-z]{2}(?:[-_][A-Z]{2})?)\.?(default)?\.(txt|rtf)$/;
             const licenseButtonsJsonRegex = /^license_buttons\.([a-z]{2}(?:[-_][A-Z]{2})?)\.json$/;
             const licenseButtonsYmlRegex = /^license_buttons\.([a-z]{2}(?:[-_][A-Z]{2})?)\.yml$/;
 
@@ -212,7 +214,6 @@ export function generateDmgLicenseConfig(builderConfig: any, projectDir: string)
                 let filename = path.join(licenseDir, value);
                 const licenseMatches = value.match(licenseRegex);
                 if (licenseMatches && licenseMatches[1]) {
-                    //协议文本文件
                     let lang = licenseMatches[1].replace("_", "-");
                     let isDefault = licenseMatches[2] == "default";
                     if (isDefault) {

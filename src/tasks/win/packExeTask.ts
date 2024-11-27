@@ -5,7 +5,7 @@ import { ITask, TaskBase } from "tasks/common";
 import { info } from "utils/log";
 import path from "path";
 import { runCommand } from 'utils/exec';
-import { nodeModulesDir, signToolFilename } from 'utils/path';
+import { libDir, nodeModulesDir, signToolFilename } from 'utils/path';
 
 /**
  * 打包exe安装包的任务
@@ -54,7 +54,7 @@ export class PackExeTask extends TaskBase implements ITask {
     }
 
     private pack(issFilename: string, sign: WinSign): Promise<void> {
-        const innoSetupPath = `${path.join(nodeModulesDir(), 'innosetup', 'bin', 'ISCC.exe')}`
+        const innoSetupPath = `${path.join(libDir(), 'innosetup', 'bin', 'ISCC.exe')}`
         let args: string[] = [];
         if (sign) {
             if (sign.signingHashAlgorithms.indexOf("sha1") != -1) {

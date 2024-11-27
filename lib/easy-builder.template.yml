@@ -54,7 +54,6 @@ mac:
   pack:
     title: "window title"
     background: build/darwin/background.png
-    icon: build/darwin/app.icns
     license: build/license #支持license.en-US.txt 和 license_buttons.en-US.json | license_buttons.en-US.yml，utf8格式
     iconSize: 80
     window:
