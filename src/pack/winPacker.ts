@@ -1,4 +1,3 @@
-import { generateElectronBuilderConfig } from "helpers/configHelper";
 import { runTask } from "tasks/common";
 import { AddBuildInfoWinTask } from "tasks/win/addBuildInfoTask";
 import { AddFileAssociationsTask } from "tasks/win/addFileAssociationsTask";

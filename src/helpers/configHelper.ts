@@ -78,9 +78,10 @@ export function generateElectronBuilderConfig(builderConfig: any, platform: "mac
     //win config
     if (platform == "win" && builderConfig.win) {
         config.win = {
-            icon: builderConfig.win.appIcon,
+            icon: builderConfig.win.icon,
+            type: "distribution",
+            target: ["dir"],
             extraResources: builderConfig.win.extraResources,
-            target: ["dir"]
         }
         if (builderConfig.win.sign) {
             config.win.certificateFile = builderConfig.win.sign.certificateFile;
