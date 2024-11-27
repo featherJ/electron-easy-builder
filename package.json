@@ -27,7 +27,8 @@
 	},
 	"dependencies": {
 		"chardet": "^2.0.0",
-		"electron-builder": "^25.0.5"
+		"electron-builder": "^25.0.5",
+		"png-to-ico": "^2.1.8"
 	},
 	"optionalDependencies": {
 		"appdmg": "~0.6.6",
