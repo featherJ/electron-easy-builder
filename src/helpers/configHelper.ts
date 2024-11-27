@@ -433,7 +433,7 @@ export function generateSetupIss(builderConfig: any, packageConfig: any, project
             } else if (!fs.statSync(licenseDir).isDirectory) {
                 throw `${licenseDir} is not a folder`
             } else {
-                const licenseRegex = /^license\.([a-z]{2}(?:[-_][A-Z]{2})?)\.?(default)?\.txt$/;
+                const licenseRegex = /^license\.([a-z]{2}(?:[-_][A-Z]{2})?)\.?(default)?\.(txt|rtf)$/;
                 let files = fs.readdirSync(licenseDir);
 
                 files.forEach(value => {
@@ -444,14 +444,14 @@ export function generateSetupIss(builderConfig: any, packageConfig: any, project
                         let lang = licenseMatches[1].replace("_", "-");
                         let isDefault = licenseMatches[2] == "default";
 
-                        let fileContent = fs.readFileSync(filename, { encoding: "utf8" });
-                        // 检查并移除 BOM
-                        if (fileContent.charCodeAt(0) === 0xFEFF) {
-                            fileContent = fileContent.slice(1);
-                        }
-                        let output = path.join(tmpdir(), value);
-                        let gbkBuffer = iconv.encode(fileContent, 'gbk');
-                        fs.writeFileSync(output, gbkBuffer);
+                        // let fileContent = fs.readFileSync(filename, { encoding: "utf8" });
+                        // // 检查并移除 BOM
+                        // if (fileContent.charCodeAt(0) === 0xFEFF) {
+                        //     fileContent = fileContent.slice(1);
+                        // }
+                        // let output = path.join(tmpdir(), value);
+                        // let gbkBuffer = iconv.encode(fileContent, 'gbk');
+                        // fs.writeFileSync(output, gbkBuffer);
                         //查找对应的默认文本
                         let existMessage = messagesMap[lang];
                         if (!existMessage) {
@@ -459,7 +459,7 @@ export function generateSetupIss(builderConfig: any, packageConfig: any, project
                             existMessage = messagesMap[lang2];
                         }
                         if (existMessage) {
-                            existMessage.license = output;
+                            existMessage.license = filename;
                             if (!firstMessage) {
                                 firstMessage = existMessage;
                             }
@@ -551,8 +551,10 @@ export function generateSetupIss(builderConfig: any, packageConfig: any, project
 
 
         let issFilename = path.join(tmpdir(), "setup.iss");
-        const gbkBuffer = iconv.encode(config, 'gbk');
-        fs.writeFileSync(issFilename, gbkBuffer);
+        // const gbkBuffer = iconv.encode(config, 'gbk');
+        // fs.writeFileSync(issFilename, gbkBuffer);
+        fs.writeFileSync(issFilename, config,"utf8");
+
         return {
             issFilename: issFilename,
             outputFilename: outputFilename
@@ -648,8 +650,9 @@ export function generateResourceUpdateIss(builderConfig: any, packageConfig: any
         }
         config += baseConfig;
         let issFilename = path.join(tmpdir(), "update.iss");
-        const gbkBuffer = iconv.encode(config, 'gbk');
-        fs.writeFileSync(issFilename, gbkBuffer);
+        // const gbkBuffer = iconv.encode(config, 'gbk');
+        // fs.writeFileSync(issFilename, gbkBuffer);
+        fs.writeFileSync(issFilename, config,"utf8");
         return {
             issFilename: issFilename,
             outputFilename: outputFilename
