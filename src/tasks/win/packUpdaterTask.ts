@@ -1,11 +1,11 @@
 import chalk from 'chalk';
 import { AppPath, WinFileAssociation, WinSign } from "configs/common";
-import { generateResourceUpdateIss, generateSetupIss, generateWinSign, getWinAppPaths } from "helpers/configHelper";
-import { ITask, TaskBase } from "tasks/common";
-import { info } from "utils/log";
+import { generateResourceUpdateIss, generateWinSign, getWinAppPaths } from "helpers/configHelper";
 import path from "path";
+import { ITask, TaskBase } from "tasks/common";
 import { runCommand } from 'utils/exec';
-import { libDir, nodeModulesDir, signToolFilename } from 'utils/path';
+import { info } from "utils/log";
+import { libDir, signToolFilename } from 'utils/path';
 
 /**
  * 打包exe更新包的任务
@@ -46,7 +46,7 @@ export class PackExeUpdaterTask extends TaskBase implements ITask {
                 await this.pack(iss.issFilename, sign);
                 outputs.push({
                     path: iss.outputFilename,
-                    arch: appPath.arch == "x64" ? "x64-resource-update" : "x86-resource-update"
+                    arch: appPath.arch == "x64" ? "x64-minimal-update" : "x86-minimal-update"
                 })
             }
         }

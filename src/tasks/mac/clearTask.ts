@@ -39,11 +39,11 @@ export class ClearMacTask extends TaskBase implements ITask{
         fs.removeSync(latestMacFilename);
         if(this.all){
             let x64DmgFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-intel.dmg`);
-            let x64ResourceFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-intel-resource-update.zip`);
+            let x64ResourceFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-intel-minimal-update.zip`);
             let x64FullFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-intel-full-update.zip`);
             let arm64DmgFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-apple-silicon.dmg`);
           
-            let arm64ResourceFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-apple-silicon-resource-update.zip`);
+            let arm64ResourceFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-apple-silicon-minimal-update.zip`);
             let arm64FullFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-apple-silicon-full-update.zip`);
             fs.removeSync(x64DmgFilename);
             fs.removeSync(x64ResourceFilename);

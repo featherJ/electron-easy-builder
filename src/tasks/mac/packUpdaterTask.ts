@@ -41,7 +41,7 @@ export class PackMacUpdaterTask extends TaskBase implements ITask {
             let output = await this.packUpdate(appPath.path, appPath.arch, outputDir,false);
             outputs.push({
                 path:output,
-                arch:appPath.arch == "x64" ? "x64-resource-update" : "arm64-resource-update"
+                arch:appPath.arch == "x64" ? "x64-minimal-update" : "arm64-minimal-update"
             })
             output = await this.packUpdate(appPath.path, appPath.arch, outputDir,true);
             outputs.push({
@@ -53,11 +53,11 @@ export class PackMacUpdaterTask extends TaskBase implements ITask {
     }
 
     private async packUpdate(appPath: string, arch: ArchAll, outputDir: string, full: boolean): Promise<string> {
-        info(`packaging update ${chalk.blue("arch")}=${arch} ${chalk.blue("type")}=${full ? "full" : "resource"}`)
+        info(`packaging update ${chalk.blue("arch")}=${arch} ${chalk.blue("type")}=${full ? "full" : "minimal"}`)
         let archName = arch == "x64" ? "intel" : "apple-silicon";
         let contentsDir = path.join(appPath, "Contents");
         let files = fs.readdirSync(contentsDir);
-        let outputName = path.join(outputDir, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-${archName}-${full ? "full" : "resource"}-update.zip`);
+        let outputName = path.join(outputDir, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-${archName}-${full ? "full" : "minimal"}-update.zip`);
         const output = fs.createWriteStream(outputName);
         const archive = archiver('zip', {
             zlib: { level: 9 },

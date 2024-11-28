@@ -33,9 +33,9 @@ export class ClearWinTask extends TaskBase implements ITask{
         fs.removeSync(builderDebugFilename);
         if(this.all){
             let x64Filename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-x64.exe`);
-            let x64ResourceFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-x64-resource-update.exe`);
+            let x64ResourceFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-x64-minimal-update.exe`);
             let x86Filename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-x86.exe`);
-            let x86ResourceFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-x86-resource-update.exe`);
+            let x86ResourceFilename = path.join(outputName, `${removeSpace(this.sourceConfig.productName)}-${this.packageConfig.version}-x86-minimal-update.exe`);
             fs.removeSync(x64Filename);
             fs.removeSync(x64ResourceFilename);
             fs.removeSync(x86Filename);

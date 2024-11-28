@@ -3,7 +3,7 @@
 [![Donation](https://img.shields.io/static/v1?label=Donation&message=❤️&style=social)](https://ko-fi.com/V7V7141EHB)
 
 ## 介绍
-这是一个更简单的 electron 程序的打包工具，同时配合 electron-easy-updater 可以更好的实现 electron 程序在 Windows 和 Mac OS 上的的全量更新与最小体积更新。
+这是一个更简单的 electron 程序的打包工具，同时配合 [electron-easy-updater](https://github.com/featherJ/electron-easy-updater) 可以更好的实现 electron 程序在 Windows 和 Mac OS 上的的全量更新与最小体积更新。
 
 ## 为什么重复造轮子
 出发点是因为官方的 electron-builder 的自动更新在 Mac OS 上只能全量更新，无法只更新指定的文件，导致每次自动更新的尺寸会非常大。而且 electron 使用的 squirrel 的自动更新在 Mac OS 上会验证更新包是否进行了完整的签名。
@@ -42,3 +42,5 @@
 
 ## TODO
 * icon的生成
+* 更新日志字段的生成
+* 最低需要的操作系统的支持

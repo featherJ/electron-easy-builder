@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { AppPath, BaseBuildConfig, MacArch, MacArchUpdate, WinArch, WinArchUpdate } from "configs/common";
+import { AppPath, BaseBuildConfig, MacArch, MacArchUpdate, Platform, WinArch, WinArchUpdate } from "configs/common";
 import fs from "fs";
 import { UpdateConfigHelper } from "helpers/updateHelper";
 import path from "path";
@@ -37,7 +37,7 @@ export class SetUpdateConfigWinTask extends TaskBase implements ITask {
     }
 
     public async run(): Promise<void> {
-        var helper = new UpdateConfigHelper(this.sourceConfig,this.projectDir,"win");
+        var helper = new UpdateConfigHelper(this.sourceConfig,this.projectDir,Platform.win);
         let updateConfig = helper.getUpdateConfig();
         updateConfig.electron = this.buildConfig.electron;
         updateConfig.build = this.buildConfig.build;
@@ -57,11 +57,11 @@ export class SetUpdateConfigWinTask extends TaskBase implements ITask {
                 archConfig.full.url = path.basename(appPath.path);
                 archConfig.full.size = fileSizeInBytes;
             }
-            if(arch == "x64-resource-update"){
-                info(`setting ${chalk.blue("arch")}=x64 ${chalk.blue("type")}=resource`)
+            if(arch == "x64-minimal-update"){
+                info(`setting ${chalk.blue("arch")}=x64 ${chalk.blue("type")}=minimal`)
                 let archConfig = helper.getArchUpdateConfig(updateConfig,"x64");
-                archConfig.resource.url = path.basename(appPath.path);
-                archConfig.resource.size = fileSizeInBytes;
+                archConfig.minimal.url = path.basename(appPath.path);
+                archConfig.minimal.size = fileSizeInBytes;
             }
             if(arch == "x86"){
                 info(`setting ${chalk.blue("arch")}=x86 ${chalk.blue("type")}=download`)
@@ -73,13 +73,13 @@ export class SetUpdateConfigWinTask extends TaskBase implements ITask {
                 archConfig.full.url = path.basename(appPath.path);
                 archConfig.full.size = fileSizeInBytes;
             }
-            if(arch == "x86-resource-update"){
-                info(`setting ${chalk.blue("arch")}=x86 ${chalk.blue("type")}=resource`)
+            if(arch == "x86-minimal-update"){
+                info(`setting ${chalk.blue("arch")}=x86 ${chalk.blue("type")}=minimal`)
                 let archConfig = helper.getArchUpdateConfig(updateConfig,"x86");
-                archConfig.resource.url = path.basename(appPath.path);
-                archConfig.resource.size = fileSizeInBytes;
+                archConfig.minimal.url = path.basename(appPath.path);
+                archConfig.minimal.size = fileSizeInBytes;
             }
         }
-        helper.setUpdateConfig(updateConfig);
+        helper.saveUpdateConfig();
     }
 } 

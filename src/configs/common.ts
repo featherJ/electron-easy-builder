@@ -14,10 +14,15 @@ export interface NotarizeConfig {
     notarytoolPath?: string;
 }
 
+export enum Platform {
+    mac = "mac",
+    win = "win"
+}
+
 export type MacArch = "x64" | "arm64";
-export type MacArchUpdate = "x64-resource-update" | "x64-full-update" | "arm64-resource-update" | "arm64-full-update";
+export type MacArchUpdate = "x64-minimal-update" | "x64-full-update" | "arm64-minimal-update" | "arm64-full-update";
 export type WinArch = "x64" | "x86";
-export type WinArchUpdate = "x64-resource-update" | "x86-resource-update" ;
+export type WinArchUpdate = "x64-minimal-update" | "x86-minimal-update";
 export type ArchAll = MacArch | MacArchUpdate | WinArch | WinArchUpdate;
 
 /**
@@ -61,12 +66,12 @@ export interface WinFileAssociation {
     icon: string;
 }
 
-export interface WinSign{
+export interface WinSign {
     certificateFile: string;
     certificatePassword: string;
     timeStampServer: string;
     rfc3161TimeStampServer: string;
-    signingHashAlgorithms:string[];
+    signingHashAlgorithms: string[];
 }
 
 export interface BuildConfig extends BaseBuildConfig {
@@ -78,7 +83,7 @@ export interface ArchUpdate {
         url: string;
         size: number;
     };
-    resource: {
+    minimal: {
         url: string;
         size: number;
     },
@@ -96,6 +101,7 @@ export interface UpdateConfig extends BaseBuildConfig {
     x64?: ArchUpdate;
     arm64?: ArchUpdate;
     x86?: ArchUpdate;
+    releaseNotes:string[];
 }
 
 

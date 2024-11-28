@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import { ArchUpdate, UpdateConfig } from "configs/common";
+import { ArchUpdate, Platform, UpdateConfig } from "configs/common";
 
 
 /**
@@ -8,17 +8,20 @@ import { ArchUpdate, UpdateConfig } from "configs/common";
  */
 export class UpdateConfigHelper{
     private filename:string;
+    private platform:Platform;
     /**
      * @param config 原始配置或打包配置都可以
      * @param projectDir 
      */
-    constructor(config:any,projectDir:string,platform:"mac"|"win"){
+    constructor(config:any,projectDir:string,platform:Platform){
         let output = config.output ? config.output : config.directories.output;
-        this.filename = path.join(projectDir,output,`app-${platform}-update.json`);
+        this.platform = platform;
+        this.filename = path.join(projectDir,output,`app-update.json`);
     }
 
+    private config:any;
     /**
-     * 得到已有的配置
+     * 得到当前的配置
      * @returns 
      */
     public getUpdateConfig():UpdateConfig{
@@ -29,15 +32,25 @@ export class UpdateConfigHelper{
             } catch (error) {
             }
         }
-        return updateConfig as UpdateConfig;
+        this.config = updateConfig;
+
+        let platform = this.platform;
+        if(!(platform in updateConfig)){
+            updateConfig[platform] = {};
+        }
+        let targetConfig = updateConfig[platform] as UpdateConfig;
+        if(!targetConfig.releaseNotes){
+            targetConfig.releaseNotes = [];
+        }
+        return targetConfig;
     }
     
     /**
-     * 设置新的配置
+     * 保存配置
      * @param config 
      */
-    public setUpdateConfig(config:UpdateConfig):void{
-        let configStr = JSON.stringify(config,null,2);
+    public saveUpdateConfig():void{
+        let configStr = JSON.stringify(this.config,null,2);
         fs.writeFileSync(this.filename,configStr,{ encoding: 'utf8' });
     }
 
@@ -53,7 +66,7 @@ export class UpdateConfigHelper{
         }
         let archConfig = {
             download:{},
-            resource:{},
+            minimal:{},
             full:{}
         } as ArchUpdate;
         config[arch] = archConfig;

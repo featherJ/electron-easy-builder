@@ -102,7 +102,6 @@ program.command('build')
 
 program.parse(process.argv);
 
-
 // const initer = new Initer("/Users/apple/Documents/FacnyGit/editor-electron-template");
 // let valid = initer.init();
 // if(valid){

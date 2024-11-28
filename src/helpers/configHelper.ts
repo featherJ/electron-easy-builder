@@ -585,7 +585,7 @@ export function generateResourceUpdateIss(builderConfig: any, packageConfig: any
         let updatesURL = builderConfig.win?.pack?.appUrl ? builderConfig.win?.pack?.appUrl : "";
         config += `#define UpdatesURL "${updatesURL}"\n`;
         config += `#define OutputDir "${path.join(projectDir, builderConfig.output)}"\n`;
-        let outputBasename = `${removeSpace(builderConfig.productName)}-${packageConfig.version}-${appPath.arch == "x64" ? "x64-resource-update" : "x86-resource-update"}`
+        let outputBasename = `${removeSpace(builderConfig.productName)}-${packageConfig.version}-${appPath.arch == "x64" ? "x64-minimal-update" : "x86-minimal-update"}`
         config += `#define OutputBasename "${outputBasename}"\n`;
         let outputFilename = path.join(projectDir, builderConfig.output, outputBasename + ".exe");
         let setupIcon = builderConfig.win?.pack?.setupIcon ? path.join(projectDir, builderConfig.win?.pack?.setupIcon) : "";
