@@ -39,6 +39,7 @@ export class SetUpdateConfigMacTask extends TaskBase implements ITask {
     public async run(): Promise<void> {
         var helper = new UpdateConfigHelper(this.sourceConfig,this.projectDir,Platform.mac);
         let updateConfig = helper.getUpdateConfig();
+        updateConfig.date = new Date().toISOString();
         updateConfig.electron = this.buildConfig.electron;
         updateConfig.build = this.buildConfig.build;
         updateConfig.version = this.packageConfig.version;
@@ -50,38 +51,38 @@ export class SetUpdateConfigMacTask extends TaskBase implements ITask {
             if(arch == "x64"){
                 info(`setting ${chalk.blue("arch")}=x64 ${chalk.blue("type")}=download`)
                 let archConfig = helper.getArchUpdateConfig(updateConfig,"x64");
-                archConfig.download.url = path.basename(appPath.path);
+                archConfig.download.filename = path.basename(appPath.path);
                 archConfig.download.size = fileSizeInBytes;
             }
             if(arch == "x64-full-update"){
                 info(`setting ${chalk.blue("arch")}=x64 ${chalk.blue("type")}=full`)
                 let archConfig = helper.getArchUpdateConfig(updateConfig,"x64");
-                archConfig.full.url = path.basename(appPath.path);
+                archConfig.full.filename = path.basename(appPath.path);
                 archConfig.full.size = fileSizeInBytes;
             }
             if(arch == "x64-minimal-update"){
                 info(`setting ${chalk.blue("arch")}=x64 ${chalk.blue("type")}=minimal`)
                 let archConfig = helper.getArchUpdateConfig(updateConfig,"x64");
-                archConfig.minimal.url = path.basename(appPath.path);
+                archConfig.minimal.filename = path.basename(appPath.path);
                 archConfig.minimal.size = fileSizeInBytes;
             }
 
             if(arch == "arm64"){
                 info(`setting ${chalk.blue("arch")}=arm64 ${chalk.blue("type")}=download`)
                 let archConfig = helper.getArchUpdateConfig(updateConfig,"arm64");
-                archConfig.download.url = path.basename(appPath.path);
+                archConfig.download.filename = path.basename(appPath.path);
                 archConfig.download.size = fileSizeInBytes;
             }
             if(arch == "arm64-full-update"){
                 info(`setting ${chalk.blue("arch")}=arm64 ${chalk.blue("type")}=full`)
                 let archConfig = helper.getArchUpdateConfig(updateConfig,"arm64");
-                archConfig.full.url = path.basename(appPath.path);
+                archConfig.full.filename = path.basename(appPath.path);
                 archConfig.full.size = fileSizeInBytes;
             }
             if(arch == "arm64-minimal-update"){
                 info(`setting ${chalk.blue("arch")}=arm64 ${chalk.blue("type")}=minimal`)
                 let archConfig = helper.getArchUpdateConfig(updateConfig,"arm64");
-                archConfig.minimal.url = path.basename(appPath.path);
+                archConfig.minimal.filename = path.basename(appPath.path);
                 archConfig.minimal.size = fileSizeInBytes;
             }
         }

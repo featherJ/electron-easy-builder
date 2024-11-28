@@ -1,5 +1,3 @@
-import { SomeJTDSchemaType } from "ajv/dist/core";
-
 /**
  * 公证配置
  */
@@ -80,15 +78,15 @@ export interface BuildConfig extends BaseBuildConfig {
 
 export interface ArchUpdate {
     download: {
-        url: string;
+        filename: string;
         size: number;
     };
     minimal: {
-        url: string;
+        filename: string;
         size: number;
     },
     full: {
-        url: string;
+        filename: string;
         size: number;
     }
 }
@@ -97,6 +95,7 @@ export interface ArchUpdate {
  * 更新配置文件
  */
 export interface UpdateConfig extends BaseBuildConfig {
+    date:string;
     version: string;
     x64?: ArchUpdate;
     arm64?: ArchUpdate;

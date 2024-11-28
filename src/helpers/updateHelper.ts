@@ -62,6 +62,16 @@ export class UpdateConfigHelper{
      */
     public getArchUpdateConfig(config:UpdateConfig,arch:"x64" | "arm64" | "x86"):ArchUpdate{
         if(config[arch]){
+            let targetConfig = config[arch];
+            if(!targetConfig.download){
+                targetConfig.download = {} as any;
+            }
+            if(!targetConfig.full){
+                targetConfig.full = {} as any;
+            }
+            if(!targetConfig.minimal){
+                targetConfig.minimal = {} as any;
+            }
             return config[arch];
         }
         let archConfig = {
