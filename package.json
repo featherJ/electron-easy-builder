@@ -1,7 +1,7 @@
 {
 	"name": "electron-easy-builder",
 	"version": "1.0.0",
-	"description": "A simpler Electron packaging tool (supports Windows and macOS). With electron-easy-updater, you can easily implement updates for Electron applications. The updater will automatically determine which update method to use: resource minimum update or full update.",
+	"description": "A simple and efficient Electron packaging tool for Windows and macOS. Combined with electron-easy-updater, it makes updating Electron apps easy. The updater automatically determines whether to apply a minimal resource update or a full update.",
 	"author": "Auga.L",
 	"license": "MIT",
 	"main": "./out/easy-builder.js",
