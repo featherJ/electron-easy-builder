@@ -60,10 +60,10 @@ export class SetUpdateConfigMacTask extends TaskBase implements ITask {
                 archConfig.full.size = fileSizeInBytes;
             }
             if(arch == "x64-minimal-update"){
-                info(`setting ${chalk.blue("arch")}=x64 ${chalk.blue("type")}=resource`)
+                info(`setting ${chalk.blue("arch")}=x64 ${chalk.blue("type")}=minimal`)
                 let archConfig = helper.getArchUpdateConfig(updateConfig,"x64");
-                archConfig.resource.url = path.basename(appPath.path);
-                archConfig.resource.size = fileSizeInBytes;
+                archConfig.minimal.url = path.basename(appPath.path);
+                archConfig.minimal.size = fileSizeInBytes;
             }
 
             if(arch == "arm64"){
@@ -79,10 +79,10 @@ export class SetUpdateConfigMacTask extends TaskBase implements ITask {
                 archConfig.full.size = fileSizeInBytes;
             }
             if(arch == "arm64-minimal-update"){
-                info(`setting ${chalk.blue("arch")}=arm64 ${chalk.blue("type")}=resource`)
+                info(`setting ${chalk.blue("arch")}=arm64 ${chalk.blue("type")}=minimal`)
                 let archConfig = helper.getArchUpdateConfig(updateConfig,"arm64");
-                archConfig.resource.url = path.basename(appPath.path);
-                archConfig.resource.size = fileSizeInBytes;
+                archConfig.minimal.url = path.basename(appPath.path);
+                archConfig.minimal.size = fileSizeInBytes;
             }
         }
         helper.saveUpdateConfig();
