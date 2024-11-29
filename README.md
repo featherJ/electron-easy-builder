@@ -40,10 +40,11 @@
 
 ### 命令行参数
 
+## 其他
+* 目前使用的 electron-builder 版本为 24.6.3 。最新版本会因 https://github.com/electron-userland/electron-builder/issues/8149 导致只能在管理员身份下才能正常运行。
+* 在 Windows 上如果遇到 Unable to commit changes 报错，请参考 https://github.com/electron/packager/issues/590#issuecomment-1416237580 关闭杀毒软件后重试。这是由于杀毒软件将刚生成的文件保护了起来，拒绝其他进程对其修改导致的。
+
 ## TODO
 * 规范配置文件中到底哪些是可选配置，哪些是必须配置。同时修改common.ts中的buildConfigSchema。
-* https://github.com/electron-userland/electron-builder-binaries/issues/34 这个写到文档里
-* 研究为什么一定需要管理员权限，是否可以不需要管理员权限
 * icon的生成
-* 更新日志字段的生成
 * 最低需要的操作系统的支持

@@ -89,7 +89,7 @@ program.command('build')
             error(`The file 'easy-builder.yml' does not contain 'win' configuration. Please add it and try again.`);
             return;
         }
-        await ensureElevated();
+        // await ensureElevated();
         let winPacker = new WinPacker(initer);
         try {
             await winPacker.pack();
@@ -107,4 +107,10 @@ program.parse(process.argv);
 // if(valid){
 //     let macPacker = new MacPacker(initer);
 //     macPacker.pack();
+// }
+// const initer = new Initer("C:\\Users\\Agua.L\\Documents\\project\\editor-electron-template");
+// let valid = initer.init();
+// if(valid){
+//     let winPacker = new WinPacker(initer);
+//     winPacker.pack();
 // }
