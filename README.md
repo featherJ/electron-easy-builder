@@ -41,6 +41,7 @@
 ### 命令行参数
 
 ## TODO
+* 规范配置文件中到底哪些是可选配置，哪些是必须配置。同时修改common.ts中的buildConfigSchema。
 * https://github.com/electron-userland/electron-builder-binaries/issues/34 这个写到文档里
 * 研究为什么一定需要管理员权限，是否可以不需要管理员权限
 * icon的生成

@@ -264,8 +264,58 @@ export const buildConfigSchema = {
             additionalProperties: false
         },
         win: {
-            //todo 这里还没实现
-            type: "object"
+            type: "object",
+            properties: {
+                icon: { type: "string" },
+                extraResources: {
+                    type: "array",
+                    items: {
+                        type: "object",
+                        properties: {
+                            from: { type: "string" },
+                            to: { type: "string" },
+                        },
+                        required: ["from", "to"],
+                        additionalProperties: false
+                    }
+                },
+                sign: {
+                    type: "object",
+                    properties: {
+                        certificateFile: { type: "string" },
+                        certificatePassword: { type: "string" },
+                        timeStampServer: { type: "string" },
+                        rfc3161TimeStampServer: { type: "string" },
+                        signingHashAlgorithms: {
+                            type: "array",
+                            items: {
+                            type: "string",
+                                enum: ["sha1", "sha256"]
+                            },
+                            uniqueItems: true
+                        }
+                    },
+                    additionalProperties: false
+                },
+                pack: {
+                    type: "object",
+                    properties: {
+                        verName: { type: "string" },
+                        setupIcon: { type: "string" },
+                        appUrl: { type: "string" },
+                        appId: { type: "string" },
+                        publisherName: { type: "string" },
+                        appUserModelID: { type: "string" },
+                        friendlyAppName: { type: "string" },
+                        regValueName: { type: "string" },
+                        wizardSmallImageFile: { type: "string" },
+                        wizardImageFile: { type: "string" },
+                        license: { type: "string" },
+                    },
+                    required: ["regValueName"],
+                    additionalProperties: false
+                }
+            }
         },
     },
     required: ['appId', 'productName'],
