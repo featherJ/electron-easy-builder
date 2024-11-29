@@ -264,6 +264,7 @@ export const buildConfigSchema = {
             additionalProperties: false
         },
         win: {
+            //todo 这里还没实现
             type: "object"
         },
     },

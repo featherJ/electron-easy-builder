@@ -79,7 +79,6 @@ export function generateElectronBuilderConfig(builderConfig: any, platform: "mac
     if (platform == "win" && builderConfig.win) {
         config.win = {
             icon: builderConfig.win.icon,
-            type: "distribution",
             target: ["dir"],
             extraResources: builderConfig.win.extraResources,
         }

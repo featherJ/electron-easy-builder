@@ -41,6 +41,8 @@
 ### 命令行参数
 
 ## TODO
+* https://github.com/electron-userland/electron-builder-binaries/issues/34 这个写到文档里
+* 研究为什么一定需要管理员权限，是否可以不需要管理员权限
 * icon的生成
 * 更新日志字段的生成
 * 最低需要的操作系统的支持
