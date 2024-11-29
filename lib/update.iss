@@ -21,6 +21,12 @@ OutputDir={#OutputDir}
 OutputBaseFilename={#OutputBasename}
 Compression=lzma2/ultra64
 SolidCompression=yes
+#if "" != WizardImageFile
+  WizardImageFile={#WizardImageFile}
+#endif
+#if "" != WizardSmallImageFile
+  WizardSmallImageFile={#WizardSmallImageFile}
+#endif
 #if "" != SetupIconFile
   SetupIconFile={#SetupIconFile}
 #endif
