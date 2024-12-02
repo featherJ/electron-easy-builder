@@ -32,7 +32,7 @@ As a result, I decided to write my own packaging tool and update plugin.
 	| Supports delta updates on macOS without the need for signed update packages | Only supports full updates on macOS, and the update package must be signed |
 	| Local testing is easy | Requires a `dev-app-update.yml` configuration file for local testing |
 	| Simple functionality with bundled full template example | Documentation is unclear, and some features are not easy to use |
-	| Automated packaging process that handles **signing**, **notarizing**, and **stapling** the `app` into a `.dmg` after app stapling | On macOS, the **signing**, **notarization**, and **stapling** process requires splitting the original packaging flow and using additional tools for **notarization** and **stapling** |
+	| Automated packaging process that handles **signing**, **notarizing**, and **stapling** the `.app` into a `.dmg` after app stapling | On macOS, the **signing**, **notarization**, and **stapling** process requires splitting the original packaging flow and using additional tools for **notarization** and **stapling** |
 	| Uses **Inno Setup** for Windows packaging, providing a simpler and more user-friendly installation and update interface, but requires packaging on Windows | Uses **NSIS** for Windows packaging, which has a steeper learning curve, higher maintenance cost, and requires additional plugins for customizations. However, NSIS can be used to cross-compile an `.exe` installer package on macOS |
 
 ## Implementation Principles
