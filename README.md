@@ -1,9 +1,8 @@
-# Electron打包工具与更新器
+# Electron Easy Builder
 
 [![Donation](https://img.shields.io/static/v1?label=Donation&message=❤️&style=social)](https://ko-fi.com/V7V7141EHB)
 
-## 介绍
-这是一个更简单的 electron 程序的打包工具，同时配合 [electron-easy-updater](https://github.com/featherJ/electron-easy-updater) 可以更好的实现 electron 程序在 Windows 和 Mac OS 上的的全量更新与最小体积更新。
+这是一个的 Electron 程序的打包工具，同时配合 [electron-easy-updater](https://github.com/featherJ/electron-easy-updater) 可以更简单的实现 Electron 程序在 Windows 和 Mac OS 上的的全量更新与最小体积更新。
 
 ## 为什么重复造轮子
 出发点是因为官方的 electron-builder 的自动更新在 Mac OS 上只能全量更新，无法只更新指定的文件，导致每次自动更新的尺寸会非常大。而且 electron 使用的 squirrel 的自动更新在 Mac OS 上会验证更新包是否进行了完整的签名。
@@ -28,17 +27,53 @@
 	|----------|----------|
 	| Mac OS 支持最小更新，且小更新包无需签名 | Mac OS 上只能全量更新，且更新包必须签名 |
 	| 本地测试方便 | 需要 dev-app-update.yml 配置文件进行本地测试 |
-	| 功能简单，附带全量模板示例 | 文档不清晰，很多功能不知道如何使用 |
-	| 自动化打包流程，在打包app之后可自动进行签名公证和装订，并将装订的app打包成dmg | 在 Mac OS 上对于app的签名公证装订过程需要额外的工具 |
+	| 功能简单，附带全量模板示例 | 文档不清晰，部分功能不知道如何使用 |
+	| 自动化打包流程，在打包app之后可自动进行签名公证和装订，并将装订的app打包成dmg | 在 Mac OS 上对于app的签名公证装订过程需要将原有打包流程拆开，并通过额外的工具来进行公正与装订。 |
 	| Windows 打包使用的 Inno Setup，安装与更新界面更简洁且易用，但需要在 Windows 上进行打包。 | Windows 打包使用的 NSIS。其脚本的学习成本会更高，维护成本大，对于一些定制化需要额外的插件。但使用 NSIS 可以在 Mac OS 交叉编译为 exe 安装包， |
 
+## 实现原理
+这个工具的内部的主要功能实际还是调用的 electron-builder（但 windows 打包部分使用的是 innosetup，而非 electron-builder 内置的 NSIS）。将 electron-builder 的全部功能都拆开了，然后通过 easy-builder.yml 配置的内容，动态生成 electron-builder 在各功能模块里所需的配置，然后通过 api 的方式调用 electron-builder。
+
+目的是简化 electron-builder 打包所需的配置。并将各个功能模块拆开分别控制，以实现本打包工具所支持的功能。
+
 ## 如何使用
-
-
 ### 配置文件
+配置文件的全貌可以参考 [lib/easy-builder.template.yml](lib/easy-builder.template.yml).
 
+配置文件的详情介绍：
+* [easy-builder.yml](docs/zh/base.md): 配置全貌
+	* [fileAssociations](docs/zh/fileAssociation.md):	应用程序的关联文件
+	* [mac](docs/zh/mac/base.md): macOS 平台的配置
+		* [sign](docs/zh/mac/sign.md): 签名配置
+		* [notarize](docs/zh/mac/notarize.md): 公正配置
+		* [pack](docs/zh/mac/pack.md): 打包配置
+	* [win](docs/zh/win/base.md): Windows 平台的配置
+		* [sign](docs/zh/win/sign.md): 签名配置
+		* [pack](docs/zh/win/pack.md): 打包配置
 
-### 命令行参数
+### 命令行参数介绍
+您可以通过当前命令行创建 `proto` 协议模板文件或创建编译配置末班文件，可以将指定 `proto` 文件夹编译为指定的语言，具体命令可以参考如下：
+
+* **选项**:
+    * `easy-builder -V` - 查看当前命令行编译工具版本号
+    * `easy-builder -h` - 查看命令帮助
+* **命令**:
+    * `easy-builder init [options] <string>` - 初始化配置文件，此命令
+	会在当前工作空间创建一个easy-builder.yml的配置模板
+    * `easy-builder build [options] <string>` - 编译协议文件为指定语言
+    * `easy-builder support` - 查看当前支持的语言
+    * `easy-builder help [command] ` - 查看对命令的帮助
+* **命令**:
+	* `easy-builder init [options] <string>` - 初始化配置文件，此命令会在当前工作空间创建一个 easy-builder.yml 的配置模板。
+	**可选参数** :
+		* `-d, --dir <path>` - 指定项目的目录。默认情况下，配置文件将在当前工作目录下创建。使用此参数可以为指定的路径创建配置文件。
+	* `easy-builder build [options] <string>` - 构建应用程序。
+	**可选参数**:
+		* `-d, --dir <path>` - 指定项目的目录。此路径下的协议文件将被编译。如果未指定，默认使用当前目录。
+		* `-m` - 编译为 macOS 平台的应用程序。
+		* `-w` - 编译为 Windows 平台的应用程序。
+    * `easy-builder help [command] ` - 查看对指定命令的帮助，使用此命令可以获取有关 init、build 等命令的详细信息。
+
 
 ## 其他
 * 目前使用的 electron-builder 版本为 24.6.3 。最新版本会因 https://github.com/electron-userland/electron-builder/issues/8149 导致只能在管理员身份下才能正常运行。
@@ -48,3 +83,6 @@
 * 规范配置文件中到底哪些是可选配置，哪些是必须配置。同时修改common.ts中的buildConfigSchema。
 * icon的生成
 * 最低需要的操作系统的支持
+
+## 致谢
+非常感谢 [electron-builder](https://www.electron.build/index.html)，一个功能这么全面，且支持api调用的的打包工具。

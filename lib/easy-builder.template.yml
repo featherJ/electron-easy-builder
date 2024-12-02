@@ -1,96 +1,215 @@
+# 应用程序 ID。用作 macOS 的 CFBundleIdentifier 和 Windows 的 AppUserModelIDs。
+# The application id. Used as CFBundleIdentifier for macOS and as Application User Model ID for Windows
+# https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleidentifier
+# https://learn.microsoft.com/zh-cn/windows/win32/shell/appids?redirectedfrom=MSDN
 appId: "com.example.app"
+# 程序的版权信息。
+# Copyright information of the application.
 copyright: "Copyright (C) 2024-2024 My Company Name. All rights reserved"
+# 产品名称，也是最终可执行文件的名称。
+# Product name, which is also the name of the final executable file.
 productName: "Editor Electron Template"
+# 是否将源码打包为asar
+# Whether to package the source code as ASAR.
 asar: true
+# 指定哪些文件不要被打包进asar包内。
+# Specify which files should not be included in the ASAR package.
 asarUnpack:
-  - test/test
-  - test2/test2
+  - unpack/**/*
+# 是否从源代码构建应用程序的本地依赖项。
+# Whether to build the application native dependencies from source.
 buildDependenciesFromSource: false
+# 是否在开始打包应用程序之前执行 node-gyp rebuild。
+# Whether to execute node-gyp rebuild before starting to package the app.
+# https://www.electron.build/configuration.html#nodegyprebuild
 nodeGypRebuild: false
-npmRebuild: false
+# 是否在开始打包应用程序之前重新构建本地依赖项。
+# Whether to rebuild native dependencies before starting to package the app.
+npmRebuild: true
 
+# 打包包含的文件
+# Files included in the package.
 files:
+  - unpack/**/*
   - out/**/*
   - "!node_modules/**"   
 
+# 打包输出目录
+# Packaging output directory.
 output: dist
 
+# 关联文件，指定哪些文件格式可以使用当前应用程序打开。
+# Associated files, specifying which file formats can be opened with the current application.
 fileAssociations:
-  - ext: txt
-    name: Text
-    description: Text Files
+    # 文件扩展名，如 png。
+    # File extension, such as png.
+  - ext: test1 
+    # 关联文件类型名
+    # Associated file type name.
+    name: Test1-File-Format
+    # 关联文件的描述（仅限 Windows）
+    # Description of the associated file (Windows only).
+    description:  Electron Template Test Format 1
+    # 用来定义应用在处理特定文件类型时的角色，对应属性为CFBundleTypeRole（仅限 Mac OS）。 
+    # Used to define the role of the application when handling a specific file type, corresponding to the property CFBundleTypeRole (Mac OS only)。 
+    # https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleurltypes/cfbundletyperole
     role: "Editor"
-    iconMac: "path/to/icon.ico"
-    iconWin: "path/to/icon.ico"
-
-  - ext: md
-    name: Markdown
+    # Mac OS 上当前关联文件的图标（目前仅支持icns）格式
+    # The icon for the currently associated file on macOS (currently only supports ICNS format).
+    iconMac: build/darwin/document.icns
+    # Windows 上当前关联文件的图标（目前仅支持ico）格式
+    # The icon for the currently associated file on Windows (currently only supports ICO format).
+    iconWin: build/win/document.ico
+  - ext: test2
+    name: Test2-File-Format
     role: "Editor"
-    description: Markdown Files #win
-    iconMac: "path/to/icon.ico"
-    iconWin: "path/to/icon.ico"
-   
+    description: Electron Template Test Format 2
+    iconMac: build/darwin/document.icns
+    iconWin: build/win/document.ico
 
+# Mac OS 上的安装包打包配置
+# Packaging configuration for application installer on Mac OS
 mac:
-  icon: build/darwin/app.icns
+  # 对应的属性为LSApplicationCategoryType。
+  # The corresponding property is LSApplicationCategoryType. 
+  # https://developer.apple.com/documentation/bundleresources/information-property-list/lsapplicationcategorytype
   category: public.app-category.developer-tools
+  # 应用程序的图标（目前仅支持 icns 格式）
+  # The application icon (currently only supports the ICNS format).
+  icon: build/darwin/app.icns
+  # 扩展信息：请求摄像头与麦克风权限，这会写入到 Info.plist 中。
+  # Extended information: Request camera and microphone permissions, this will be written to the Info.plist.
   extendInfo: 
-    NSCameraUsageDescription: "We need access to your camera."  # 默认权限描述
-    NSMicrophoneUsageDescription: "We need access to your microphone."  # 默认权限描述
+    # 找不到多语言时的默认权限描述
+    # The default permission description when a language is not found.
+    NSCameraUsageDescription: "We need access to your camera."   
+    # 找不到多语言时的默认权限描述
+    # The default permission description when a language is not found.
+    NSMicrophoneUsageDescription: "We need access to your microphone."
+  # 附加资源，通常用于系统级的多语言资源。
+  # Extra resources, typically used for system-level multilingual resources.
   extraResources:
-    - from: build/darwin/en.lproj
+    - from: build/darwin/resources/en.lproj
       to: en.lproj
-    - from: build/darwin/zh_CN.lproj
+    - from: build/darwin/resources/zh_CN.lproj
       to: zh_CN.lproj
-  sign:
-    identity: "Developer ID Application: Your Name (Team ID)"
-    entitlements: build/darwin/entitlements.plist
-    entitlementsInherit: build/darwin/entitlements.plist
-  notarize:
-    appleId: my-name@email.com
-    appleIdPassword: abcd-abcd-abcd-abcd
-    teamId: my-team-id
-    notarytoolPath: path/to/notarytool
+  # 签名配置
+  # Signing configuration.
+  # sign:
+    # 要使用的证书名称
+    # The certificate name to be used.
+    # identity: "xxxxxxxxx (xxxxxx)"
+    # 指定应用程序需要的特定权限和能力（可选）。 
+    # Specify the specific permissions and capabilities required by the application (optional).
+    # https://www.electron.build/app-builder-lib.interface.macconfiguration#entitlements
+    # entitlements: build/darwin/entitlements.plist
+    # 子程序的权限（可选）。
+    # Subprogram permissions  (optional). 
+    # https://www.electron.build/app-builder-lib.interface.macconfiguration#entitlementsinherit
+    # entitlementsInherit: build/darwin/entitlements.plist
+  # 公正配置
+  # Notarization configuration.
+  # notarize:
+    # 苹果账号和密码。
+    # Apple account and password.
+    # appleId: xxxx@xxxx.xxx
+    # appleIdPassword: xxxx-xxxx-xxxx-xxxx
+  # Dmg 打包的配置
+  # DMG packaging configuration.
   pack:
-    title: "window title"
+    # Dmg 包的背景图片。
+    # Background image of the DMG package.
     background: build/darwin/background.png
-    license: build/license #支持license.en-US.txt 和 license_buttons.en-US.json | license_buttons.en-US.yml，utf8格式
+    # Dmg 包内的图标尺寸。
+    # Icon size within the DMG package.
     iconSize: 80
+    # 这是 rtf 富文本协议。txt文本协议，可以切换为：build/license/txt。rtf 与 txt 请使用 utf-8 编码。
+    # This is the RTF rich text version of the license agreement. To view the plain text (TXT) version, switch to: build/license/txt. Please use UTF-8 encoding for both RTF and TXT formats.
+    license: build/license/rtf-mac
+    # Dmg 的窗口尺寸。
+    # DMG window size.
     window:
       width: 500
       height: 300
+    # Dmg 内两个图标的位置，from 是要安装的程序图标，to 是系统 Applications 链接的图标。
+    # The positions of the two icons inside the DMG: "from" is the icon of the program to be installed, and "to" is the icon linking to the system's Applications folder.
     contents:
       from:
-        x: 135
-        y: 190
+        x: 125
+        y: 130
       to:
-        x: 370
-        y: 190
+        x: 380
+        y: 130
 
 win:
-  appIcon: build/win/app.ico
+  # 应用程序的图标（目前仅支持 ico 格式）
+  # The application icon (currently only supports the ICO format).
+  icon: build/win/app.ico
+  # 附加资源
+  # Extra resources
   extraResources:
-    - from: build/darwin/en.lproj
-      to: en.lproj
-    - from: build/darwin/zh_CN.lproj
-      to: zh_CN.lproj
-  sign:
-    certificateFile: path/certificateFile.pfx
-    certificatePassword: my-password
-    timeStampServer: http://timestamp.digicert.com
-    rfc3161TimeStampServer: http://timestamp.digicert.com
-    signingHashAlgorithms:
-      - sha1
-      - sha256
-  pack: 
-    # title: "asdfasdf" #默认是 ${productName} ${version}
-    verName: Editor Electron Template # https://jrsoftware.org/is6help/index.php?topic=setup_appvername
+    - from: build/win/resources/test.txt
+      to: test.txt
+  # 签名配置
+  # Signing configuration.
+  # sign:
+    # 证书文件的路径
+    # The path to the certificate file.
+    # certificateFile: build/win/certificateFile.pfx
+    # 证书文件的密码
+    # The password for the certificate file.
+    # certificatePassword: my-password
+    # 用于签名 sha1 的时间戳
+    # Timestamp for signing with SHA1.
+    # timeStampServer: http://timestamp.digicert.com
+    # 用于签名 sha256 的时间戳
+    # Timestamp for signing with SHA256.
+    # rfc3161TimeStampServer: http://timestamp.digicert.com
+    # 所需的签名算法
+    # The required signing algorithm.
+    # signingHashAlgorithms:
+      # - sha1
+      # - sha256
+  pack:
+    # TODO 未来可做成支持{version}这种
+    # 应用版本名
+    # Application version name
+    # https://jrsoftware.org/ishelp/index.php?topic=setup_appvername
+    verName: Editor Electron Template 1.0
+    # 安装包的图标
+    # Installer package icon.
     setupIcon: build/win/app.ico
+    # todo 确认是否可选
+    # 应用的网址
+    # The url of application
     appUrl: http://my-website.com
+    # todo 做成可选，如果没有设定就是用外层的appid
+    # App的id，仅用于注册表和覆盖安装时的对应等，不会在任何地方显示。
+    # App ID, used only for registry and overlay installation correspondence, and will not be displayed anywhere.
+    # https://jrsoftware.org/ishelp/index.php?topic=setup_appid
+    appId: 00000000-0000-0000-0000-000000000000 
+    # 发布者名称
+    # Publisher name.
     publisherName: My Company Inc
+    # 应用程序用户模型 ID，用于关联文件等，对应的属性为 AppUserModelIDs。
+    # Application User Model ID, used for associating files, etc. The corresponding property is AppUserModelIDs.
+    # https://learn.microsoft.com/en-us/windows/win32/shell/appids
     appUserModelID: MyCompany.Template
-    friendlyAppName: Editor Electron Template #右键"open with"里显示的内容，没有的话使用productName
-    regValueName: EditorTemplate #必须的,不能包含空格
-    wizardSmallImageFile: path/wizardSmallImageFile.bmp
-    wizardImageFile: path/wizardImageFile.bmp
-    license: build/license #目前仅支持license.en-US.txt，utf8格式
+    # 右键"open with"里显示的内容，没有的话使用 productName。对应属性为 FriendlyName。
+    # The content displayed in the "Open with" right-click menu. If not specified, the productName will be used. The corresponding property is FriendlyName.
+    # https://learn.microsoft.com/en-us/dotnet/api/system.appdomain.friendlyname
+    friendlyAppName: Editor Electron Template 
+    # 注册表中被注册的文件名，用于关联文件等（不能存在空格和特殊字符）。
+    # The file name registered in the registry, used for associating files, etc. (must not contain spaces or special characters).
+    regValueName: EditorTemplate #必须的
+    # 安装包中所需的小图。
+    # The small images required in the installer package.
+    # https://jrsoftware.org/ishelp/index.php?topic=setup_wizardsmallimagefile
+    wizardSmallImageFile: build/win/WizModernSmallImage*.bmp
+    # 安装包中所需的小图。
+    # The large images required in the installer package.
+    # https://jrsoftware.org/ishelp/index.php?topic=setup_wizardimagefile
+    wizardImageFile: build/win/WizModernImage*.bmp
+    # 这是 rtf 富文本协议。txt文本协议，可以切换为：build/license/txt。txt 文件可以使用 utf-8 编码，但 rtf 文件请使用对应语言的编码格式，否则会呈现乱码。
+    # This is the RTF rich text version of the license agreement. To view the plain text (TXT) version, switch to: build/license/txt. TXT files can use UTF-8 encoding, but RTF files should use the corresponding language's encoding format, otherwise they may appear garbled.
+    license: build/license/rtf-win 

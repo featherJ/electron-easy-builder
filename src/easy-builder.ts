@@ -22,13 +22,10 @@ program
     .on('--help', () => {
         console.log('');
         console.log('Examples:');
-        // console.log('  $ protobytes -h');
-        // console.log('  $ protobytes support');
-        // console.log('  $ protobytes create proto -o ./templates');
-        // console.log('  $ protobytes create config -o ./templates');
-        // console.log('  $ protobytes compile -s ./my-protos -t java -o ./my-generate/java/com/myprotos -p com.myprotos -a MyName -c');
-        // console.log('  $ protobytes compile -s ./my-protos -t java -o ./my-generate/java/com/myprotos -p com.myprotos');
-        // console.log('  $ protobytes compile -config ./proto-config.json');
+        console.log('  $ easy-builder -h');
+        console.log('  $ easy-builder init ');
+        console.log('  $ easy-builder build -m');
+        console.log('  $ easy-builder build -w');
     });
 
 program.command('init')
@@ -36,8 +33,8 @@ program.command('init')
     .option('-d, --dir <string>', 'Project path.')
     .action(async (options) => {
         let projectDir: string = options.dir ? options.dir : __dirname;
-        let basename = "easy-builder2.yml";
-        let basenameBackup = "easy-builder2.backup.yml";
+        let basename = "easy-builder.yml";
+        let basenameBackup = "easy-builder.backup.yml";
         let filename = path.join(projectDir, basename);
         let backupFilename = path.join(projectDir, basenameBackup);
         if (fs.existsSync(filename)) {
