@@ -45,15 +45,15 @@ The goal is to simplify the configuration required for `electron-builder` packag
 You can refer to the full configuration file in [lib/easy-builder.template.yml](lib/easy-builder.template.yml).
 
 Details about the configuration file:
-* [easy-builder.yml](docs/en/base.md): Overview of the configuration
-	* [fileAssociations](docs/en/fileAssociation.md): File associations for the application
-	* [mac](docs/en/mac/base.md): Configuration for macOS platform
-		* [sign](docs/en/mac/sign.md): Signing configuration
-		* [notarize](docs/en/mac/notarize.md): Notarization and stapling configuration
-		* [pack](docs/en/mac/pack.md): Packaging configuration
-	* [win](docs/en/win/base.md): Configuration for Windows platform
-		* [sign](docs/en/win/sign.md): Signing configuration
-		* [pack](docs/en/win/pack.md): Packaging configuration
+* [easy-builder.yml](docs/en/base.md) - Overview of the configuration
+	* [fileAssociations](docs/en/fileAssociation.md) - File associations for the application
+	* [mac](docs/en/mac/base.md) - Configuration for macOS platform
+		* [sign](docs/en/mac/sign.md) - Signing configuration
+		* [notarize](docs/en/mac/notarize.md) - Notarization and stapling configuration
+		* [pack](docs/en/mac/pack.md) - Packaging configuration
+	* [win](docs/en/win/base.md) - Configuration for Windows platform
+		* [sign](docs/en/win/sign.md) - Signing configuration
+		* [pack](docs/en/win/pack.md) - Packaging configuration
 
 ### Command-Line Options
 The specific commands are as follows:

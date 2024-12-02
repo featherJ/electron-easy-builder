@@ -43,15 +43,15 @@
 配置文件的全貌可以参考 [lib/easy-builder.template.yml](lib/easy-builder.template.yml).
 
 配置文件的详情介绍：
-* [easy-builder.yml](docs/zh/base.md): 配置全貌
-	* [fileAssociations](docs/zh/fileAssociation.md): 应用程序的关联文件
-	* [mac](docs/zh/mac/base.md): macOS 平台的配置
-		* [sign](docs/zh/mac/sign.md): 签名配置
-		* [notarize](docs/zh/mac/notarize.md): 公正与装订配置
-		* [pack](docs/zh/mac/pack.md): 打包配置
-	* [win](docs/zh/win/base.md): Windows 平台的配置
-		* [sign](docs/zh/win/sign.md): 签名配置
-		* [pack](docs/zh/win/pack.md): 打包配置
+* [easy-builder.yml](docs/zh/base.md) - 配置全貌
+	* [fileAssociations](docs/zh/fileAssociation.md) - 应用程序的关联文件
+	* [mac](docs/zh/mac/base.md) - macOS 平台的配置
+		* [sign](docs/zh/mac/sign.md) - 签名配置
+		* [notarize](docs/zh/mac/notarize.md) - 公正与装订配置
+		* [pack](docs/zh/mac/pack.md) - 打包配置
+	* [win](docs/zh/win/base.md) - Windows 平台的配置
+		* [sign](docs/zh/win/sign.md) - 签名配置
+		* [pack](docs/zh/win/pack.md) - 打包配置
 
 ### 命令行参数介绍
 具体命令可以参考如下：
