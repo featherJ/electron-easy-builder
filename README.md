@@ -2,87 +2,84 @@
 
 [![Donation](https://img.shields.io/static/v1?label=Donation&message=❤️&style=social)](https://ko-fi.com/V7V7141EHB)
 
-这是一个的 Electron 程序的打包工具，同时配合 [electron-easy-updater](https://github.com/featherJ/electron-easy-updater) 可以更简单的实现 Electron 程序在 Windows 和 Mac OS 上的的全量更新与最小体积更新。
+[中文文档](README_CN.md) | English
 
-## 为什么重复造轮子
-出发点是因为官方的 electron-builder 的自动更新在 Mac OS 上只能全量更新，无法只更新指定的文件，导致每次自动更新的尺寸会非常大。而且 electron 使用的 squirrel 的自动更新在 Mac OS 上会验证更新包是否进行了完整的签名。
+This is a packaging tool for Electron applications. When used together with [electron-easy-updater](https://github.com/featherJ/electron-easy-updater), it simplifies implementing both **full updates** and **minimal updates** for Electron applications on **Windows** and **macOS**.
 
-而后在使用官方的 electron-builder 的过程中，发现了存在如下问题：
-* 使用的 Squirrel 自动更新，Mac OS 上只能全量更新，且要求更新包必须是签名过的。
-* 本地测试自动更新过程不够直观，且操作繁琐。
-* 配置参数太多，使用门槛较高。
-* 文档不够全面，如为dmg安装包增加用户协议过程就没能按照文档顺利完成，只能通过阅读源码来完成。
-* dmg 的打包过程中无法对已签名的 app 文件进行认证与装订。只能手动干预打包流程，手动将已签名公证并且装订的 app 文件打包为 dmg。
-* Electron Forge 对于程序的结构以及 webpack 限制的过于死板，没有灵活性。
 
-所以最终导致我决定自己重写一套打包工具和更新插件。
+## Why Reinvent the Wheel?
+The motivation for this comes from the limitations of the official `electron-builder` auto-update, which only supports full updates on macOS. It doesn't allow for updating specific files, causing each auto-update to be unnecessarily large. Additionally, the Squirrel auto-update used by Electron requires the update package to be fully signed on macOS.
 
-## 功能简介
-* Windows 与 Mac OS 平台的打包。
-* 两个平台自动化的全量更新与最小体积更新。
-* 安装包与安装协议的多语言支持。
+While using the official `electron-builder`, I encountered the following issues:
+* The Squirrel auto-update on macOS only supports full updates, and the update package must be signed.
+* The local testing process for auto-updates is not intuitive and involves complicated steps.
+* Too many configuration options, leading to a high learning curve.
+* Documentation is lacking; for example, the process for adding a user agreement to a .dmg installer did not work as described in the docs and required reading the source code to complete.
+* During .dmg packaging, it’s not possible to verify and notarize signed app files. Manual intervention is needed to manually package the notarized and signed app into a .dmg.
+* Electron Forge enforces rigid structure and Webpack limitations, offering no flexibility.
 
-	### 与 Electron-builder 的差异对比
+As a result, I decided to write my own packaging tool and update plugin.
+
+
+## Feature Overview
+* Packaging for both **Windows** and **macOS** platforms.
+* Automated **full updates** and **minimal updates** for both platforms.
+* Multi-language support for installer packages and installation licenses.
+
+	### Comparison with electron-builder
 	| electron-easy-builder (this) | [electron-builder](https://www.electron.build/index.html) | 
 	|----------|----------|
-	| Mac OS 支持最小更新，且小更新包无需签名 | Mac OS 上只能全量更新，且更新包必须签名 |
-	| 本地测试方便 | 需要 dev-app-update.yml 配置文件进行本地测试 |
-	| 功能简单，附带全量模板示例 | 文档不清晰，部分功能不知道如何使用 |
-	| 自动化打包流程，在打包app之后可自动进行签名公证和装订，并将装订的app打包成dmg | 在 Mac OS 上对于app的签名公证装订过程需要将原有打包流程拆开，并通过额外的工具来进行公正与装订。 |
-	| Windows 打包使用的 Inno Setup，安装与更新界面更简洁且易用，但需要在 Windows 上进行打包。 | Windows 打包使用的 NSIS。其脚本的学习成本会更高，维护成本大，对于一些定制化需要额外的插件。但使用 NSIS 可以在 Mac OS 交叉编译为 exe 安装包， |
+	| Supports delta updates on macOS without the need for signed update packages | Only supports full updates on macOS, and the update package must be signed |
+	| Local testing is easy | Requires a `dev-app-update.yml` configuration file for local testing |
+	| Simple functionality with bundled full template example | Documentation is unclear, and some features are not easy to use |
+	| Automated packaging process that handles **signing**, **notarizing**, and **stapling** the `app` into a `.dmg` after app stapling | On macOS, the **signing**, **notarization**, and **stapling** process requires splitting the original packaging flow and using additional tools for **notarization** and **stapling** |
+	| Uses **Inno Setup** for Windows packaging, providing a simpler and more user-friendly installation and update interface, but requires packaging on Windows | Uses **NSIS** for Windows packaging, which has a steeper learning curve, higher maintenance cost, and requires additional plugins for customizations. However, NSIS can be used to cross-compile an `.exe` installer package on macOS |
 
-## 实现原理
-这个工具的内部的主要功能实际还是调用的 electron-builder（但 windows 打包部分使用的是 innosetup，而非 electron-builder 内置的 NSIS）。将 electron-builder 的全部功能都拆开了，然后通过 easy-builder.yml 配置的内容，动态生成 electron-builder 在各功能模块里所需的配置，然后通过 api 的方式调用 electron-builder。
+## Implementation Principles
+The core functionality of this tool still primarily relies on `electron-builder` (though for Windows packaging, it uses `InnoSetup` instead of the built-in `NSIS` in `electron-builder`). The entire functionality of `electron-builder` has been broken down, and the required configurations for each module are dynamically generated based on the content of the `easy-builder.yml` configuration file. These configurations are then applied via API calls to `electron-builder`.
 
-目的是简化 electron-builder 打包所需的配置。并将各个功能模块拆开分别控制，以实现本打包工具所支持的功能。
+The goal is to simplify the configuration required for `electron-builder` packaging. Additionally, the different functionality modules are separated and controlled individually to achieve the features supported by this packaging tool.
 
-## 如何使用
-### 配置文件
-配置文件的全貌可以参考 [lib/easy-builder.template.yml](lib/easy-builder.template.yml).
+## How to Use
+### Configuration File
+You can refer to the full configuration file in [lib/easy-builder.template.yml](lib/easy-builder.template.yml).
 
-配置文件的详情介绍：
-* [easy-builder.yml](docs/zh/base.md): 配置全貌
-	* [fileAssociations](docs/zh/fileAssociation.md):	应用程序的关联文件
-	* [mac](docs/zh/mac/base.md): macOS 平台的配置
-		* [sign](docs/zh/mac/sign.md): 签名配置
-		* [notarize](docs/zh/mac/notarize.md): 公正配置
-		* [pack](docs/zh/mac/pack.md): 打包配置
-	* [win](docs/zh/win/base.md): Windows 平台的配置
-		* [sign](docs/zh/win/sign.md): 签名配置
-		* [pack](docs/zh/win/pack.md): 打包配置
+Details about the configuration file:
+* [easy-builder.yml](docs/en/base.md): Overview of the configuration
+	* [fileAssociations](docs/en/fileAssociation.md): File associations for the application
+	* [mac](docs/en/mac/base.md): Configuration for macOS platform
+		* [sign](docs/en/mac/sign.md): Signing configuration
+		* [notarize](docs/en/mac/notarize.md): Notarization and stapling configuration
+		* [pack](docs/en/mac/pack.md): Packaging configuration
+	* [win](docs/en/win/base.md): Configuration for Windows platform
+		* [sign](docs/en/win/sign.md): Signing configuration
+		* [pack](docs/en/win/pack.md): Packaging configuration
 
-### 命令行参数介绍
-您可以通过当前命令行创建 `proto` 协议模板文件或创建编译配置末班文件，可以将指定 `proto` 文件夹编译为指定的语言，具体命令可以参考如下：
+### Command-Line Options
+The specific commands are as follows:
 
-* **选项**:
-    * `easy-builder -V` - 查看当前命令行编译工具版本号
-    * `easy-builder -h` - 查看命令帮助
-* **命令**:
-    * `easy-builder init [options] <string>` - 初始化配置文件，此命令
-	会在当前工作空间创建一个easy-builder.yml的配置模板
-    * `easy-builder build [options] <string>` - 编译协议文件为指定语言
-    * `easy-builder support` - 查看当前支持的语言
-    * `easy-builder help [command] ` - 查看对命令的帮助
-* **命令**:
-	* `easy-builder init [options] <string>` - 初始化配置文件，此命令会在当前工作空间创建一个 easy-builder.yml 的配置模板。
-	**可选参数** :
-		* `-d, --dir <path>` - 指定项目的目录。默认情况下，配置文件将在当前工作目录下创建。使用此参数可以为指定的路径创建配置文件。
-	* `easy-builder build [options] <string>` - 构建应用程序。
-	**可选参数**:
-		* `-d, --dir <path>` - 指定项目的目录。此路径下的协议文件将被编译。如果未指定，默认使用当前目录。
-		* `-m` - 编译为 macOS 平台的应用程序。
-		* `-w` - 编译为 Windows 平台的应用程序。
-    * `easy-builder help [command] ` - 查看对指定命令的帮助，使用此命令可以获取有关 init、build 等命令的详细信息。
+* **Options**:
+    * `easy-builder -V` - View the current command-line tool version.
+    * `easy-builder -h` - View command help.
+* **Commands**:
+	* `easy-builder init [options] <string>` - Initialize the configuration file. This command will create an `easy-builder.yml` template file in the current working directory.
+	**Optional Parameters** :
+		* `-d, --dir <path>` - Specify the project directory. By default, the configuration file will be created in the current working directory. Use this option to create the configuration file in a specified path.
+	* `easy-builder build [options] <string>` - Build the application.
+	**Optional Parameters**:
+		* `-d, --dir <path>` - Specify the project directory. The protocol files in this path will be compiled. If not specified, the current directory will be used by default.
+		* `-m` - Compile the application for macOS platform.
+		* `-w` - Compile the application for Windows platform.
+    * `easy-builder help [command] ` - View help for a specific command. Use this to get detailed information on commands like init, build, etc.
 
-
-## 其他
-* 目前使用的 electron-builder 版本为 24.6.3 。最新版本会因 https://github.com/electron-userland/electron-builder/issues/8149 导致只能在管理员身份下才能正常运行。
-* 在 Windows 上如果遇到 Unable to commit changes 报错，请参考 https://github.com/electron/packager/issues/590#issuecomment-1416237580 关闭杀毒软件后重试。这是由于杀毒软件将刚生成的文件保护了起来，拒绝其他进程对其修改导致的。
+## Others
+* The current version of `electron-builder` being used is `24.6.3`. The latest version may cause issues where the tool can only run with administrator privileges due to https://github.com/electron-userland/electron-builder/issues/8149.
+* On Windows, if you encounter the error "Unable to commit changes`, please refer to https://github.com/electron/packager/issues/590#issuecomment-1416237580 to disable your antivirus software and try again. This issue occurs because the antivirus software has protected the newly generated files and prevents other processes from modifying them.
 
 ## TODO
-* 规范配置文件中到底哪些是可选配置，哪些是必须配置。同时修改common.ts中的buildConfigSchema。
-* icon的生成
-* 最低需要的操作系统的支持
+* Generation of `.icns` and `.ico` icon files.
+* Support for the minimum required operating systems.
 
-## 致谢
-非常感谢 [electron-builder](https://www.electron.build/index.html)，一个功能这么全面，且支持api调用的的打包工具。
+## Acknowledgments
+A big thank you to [electron-builder](https://www.electron.build/index.html), a comprehensive packaging tool that supports API calls.
+
