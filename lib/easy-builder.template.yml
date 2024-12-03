@@ -104,7 +104,7 @@ mac:
     # https://www.electron.build/app-builder-lib.interface.macconfiguration#entitlements
     # entitlements: build/darwin/entitlements.plist
     # 子程序的权限（可选）。
-    # Subprogram permissions  (optional). 
+    # Subprogram permissions (optional). 
     # https://www.electron.build/app-builder-lib.interface.macconfiguration#entitlementsinherit
     # entitlementsInherit: build/darwin/entitlements.plist
   # 公证装订配置
@@ -117,14 +117,14 @@ mac:
   # Dmg 打包的配置
   # DMG packaging configuration.
   pack:
-    # Dmg 包的背景图片。
-    # Background image of the DMG package.
+    # Dmg 包的背景图片（可选）。
+    # Background image of the DMG package (optional).
     background: build/darwin/background.png
-    # Dmg 包内的图标尺寸。
-    # Icon size within the DMG package.
+    # Dmg 包内的图标尺寸（可选）。
+    # Icon size within the DMG package (optional).
     iconSize: 80
-    # 这是 rtf 富文本协议。txt文本协议，可以切换为：build/license/txt。rtf 与 txt 请使用 utf-8 编码。
-    # This is the RTF rich text version of the license agreement. To view the plain text (TXT) version, switch to: build/license/txt. Please use UTF-8 encoding for both RTF and TXT formats.
+    # 这是 rtf 富文本协议。txt文本协议，可以切换为：build/license/txt。rtf 与 txt 请使用 utf-8 编码（可选）。
+    # This is the RTF rich text version of the license agreement. To view the plain text (TXT) version, switch to: build/license/txt. Please use UTF-8 encoding for both RTF and TXT formats (optional).
     license: build/license/rtf-mac
     # Dmg 的窗口尺寸。
     # DMG window size.
