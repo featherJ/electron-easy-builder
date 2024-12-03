@@ -10,7 +10,7 @@
 
 应用程序 ID。用作 macOS 的 `CFBundleIdentifier` 和 Windows 的 `AppUserModelID`。在 Windows 上被用于文件关联文件。
 
-参考：
+**参考**：
 * https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleidentifier
 * https://learn.microsoft.com/zh-cn/windows/win32/shell/appids
 

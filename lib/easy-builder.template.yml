@@ -42,23 +42,23 @@ output: dist
 # Associated files, specifying which file formats can be opened with the current application (optional).
 fileAssociations:
     # 文件扩展名，如 png。
-    # File extension, such as png.
+    # File extension. e.g. png.
   - ext: test1 
-    # 关联文件类型名
-    # Associated file type name.
-    name: Test1-File-Format
-    # 关联文件的描述（仅限 Windows）
-    # Description of the associated file (Windows only).
+    # 关联文件类型名（可选）。
+    # Associated file type name (optional).
+    name: Test1
+    # 关联文件的描述（仅限 Windows）(可选)
+    # Description of the associated file (Windows only) (optional).
     description:  Electron Template Test Format 1
-    # 用来定义应用在处理特定文件类型时的角色，对应属性为CFBundleTypeRole（仅限 macOS）。 
-    # Used to define the role of the application when handling a specific file type, corresponding to the property CFBundleTypeRole (macOS only)。 
+    # 用来定义应用在处理特定文件类型时的角色，对应属性为CFBundleTypeRole（仅限 macOS）(可选)。 
+    # Used to define the role of the application when handling a specific file type, corresponding to the property CFBundleTypeRole (macOS only) (optional). 
     # https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleurltypes/cfbundletyperole
     role: "Editor"
-    # macOS 上当前关联文件的图标（目前仅支持icns）格式
-    # The icon for the currently associated file on macOS (currently only supports ICNS format).
+    # macOS 上当前关联文件的图标（目前仅支持icns）格式 (可选)。
+    # The icon for the currently associated file on macOS (currently only supports ICNS format) (optional).
     iconMac: build/darwin/document.icns
-    # Windows 上当前关联文件的图标（目前仅支持ico）格式
-    # The icon for the currently associated file on Windows (currently only supports ICO format).
+    # Windows 上当前关联文件的图标（目前仅支持ico）格式 (可选)。
+    # The icon for the currently associated file on Windows (currently only supports ICO format) (optional).
     iconWin: build/win/document.ico
   - ext: test2
     name: Test2-File-Format

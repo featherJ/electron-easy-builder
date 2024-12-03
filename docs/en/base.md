@@ -10,7 +10,7 @@ Example: `appId: "com.example.app"`
 
 Application ID. Used as the `CFBundleIdentifier` on macOS and `AppUserModelID` on Windows. On Windows, it is used for file type associations.
 
-Reference:
+**Reference**:
 * https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleidentifier
 * https://learn.microsoft.com/zh-cn/windows/win32/shell/appids
 
