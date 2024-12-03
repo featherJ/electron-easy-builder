@@ -61,14 +61,17 @@
     * `easy-builder -h` - 查看命令帮助。
 * **命令**:
 	* `easy-builder init [options] <string>` - 初始化配置文件，此命令会在当前工作空间创建一个 easy-builder.yml 的配置模板。
-	**可选参数** :
+
+		**可选参数** :
 		* `-d, --dir <path>` - 指定项目的目录。默认情况下，配置文件将在当前工作目录下创建。使用此参数可以为指定的路径创建配置文件。
+		
 	* `easy-builder build [options] <string>` - 构建应用程序。
-	**可选参数**:
+
+		**可选参数**:
 		* `-d, --dir <path>` - 指定项目的目录。此路径下的协议文件将被编译。如果未指定，默认使用当前目录。
 		* `-m` - 编译为 macOS 平台的应用程序。
 		* `-w` - 编译为 Windows 平台的应用程序。
-    * `easy-builder help [command] ` - 查看对指定命令的帮助，使用此命令可以获取有关 init、build 等命令的详细信息。
+		* `easy-builder help [command] ` - 查看对指定命令的帮助，使用此命令可以获取有关 init、build 等命令的详细信息。
 
 ## 其他
 * 目前使用的 `electron-builder` 版本为 `24.6.3` 。最新版本会因 https://github.com/electron-userland/electron-builder/issues/8149 导致只能在管理员身份下才能正常运行。

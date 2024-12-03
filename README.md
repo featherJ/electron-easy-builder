@@ -63,14 +63,17 @@ The specific commands are as follows:
     * `easy-builder -h` - View command help.
 * **Commands**:
 	* `easy-builder init [options] <string>` - Initialize the configuration file. This command will create an `easy-builder.yml` template file in the current working directory.
-	**Optional Parameters** :
+
+		**Optional Parameters** :
 		* `-d, --dir <path>` - Specify the project directory. By default, the configuration file will be created in the current working directory. Use this option to create the configuration file in a specified path.
+	
 	* `easy-builder build [options] <string>` - Build the application.
-	**Optional Parameters**:
+
+		**Optional Parameters**:
 		* `-d, --dir <path>` - Specify the project directory. The protocol files in this path will be compiled. If not specified, the current directory will be used by default.
 		* `-m` - Compile the application for macOS platform.
 		* `-w` - Compile the application for Windows platform.
-    * `easy-builder help [command] ` - View help for a specific command. Use this to get detailed information on commands like init, build, etc.
+		* `easy-builder help [command] ` - View help for a specific command. Use this to get detailed information on commands like init, build, etc.
 
 ## Others
 * The current version of `electron-builder` being used is `24.6.3`. The latest version may cause issues where the tool can only run with administrator privileges due to https://github.com/electron-userland/electron-builder/issues/8149.
