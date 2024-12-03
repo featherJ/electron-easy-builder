@@ -144,16 +144,16 @@ mac:
 # Windows 上的安装包打包配置（可选）。
 # Packaging configuration for application installer on Windows (optional).
 win:
-  # 应用程序的图标（目前仅支持 ico 格式）
-  # The application icon (currently only supports the ICO format).
+  # 应用程序的图标（目前仅支持 ico 格式）（可选）。
+  # The application icon (currently only supports the ICO format) (optional).
   icon: build/win/app.ico
-  # 附加资源
-  # Extra resources
+  # 附加资源，符合 glob 模式的相对于项目的路径（可选）。
+  # Extra resources, a glob patterns relative to the project (optional).
   extraResources:
     - from: build/win/resources/test.txt
       to: test.txt
-  # 签名配置
-  # Signing configuration.
+  # 签名配置（可选）。
+  # Signing configuration (optional).
   # sign:
     # 证书文件的路径
     # The path to the certificate file.
@@ -172,6 +172,8 @@ win:
     # signingHashAlgorithms:
       # - sha1
       # - sha256
+  # Exe 安装包打包的配置
+  # Configuration for EXE Installer Packaging
   pack:
     # TODO 未来可做成支持{version}这种
     # 应用版本名

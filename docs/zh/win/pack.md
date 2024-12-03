@@ -1,4 +1,4 @@
-# easy-builder.win.pack
+# easy-builder.yml WinPack
 
 ## verName
 

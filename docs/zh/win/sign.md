@@ -1,4 +1,4 @@
-# easy-builder.win.sign
+# easy-builder.yml WinSign
 
 ## certificateFile
 
