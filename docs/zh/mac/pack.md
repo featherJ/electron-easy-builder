@@ -26,6 +26,8 @@ Dmg 安装包内的用户协议文件夹，支持 `rtf` 富文本格式，以及
 
 `txt` 格式：https://github.com/featherJ/editor-electron-template/tree/master/build/license/txt
 
+支持的语言：https://github.com/argv-minus-one/dmg-license/blob/master/docs/Supported%20Language%20Tags.md
+
 ### 协议文件的命名规范：
 `license.[lang].[default?].[format]`
 * lang：语言代码，通常使用国际标准（如 `en`、`zh-CN`）。
