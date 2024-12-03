@@ -172,44 +172,41 @@ win:
     # signingHashAlgorithms:
       # - sha1
       # - sha256
-  # Exe 安装包打包的配置
-  # Configuration for EXE Installer Packaging
+  # Exe 安装包打包的配置。
+  # Configuration for EXE Installer Packaging.
   pack:
-    # TODO 未来可做成支持{version}这种
-    # 应用版本名
-    # Application version name
+    # 应用版本名（可选）。
+    # Application version name (optional).
     # https://jrsoftware.org/ishelp/index.php?topic=setup_appvername
     verName: Editor Electron Template 1.0
-    # 安装包的图标
-    # Installer package icon.
+    # 安装包的图标（目前仅支持 ico 格式）（可选）。
+    # Installer package icon (currently only supports the ICO format) (optional).
     setupIcon: build/win/app.ico
-    # todo 确认是否可选
-    # 应用的网址
-    # The url of application
+    # 应用的网址（可选）。
+    # The url of application (optional).
     appUrl: http://my-website.com
-    # todo 做成可选，如果没有设定就是用外层的appid
-    # App的id，仅用于注册表和覆盖安装时的对应等，不会在任何地方显示。
-    # App ID, used only for registry and overlay installation correspondence, and will not be displayed anywhere.
+    # App的id，仅用于注册表和覆盖安装时的对应等，不会在任何地方显示。（可选）。
+    # App ID, used only for registry and overlay installation correspondence, and will not be displayed anywhere. (optional).
     # https://jrsoftware.org/ishelp/index.php?topic=setup_appid
     appId: 00000000-0000-0000-0000-000000000000 
-    # 发布者名称
-    # Publisher name.
+    # 发布者名称（可选）。
+    # Publisher name (optional).
     publisherName: My Company Inc
-    # 右键"open with"里显示的内容，没有的话使用 productName。对应属性为 FriendlyName。
-    # The content displayed in the "Open with" right-click menu. If not specified, the productName will be used. The corresponding property is FriendlyName.
+    # 右键"open with"里显示的内容，没有的话使用 productName。对应属性为 FriendlyName。（可选）。
+    # The content displayed in the "Open with" right-click menu. If not specified, the productName will be used. The corresponding property is FriendlyName (optional).
     # https://learn.microsoft.com/en-us/dotnet/api/system.appdomain.friendlyname
     friendlyAppName: Editor Electron Template 
     # 注册表中被注册的文件名，用于关联文件等（不能存在空格和特殊字符）。
     # The file name registered in the registry, used for associating files, etc. (must not contain spaces or special characters).
     regValueName: EditorTemplate #必须的
-    # 安装包中所需的小图。
-    # The small images required in the installer package.
+    # 安装包中所需的小图（可选）。
+    # The small images required in the installer package (optional).
     # https://jrsoftware.org/ishelp/index.php?topic=setup_wizardsmallimagefile
     wizardSmallImageFile: build/win/WizModernSmallImage*.bmp
-    # 安装包中所需的小图。
-    # The large images required in the installer package.
+    # 安装包中所需的大图（可选）。
+    # The large images required in the installer package (optional).
     # https://jrsoftware.org/ishelp/index.php?topic=setup_wizardimagefile
     wizardImageFile: build/win/WizModernImage*.bmp
-    # 这是 rtf 富文本协议。txt文本协议，可以切换为：build/license/txt。txt 文件可以使用 utf-8 编码，但 rtf 文件请使用对应语言的编码格式，否则会呈现乱码。
-    # This is the RTF rich text version of the license agreement. To view the plain text (TXT) version, switch to: build/license/txt. TXT files can use UTF-8 encoding, but RTF files should use the corresponding language's encoding format, otherwise they may appear garbled.
+    # 这是 rtf 富文本协议。txt文本协议，可以切换为：build/license/txt。txt 文件可以使用 utf-8 编码，但 rtf 文件请使用对应语言的编码格式，否则会呈现乱码（可选）。
+    # This is the RTF rich text version of the license agreement. To view the plain text (TXT) version, switch to: build/license/txt. TXT files can use UTF-8 encoding, but RTF files should use the corresponding language's encoding format, otherwise they may appear garbled (optional).
     license: build/license/rtf-win 

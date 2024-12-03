@@ -22,11 +22,9 @@ Icon size within the DMG package.
 Folder for the user agreement files within the DMG installer. Supports both `rtf` rich text format and `txt` plain text format, with multi-language support.
 
 ### Reference:
-`rtf` format: https://github.com/featherJ/editor-electron-template/tree/master/build/license/rtf-mac
-
-`txt` format: https://github.com/featherJ/editor-electron-template/tree/master/build/license/txt
-
-Supported Languages: https://github.com/argv-minus-one/dmg-license/blob/master/docs/Supported%20Language%20Tags.md
+* `rtf` format: https://github.com/featherJ/editor-electron-template/tree/master/build/license/rtf-mac
+* `txt` format: https://github.com/featherJ/editor-electron-template/tree/master/build/license/txt
+* Supported Languages: https://github.com/argv-minus-one/dmg-license/blob/master/docs/Supported%20Language%20Tags.md
 
 ### Naming Convention for Agreement Files:
 `license.[lang].[default?].[format]`

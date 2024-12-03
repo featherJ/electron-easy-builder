@@ -1,5 +1,5 @@
 # easy-builder.yml WinSign
-中文 | [English](../../en/mac/sign.md)
+中文 | [English](../../en/win/sign.md)
 
 Windows 上的签名配置。
 

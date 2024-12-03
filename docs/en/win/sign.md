@@ -1,5 +1,5 @@
 # easy-builder.yml WinSign
-[中文](../../zh/mac/sign.md) | English
+[中文](../../zh/win/sign.md) | English
 
 Signing configuration on Windows.
 

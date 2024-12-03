@@ -75,6 +75,7 @@
 * 在 Windows 上如果遇到 Unable to commit changes 报错，请参考 https://github.com/electron/packager/issues/590#issuecomment-1416237580 关闭杀毒软件后重试。这是由于杀毒软件将刚生成的文件保护了起来，拒绝其他进程对其修改导致的。
 
 ## TODO
+* 对于命名中应该支持 File Macros https://www.electron.build/file-patterns#file-macros，比如win.pack.verName
 * 规范配置文件中到底哪些是可选配置，哪些是必须配置。同时修改common.ts中的buildConfigSchema。
 * `.icns` 和 `.ico` 图标文件的生成。
 * 最低需要的操作系统的支持。

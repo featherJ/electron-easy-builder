@@ -348,10 +348,13 @@ export function getWinAppPaths(config: any, projectDir: string): AppPath[] {
 export function generateSetupIss(builderConfig: any, packageConfig: any, projectDir: string, appPath: AppPath, winFileAssociations: WinFileAssociation[], sign: boolean): { issFilename: string, outputFilename: string } {
     if (builderConfig.win?.pack) {
         let config = "";
-        // define
-        config += `#define AppId "${builderConfig.appId}"\n`;
+        let appId = builderConfig.win?.pack?.appId ? builderConfig.win?.pack?.appId : builderConfig.appId;
+        config += `#define AppId "${appId}"\n`;
         config += `#define AppName "${builderConfig.productName}"\n`;
         let nameVersion = builderConfig.win?.pack?.verName ? builderConfig.win?.pack?.verName : builderConfig.productName;
+        if(!nameVersion){
+            nameVersion = packageConfig.name
+        }
         config += `#define NameVersion "${nameVersion}"\n`;
         let publisher = builderConfig.win?.pack?.publisherName ? builderConfig.win?.pack?.publisherName : "";
         config += `#define Publisher "${publisher}"\n`;
@@ -384,6 +387,9 @@ export function generateSetupIss(builderConfig: any, packageConfig: any, project
         let regValueName = builderConfig.win?.pack?.regValueName
         config += `#define RegValueName "${regValueName}"\n`;
         let friendlyAppName = builderConfig.win?.pack?.friendlyAppName ? builderConfig.win?.pack?.friendlyAppName : builderConfig.productName;
+        if(!friendlyAppName){
+            friendlyAppName = packageConfig.name;
+        }
         config += `#define FriendlyName "${friendlyAppName}"\n`;
         config += `#define Sign "${sign ? "sign" : ""}"\n`;
 
@@ -568,9 +574,13 @@ export function generateResourceUpdateIss(builderConfig: any, packageConfig: any
     if (builderConfig.win?.pack) {
         let config = "";
         // define
-        config += `#define AppId "${builderConfig.appId}"\n`;
+        let appId = builderConfig.win?.pack?.appId ? builderConfig.win?.pack?.appId : builderConfig.appId;
+        config += `#define AppId "${appId}"\n`;
         config += `#define AppName "${builderConfig.productName}"\n`;
         let nameVersion = builderConfig.win?.pack?.verName ? builderConfig.win?.pack?.verName : builderConfig.productName;
+        if(!nameVersion){
+            nameVersion = packageConfig.name
+        }
         config += `#define NameVersion "${nameVersion}"\n`;
         let publisher = builderConfig.win?.pack?.publisherName ? builderConfig.win?.pack?.publisherName : "";
         config += `#define Publisher "${publisher}"\n`;
