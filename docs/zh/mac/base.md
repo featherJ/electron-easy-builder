@@ -52,3 +52,6 @@ extraResources:
 公证装订配置。
 
 ## pack
+`pack`: `undefined` | [MacPack](pack.md)
+
+Dmg 打包的配置。

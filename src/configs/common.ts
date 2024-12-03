@@ -260,7 +260,7 @@ export const buildConfigSchema = {
                     additionalProperties: false
                 }
             },
-            required: ["icon", "pack"],
+            required: ["pack"],
             additionalProperties: false
         },
         win: {
