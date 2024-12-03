@@ -21,18 +21,18 @@ Icon size within the DMG package.
 
 Folder for the user agreement files within the DMG installer. Supports both `rtf` rich text format and `txt` plain text format, with multi-language support.
 
-**Reference**:
+### Reference:
 `rtf` format：https://github.com/featherJ/editor-electron-template/tree/master/build/license/rtf-mac
 
 `txt` format：https://github.com/featherJ/editor-electron-template/tree/master/build/license/txt
 
-**Naming Convention for Agreement Files**:
+### Naming Convention for Agreement Files:
 `license.[lang].[default?].[format]`
 * lang: Language code, typically using international standards (e.g., `en`, `zh-CN`).
 * default (optional): Indicates this file as the default version.
 * format: File format, typically `rtf` or `txt`.
 
-**UI Text Naming Convention (Optional)**:
+### UI Text Naming Convention (Optional):
 If not set, default UI text is used.
 
 `license_buttons.[lang].json`
