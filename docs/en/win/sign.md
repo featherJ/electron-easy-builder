@@ -1,38 +1,38 @@
 # easy-builder.yml WinSign
-中文 | [English](../../en/mac/sign.md)
+[中文](../../zh/mac/sign.md) | English
 
-Windows 上的签名配置。
+Signing configuration on Windows.
 
 ## certificateFile
 `certificateFile`: `string`
 
-证书文件的路径。
+The path to the certificate file.
 
 ## certificatePassword
 `certificatePassword`: `string`
 
-证书文件的密码。
+The password for the certificate file.
 
 ## timeStampServer?
 `timeStampServer`: `undefined` | `string`
 
-时间戳服务的URL。
+The URL of the time stamp server.
 
-**默认值**：
+**Default**：
 `http://timestamp.digicert.com`
 
 ## rfc3161TimeStampServer?
 `rfc3161TimeStampServer`: `undefined` | `string`
 
-RFC 3161 时间戳服务的URL。
+The URL of the RFC 3161 time stamp server.
 
-**默认值**：
+**Default**：
 `http://timestamp.digicert.com`
 
 ## signingHashAlgorithms?
 `signingHashAlgorithms`: `undefined` | `("sha256" | "sha1")[]`
 
-签名使用的算法。
+Array of signing algorithms used.
 
-**默认值**：
+**Default**：
 `['sha1', 'sha256']`

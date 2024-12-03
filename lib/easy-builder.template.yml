@@ -94,7 +94,7 @@ mac:
     - from: build/darwin/resources/zh_CN.lproj
       to: zh_CN.lproj
   # macOS 上的签名配置
-  # Signing configuration for macOS
+  # Signing configuration on macOS
   # sign:
     # 要使用的证书名称
     # The certificate name to be used.
@@ -152,23 +152,23 @@ win:
   extraResources:
     - from: build/win/resources/test.txt
       to: test.txt
-  # 签名配置（可选）。
-  # Signing configuration (optional).
+  # Windows 上的签名配置（可选）。
+  # Signing configuration on Windows (optional).
   # sign:
-    # 证书文件的路径
+    # 证书文件的路径。
     # The path to the certificate file.
     # certificateFile: build/win/certificateFile.pfx
-    # 证书文件的密码
+    # 证书文件的密码。
     # The password for the certificate file.
     # certificatePassword: my-password
-    # 用于签名 sha1 的时间戳
-    # Timestamp for signing with SHA1.
+    # 时间戳服务的URL（可选）。
+    # The URL of the time stamp server (optional).
     # timeStampServer: http://timestamp.digicert.com
-    # 用于签名 sha256 的时间戳
-    # Timestamp for signing with SHA256.
+    # RFC 3161 时间戳服务的URL（可选）。
+    # The URL of the RFC 3161 time stamp server (optional).
     # rfc3161TimeStampServer: http://timestamp.digicert.com
-    # 所需的签名算法
-    # The required signing algorithm.
+    # 签名使用的算法（可选）。
+    # Array of signing algorithms used (optional).
     # signingHashAlgorithms:
       # - sha1
       # - sha256

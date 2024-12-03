@@ -296,6 +296,7 @@ export const buildConfigSchema = {
                             uniqueItems: true
                         }
                     },
+                    required: ["certificateFile","certificatePassword"],
                     additionalProperties: false
                 },
                 pack: {

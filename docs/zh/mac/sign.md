@@ -1,7 +1,7 @@
 # easy-builder.yml MacSign
 中文 | [English](../../en/mac/sign.md)
 
-macOS 上的签名配置
+macOS 上的签名配置。
 
 ## identity
 `identity`: `string`
