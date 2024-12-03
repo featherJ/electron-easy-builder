@@ -50,11 +50,11 @@ fileAssociations:
     # 关联文件的描述（仅限 Windows）
     # Description of the associated file (Windows only).
     description:  Electron Template Test Format 1
-    # 用来定义应用在处理特定文件类型时的角色，对应属性为CFBundleTypeRole（仅限 Mac OS）。 
-    # Used to define the role of the application when handling a specific file type, corresponding to the property CFBundleTypeRole (Mac OS only)。 
+    # 用来定义应用在处理特定文件类型时的角色，对应属性为CFBundleTypeRole（仅限 macOS）。 
+    # Used to define the role of the application when handling a specific file type, corresponding to the property CFBundleTypeRole (macOS only)。 
     # https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleurltypes/cfbundletyperole
     role: "Editor"
-    # Mac OS 上当前关联文件的图标（目前仅支持icns）格式
+    # macOS 上当前关联文件的图标（目前仅支持icns）格式
     # The icon for the currently associated file on macOS (currently only supports ICNS format).
     iconMac: build/darwin/document.icns
     # Windows 上当前关联文件的图标（目前仅支持ico）格式
@@ -67,8 +67,8 @@ fileAssociations:
     iconMac: build/darwin/document.icns
     iconWin: build/win/document.ico
 
-# Mac OS 上的安装包打包配置
-# Packaging configuration for application installer on Mac OS
+# macOS 上的安装包打包配置（可选）。
+# Packaging configuration for application installer on macOS (optional).
 mac:
   # 对应的属性为LSApplicationCategoryType。
   # The corresponding property is LSApplicationCategoryType. 
@@ -141,6 +141,8 @@ mac:
         x: 380
         y: 130
 
+# Windows 上的安装包打包配置（可选）。
+# Packaging configuration for application installer on Windows (optional).
 win:
   # 应用程序的图标（目前仅支持 ico 格式）
   # The application icon (currently only supports the ICO format).

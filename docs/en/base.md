@@ -1,4 +1,6 @@
 # easy-builder.yml
+[中文](../zh/base.md) | English
+
 Configuration file used by `electron-easy-builder` for packaging `electron` projects.
 
 ## appId
@@ -86,3 +88,13 @@ Packaging output directory.
 `fileAssociations`: `undefined` | [FileAssociation](fileAssociation.md)[]
 
 Associated files, specifying which file formats can be opened with the current application.
+
+## mac?
+`mac`: `undefined` | [Mac](mac/base.md)
+
+Packaging configuration for application installer on macOS.
+
+## win?
+`win`: `undefined` | [Win](win/base.md)
+
+Packaging configuration for application installer on Windows.

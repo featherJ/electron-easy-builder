@@ -1,4 +1,6 @@
 # easy-builder.yml
+中文 | [English](../en/base.md)
+
 用于 `electron-easy-builder` 打包 `electron` 项目的配置文件。
 
 ## appId
@@ -87,3 +89,12 @@ files:
 
 关联文件，指定哪些文件格式可以使用当前应用程序打开。
 
+## mac?
+`mac`: `undefined` | [Mac](mac/base.md)
+
+macOS 上的安装包打包配置。
+
+## win?
+`win`: `undefined` | [Win](win/base.md)
+
+Windows 上的安装包打包配置。
