@@ -1,38 +1,39 @@
 # easy-builder.yml Mac
-中文 | [English](../../en/mac/base.md)
+[中文](../../zh/mac/base.md) | English
 
-macOS 上的安装包打包配置。
+Packaging configuration for application installer on macOS/
 
 ## category?
 `category`: `undefined` | `string`
 
-应用程序类别，对应的属性为 `LSApplicationCategoryType`，在 Finder 和应用商店中都可查看该分类
+The application category, corresponding to the `LSApplicationCategoryType` property, which can be viewed in both Finder and the App Store.
 
-**参考**：
+**Reference**：
 https://developer.apple.com/documentation/bundleresources/information-property-list/lsapplicationcategorytype
 
 ## icon?
 `icon`: `undefined` | `string`
 
-应用程序的图标路径（目前仅支持 icns 格式）。
+The application icon path (currently only supports the ICNS format).
 
 ## extendInfo?
 `extendInfo`: `any`
 
-扩展信息，这会写入到 Info.plist 中。例如：请求摄像头与麦克风权限。
+ Extended information，this will be written to the Info.plist (optional). e.g. Request camera and microphone permissions.
 
-**例如**：
+**Example**：
 ```
 NSCameraUsageDescription: "We need access to your camera."  
 NSMicrophoneUsageDescription: "We need access to your microphone."
 ```
 
+
 ## extraResources?
 `extraResources`: `{from: string, to: string}[]`
 
-附加资源，符合 glob 模式的相对于项目的路径，通常用于系统级的多语言资源。
+Extra resources, a glob patterns relative to the project, typically used for system-level multilingual resources.
 
-**例如**：
+**Example**：
 ```
 extraResources:
   - from: build/darwin/resources/en.lproj
@@ -44,11 +45,11 @@ extraResources:
 ## sign?
 `sign`: `undefined` | [MacSign](sign.md)
 
-签名配置。
+Signing configuration.
 
 ## notarize?
 `notarize`: `undefined` | [MacNotarize](notarize.md)
 
-公证装订配置。
+Notarization and stapling configuration
 
 ## pack

@@ -6,9 +6,9 @@ Configuration file used by `electron-easy-builder` for packaging `electron` proj
 ## appId
 `appId`: `string`
 
-Example: `appId: "com.example.app"`
-
 Application ID. Used as the `CFBundleIdentifier` on macOS and `AppUserModelID` on Windows. On Windows, it is used for file type associations.
+
+**Example**: `appId: "com.example.app"`
 
 **Reference**:
 * https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleidentifier
@@ -69,7 +69,7 @@ Whether to rebuild native dependencies before starting to package the app.
 
 A [glob patterns](https://www.electron.build/file-patterns) relative to the project, defining which files should be included in the package.
 
-Example:
+**Example**:
 ```
 files:
   - out/**/*

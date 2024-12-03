@@ -6,9 +6,9 @@
 ## appId
 `appId`: `string`
 
-例如：`appId: "com.example.app"`
-
 应用程序 ID。用作 macOS 的 `CFBundleIdentifier` 和 Windows 的 `AppUserModelID`。在 Windows 上被用于文件关联文件。
+
+**例如**：`appId: "com.example.app"`
 
 **参考**：
 * https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleidentifier
@@ -69,7 +69,7 @@
 
 符合 [glob 模式](https://www.electron.build/file-patterns)的相对于项目的路径，定义打包哪些文件。
 
-例如：
+**例如**：
 ```
 files:
   - out/**/*

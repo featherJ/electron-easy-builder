@@ -70,15 +70,15 @@ fileAssociations:
 # macOS 上的安装包打包配置（可选）。
 # Packaging configuration for application installer on macOS (optional).
 mac:
-  # 对应的属性为LSApplicationCategoryType。
-  # The corresponding property is LSApplicationCategoryType. 
+  # 应用程序类别，对应的属性为LSApplicationCategoryType，在 Finder 和应用商店中都可查看该分类（可选）。
+  # The application category, corresponding to the LSApplicationCategoryType property, which can be viewed in both Finder and the App Store (optional). 
   # https://developer.apple.com/documentation/bundleresources/information-property-list/lsapplicationcategorytype
   category: public.app-category.developer-tools
-  # 应用程序的图标（目前仅支持 icns 格式）
-  # The application icon (currently only supports the ICNS format).
+  # 应用程序的图标（目前仅支持 icns 格式）（可选）。
+  # The application icon path (currently only supports the ICNS format) (optional).
   icon: build/darwin/app.icns
-  # 扩展信息：请求摄像头与麦克风权限，这会写入到 Info.plist 中。
-  # Extended information: Request camera and microphone permissions, this will be written to the Info.plist.
+  # 扩展信息，这会写入到 Info.plist 中（可选）。例如：请求摄像头与麦克风权限。
+  # Extended information，this will be written to the Info.plist (optional). e.g. Request camera and microphone permissions.
   extendInfo: 
     # 找不到多语言时的默认权限描述
     # The default permission description when a language is not found.
@@ -86,8 +86,8 @@ mac:
     # 找不到多语言时的默认权限描述
     # The default permission description when a language is not found.
     NSMicrophoneUsageDescription: "We need access to your microphone."
-  # 附加资源，通常用于系统级的多语言资源。
-  # Extra resources, typically used for system-level multilingual resources.
+  # 附加资源，符合 glob 模式的相对于项目的路径，通常用于系统级的多语言资源（可选）。
+  # Extra resources, a glob patterns relative to the project, typically used for system-level multilingual resources (optional).
   extraResources:
     - from: build/darwin/resources/en.lproj
       to: en.lproj
@@ -107,8 +107,8 @@ mac:
     # Subprogram permissions  (optional). 
     # https://www.electron.build/app-builder-lib.interface.macconfiguration#entitlementsinherit
     # entitlementsInherit: build/darwin/entitlements.plist
-  # 公正配置
-  # Notarization configuration.
+  # 公证装订配置
+  # Notarization and stapling configuration
   # notarize:
     # 苹果账号和密码。
     # Apple account and password.
