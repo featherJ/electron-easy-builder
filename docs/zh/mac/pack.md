@@ -21,18 +21,18 @@ Dmg 包内的图标尺寸。
 
 Dmg 安装包内的用户协议文件夹，支持 `rtf` 富文本格式，以及 `txt` 文本格式，支持多语言。
 
-### 参考：
+**参考**：
 `rtf` 格式：https://github.com/featherJ/editor-electron-template/tree/master/build/license/rtf-mac
 
 `txt` 格式：https://github.com/featherJ/editor-electron-template/tree/master/build/license/txt
 
-### 协议文件的命名规范：
+**协议文件的命名规范**：
 `license.[lang].[default?].[format]`
 * lang：语言代码，通常使用国际标准（如 `en`、`zh-CN`）。
 * default（可选）：表示该文件是默认版本。
 * format：文件格式，通常为 `rtf` 或 `txt`。
 
-### 协议对话框中UI文字命名规范格：
+**协议对话框中UI文字命名规范格**：
 如果未设置，则使用默认UI文案
 
 `license_buttons.[lang].json`
