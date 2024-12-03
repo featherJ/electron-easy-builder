@@ -53,6 +53,6 @@ Signing configuration.
 Notarization and stapling configuration
 
 ## pack
-`pack`: `undefined` | [MacPack](pack.md)
+`pack`: [MacPack](pack.md)
 
 DMG packaging configuration.

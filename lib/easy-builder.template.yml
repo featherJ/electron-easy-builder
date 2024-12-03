@@ -93,8 +93,8 @@ mac:
       to: en.lproj
     - from: build/darwin/resources/zh_CN.lproj
       to: zh_CN.lproj
-  # 签名配置
-  # Signing configuration.
+  # macOS 上的签名配置
+  # Signing configuration for macOS
   # sign:
     # 要使用的证书名称
     # The certificate name to be used.

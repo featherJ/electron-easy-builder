@@ -200,7 +200,8 @@ export const buildConfigSchema = {
                         entitlements: { type: "string" },
                         entitlementsInherit: { type: "string" },
                     },
-                    additionalProperties: false
+                    additionalProperties: false,
+                    required: ['identity']
                 },
                 notarize: {
                     type: "object",
