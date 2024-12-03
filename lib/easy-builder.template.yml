@@ -1,45 +1,45 @@
-# 应用程序 ID。用作 macOS 的 CFBundleIdentifier 和 Windows 的 AppUserModelIDs。
-# The application id. Used as CFBundleIdentifier for macOS and as Application User Model ID for Windows
+# 应用程序 ID。用作 macOS 的 CFBundleIdentifier 和 Windows 的 AppUserModelID。在 Windows 上被用于文件关联文件。
+# The application id. Used as CFBundleIdentifier for macOS and as AppUserModelID for Windows. On Windows, it is used for file type associations.
 # https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleidentifier
-# https://learn.microsoft.com/zh-cn/windows/win32/shell/appids?redirectedfrom=MSDN
+# https://learn.microsoft.com/zh-cn/windows/win32/shell/appids
 appId: "com.example.app"
-# 程序的版权信息。
-# Copyright information of the application.
-copyright: "Copyright (C) 2024-2024 My Company Name. All rights reserved"
-# 产品名称，也是最终可执行文件的名称。
-# Product name, which is also the name of the final executable file.
+# 程序的版权信息（可选）。
+# Copyright information of the application (optional).
+copyright: "Copyright (C) 2024 My Company Name. All rights reserved"
+# 产品名称，也是最终可执行文件的名称（可选）。
+# Product name, which is also the name of the final executable file (optional). 
 productName: "Editor Electron Template"
-# 是否将源码打包为asar
-# Whether to package the source code as ASAR.
+# 是否将源码打包为asar（可选）。
+# Whether to package the source code as asar (optional). 
 asar: true
-# 指定哪些文件不要被打包进asar包内。
-# Specify which files should not be included in the ASAR package.
+# 符合 glob 模式的相对于项目的路径，定义哪些文件不会被打包进 asar 包内（可选）。
+# A glob patterns relative to the project, defining which files should not be included in the `asar` package (optional).
 asarUnpack:
   - unpack/**/*
-# 是否从源代码构建应用程序的本地依赖项。
-# Whether to build the application native dependencies from source.
+# 是否从源代码构建应用程序的本地依赖项（可选）。
+# Whether to build the application native dependencies from source (optional).
 buildDependenciesFromSource: false
-# 是否在开始打包应用程序之前执行 node-gyp rebuild。
-# Whether to execute node-gyp rebuild before starting to package the app.
+# 是否在开始打包应用程序之前执行 node-gyp rebuild（可选）。
+# Whether to execute node-gyp rebuild before starting to package the app (optional).
 # https://www.electron.build/configuration.html#nodegyprebuild
 nodeGypRebuild: false
-# 是否在开始打包应用程序之前重新构建本地依赖项。
-# Whether to rebuild native dependencies before starting to package the app.
+# 是否在开始打包应用程序之前重新构建本地依赖项（可选）。
+# Whether to rebuild native dependencies before starting to package the app (optional).
 npmRebuild: true
 
-# 打包包含的文件
-# Files included in the package.
+# 符合 glob 模式的相对于项目的路径，定义打包哪些文件。
+# A glob patterns relative to the project, defining which files should be included in the package.
 files:
   - unpack/**/*
   - out/**/*
   - "!node_modules/**"   
 
-# 打包输出目录
-# Packaging output directory.
+# 打包输出目录（可选）。
+# Packaging output directory (optional).
 output: dist
 
-# 关联文件，指定哪些文件格式可以使用当前应用程序打开。
-# Associated files, specifying which file formats can be opened with the current application.
+# 关联文件，指定哪些文件格式可以使用当前应用程序打开（可选）。
+# Associated files, specifying which file formats can be opened with the current application (optional).
 fileAssociations:
     # 文件扩展名，如 png。
     # File extension, such as png.
@@ -191,10 +191,6 @@ win:
     # 发布者名称
     # Publisher name.
     publisherName: My Company Inc
-    # 应用程序用户模型 ID，用于关联文件等，对应的属性为 AppUserModelIDs。
-    # Application User Model ID, used for associating files, etc. The corresponding property is AppUserModelIDs.
-    # https://learn.microsoft.com/en-us/windows/win32/shell/appids
-    appUserModelID: MyCompany.Template
     # 右键"open with"里显示的内容，没有的话使用 productName。对应属性为 FriendlyName。
     # The content displayed in the "Open with" right-click menu. If not specified, the productName will be used. The corresponding property is FriendlyName.
     # https://learn.microsoft.com/en-us/dotnet/api/system.appdomain.friendlyname

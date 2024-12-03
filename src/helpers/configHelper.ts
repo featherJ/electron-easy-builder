@@ -1,17 +1,14 @@
 import { AppDmgConfig, AppPath, NotarizeConfig, WinFileAssociation, WinSign } from "configs/common";
 import { Configuration } from "electron-builder";
 import fs from "fs";
-import iconv from "iconv-lite";
 import { tmpdir } from "os";
 import path from "path";
+import { warn } from "utils/log";
 import { libDir } from "utils/path";
+import { removeSpace } from "utils/string";
 import YAML from 'yaml';
 import setupIss from '../../lib/setup.iss';
 import updateIss from '../../lib/update.iss';
-import { warn } from "utils/log";
-import { json } from "stream/consumers";
-import { removeSpace } from "utils/string";
-import { detect } from "chardet";
 
 /**
  * 提取electron-builder使用的yml配置
@@ -22,7 +19,7 @@ export function generateElectronBuilderConfig(builderConfig: any, platform: "mac
     let config: any = {};
     //base info
     config.appId = builderConfig.appId; //必须
-    config.productName = builderConfig.productName; //必须
+    config.productName = builderConfig.productName; 
     config.copyright = builderConfig.copyright;
 
     //asar info
@@ -381,7 +378,7 @@ export function generateSetupIss(builderConfig: any, packageConfig: any, project
         config += `#define Version "${packageConfig.version}"\n`;
         config += `#define ArchitecturesAllowed "${appPath.arch == "x64" ? "x64" : ""}"\n`;
         config += `#define DirName "${builderConfig.productName}"\n`;
-        let appUserModelID = builderConfig.win?.pack?.appUserModelID ? builderConfig.win?.pack?.appUserModelID : "";
+        let appUserModelID = builderConfig.appId;
         config += `#define AppUserId "${appUserModelID}"\n`;
         config += `#define InstallTarget "user"\n`;
         let regValueName = builderConfig.win?.pack?.regValueName

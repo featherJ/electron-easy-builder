@@ -305,7 +305,6 @@ export const buildConfigSchema = {
                         appUrl: { type: "string" },
                         appId: { type: "string" },
                         publisherName: { type: "string" },
-                        appUserModelID: { type: "string" },
                         friendlyAppName: { type: "string" },
                         regValueName: { type: "string" },
                         wizardSmallImageFile: { type: "string" },
@@ -318,7 +317,7 @@ export const buildConfigSchema = {
             }
         },
     },
-    required: ['appId', 'productName'],
+    required: ['appId','files'],
     additionalProperties: false,
 }
 
