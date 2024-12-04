@@ -1,6 +1,6 @@
 {
 	"name": "electron-easy-builder",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"description": "A simple and efficient Electron packaging tool for Windows and macOS. Combined with electron-easy-updater, it makes updating Electron apps easy. The updater automatically determines whether to apply a minimal resource update or a full update.",
 	"author": "Auga.L",
 	"license": "MIT",
@@ -24,7 +24,7 @@
 	"bin": {
 		"easy-builder": "bin/easy-builder.js"
 	},
-	"files": ["bin", "lib", "README.md", "package.json"],
+	"files": ["bin", "lib", "README.md","README_CN.md", "package.json"],
 	"dependencies": {
 		"chardet": "^2.0.0",
 		"electron-builder": "24.6.3",
