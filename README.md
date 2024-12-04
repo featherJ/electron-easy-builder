@@ -1,5 +1,6 @@
 # Electron Easy Builder
-
+[![NPM Version](http://img.shields.io/npm/v/electron-easy-builder.svg?style=flat)](https://www.npmjs.com/package/electron-easy-builder)
+[![Install Size](https://packagephobia.now.sh/badge?p=electron-easy-builder)](https://packagephobia.now.sh/result?p=electron-easy-builder)
 [![Donation](https://img.shields.io/static/v1?label=Donation&message=❤️&style=social)](https://ko-fi.com/V7V7141EHB)
 
 [中文文档](README_CN.md) | English
@@ -41,6 +42,11 @@ The core functionality of this tool still primarily relies on `electron-builder`
 The goal is to simplify the configuration required for `electron-builder` packaging. Additionally, the different functionality modules are separated and controlled individually to achieve the features supported by this packaging tool.
 
 ## How to Use
+### Installation
+```
+npm install electron-easy-builder@latest
+```
+
 ### Configuration File
 You can refer to the full configuration file in [lib/easy-builder.template.yml](lib/easy-builder.template.yml).
 

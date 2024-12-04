@@ -1,5 +1,6 @@
 # Electron Easy Builder
-
+[![NPM Version](http://img.shields.io/npm/v/electron-easy-builder.svg?style=flat)](https://www.npmjs.com/package/electron-easy-builder)
+[![Install Size](https://packagephobia.now.sh/badge?p=electron-easy-builder)](https://packagephobia.now.sh/result?p=electron-easy-builder)
 [![Donation](https://img.shields.io/static/v1?label=Donation&message=❤️&style=social)](https://ko-fi.com/V7V7141EHB)
 
 中文文档 | [English](README.md)
@@ -39,6 +40,11 @@
 目的是简化 `electron-builder` 打包所需的配置。并将各个功能模块拆开分别控制，以实现本打包工具所支持的功能。
 
 ## 如何使用
+### 安装
+```
+npm install electron-easy-builder
+```
+
 ### 配置文件
 配置文件的全貌可以参考 [lib/easy-builder.template.yml](lib/easy-builder.template.yml).
 
