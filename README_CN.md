@@ -80,7 +80,7 @@
 ## TODO
 * 对于命名中应该支持 File Macros https://www.electron.build/file-patterns#file-macros，比如win.pack.verName
 * 规范配置文件中到底哪些是可选配置，哪些是必须配置。同时修改common.ts中的buildConfigSchema。
-* `.icns` 和 `.ico` 图标文件的生成。
+* `.icns` 和 `.ico` 图标文件的生成。"build-mac-icon": "iconutil -c icns build/darwin/app.iconset && iconutil -c icns build/darwin/document.iconset" 和 png-to-ico
 * 最低需要的操作系统的支持。
 
 ## 致谢

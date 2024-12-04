@@ -8,7 +8,6 @@ import { WinPacker } from "pack/winPacker";
 import path from "path";
 import { error } from "utils/log";
 import { promptToContinue } from "utils/program";
-import { ensureElevated } from "utils/elevate";
 //todo 改成动态读取
 import templateContent from '../lib/easy-builder.template.yml';
 //todo 改成动态读取
@@ -32,7 +31,7 @@ program.command('init')
     .description('Initialize the packaging configuration template: easy-builder.yml')
     .option('-d, --dir <string>', 'Project path.')
     .action(async (options) => {
-        let projectDir: string = options.dir ? options.dir : __dirname;
+        let projectDir: string = options.dir ? options.dir : process.cwd();
         let basename = "easy-builder.yml";
         let basenameBackup = "easy-builder.backup.yml";
         let filename = path.join(projectDir, basename);
@@ -59,7 +58,7 @@ program.command('build')
 .option('-m, --mac', 'Build and package for macOS.',false)
 .option('-w, --win', 'Build and package for Windows.',false)
 .action(async (options) => {
-    let projectDir: string = options.dir ? options.dir : __dirname;
+    let projectDir: string = options.dir ? options.dir : process.cwd();
     let mac:boolean = options.mac;
     let win:boolean = options.win;
     
@@ -98,16 +97,3 @@ program.command('build')
 });
 
 program.parse(process.argv);
-
-// const initer = new Initer("/Users/apple/Documents/FacnyGit/editor-electron-template");
-// let valid = initer.init();
-// if(valid){
-//     let macPacker = new MacPacker(initer);
-//     macPacker.pack();
-// }
-// const initer = new Initer("C:\\Users\\Agua.L\\Documents\\project\\editor-electron-template");
-// let valid = initer.init();
-// if(valid){
-//     let winPacker = new WinPacker(initer);
-//     winPacker.pack();
-// }

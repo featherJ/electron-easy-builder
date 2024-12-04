@@ -1,10 +1,9 @@
 {
 	"name": "electron-easy-builder",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "A simple and efficient Electron packaging tool for Windows and macOS. Combined with electron-easy-updater, it makes updating Electron apps easy. The updater automatically determines whether to apply a minimal resource update or a full update.",
 	"author": "Auga.L",
 	"license": "MIT",
-	"main": "./out/easy-builder.js",
 	"scripts": {
 		"watch": "webpack --watch --progress --config webpack.dev.ts",
 		"build": "webpack --progress --config webpack.prod.ts",
