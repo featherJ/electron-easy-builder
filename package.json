@@ -25,6 +25,7 @@
 	"bin": {
 		"easy-builder": "bin/easy-builder.js"
 	},
+	"files": ["bin", "lib", "README.md", "package.json"],
 	"dependencies": {
 		"chardet": "^2.0.0",
 		"electron-builder": "24.6.3",
